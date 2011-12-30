@@ -1,4 +1,66 @@
+try:
+    import json
+except ImportError:
+    import simplejson as json
 import requests 
+from amonagent.exception import ConnectionException
+from amonagent.settings import settings
 
 class Remote(object):
 	pass
+
+	def __init__(self):
+		self.server_key = None
+		self.port = None
+		self.host = None
+
+	def connection_host(self):
+		local_hosts = ['127.0.0.1', 'localhost']
+		hostaddr =  settings.REMOTE['host']
+		
+		if hostaddr in local_hosts:
+			hostaddr =  "http://{0}".format(hostaddr)
+
+		# Add http if its a numeric ip address
+		if not hostaddr.startswith('http'):
+			hostaddr =  "http://{0}".format(hostaddr)
+
+		return hostaddr
+
+	def connection_port(self):
+		return settings.REMOTE['port']
+
+	def connection_url(self):
+		return "{0}:{1}".format(self.connection_host(), self.connection_port())
+
+
+	headers = {"Content-type": "application/json"}
+
+	errors = {'connection': 'Could not establish connection to the Amon API.\
+			Please ensure that the web application is running'}
+
+	def to_json(self, data):
+		return json.dumps(data)
+
+	def _post(self, url, data, headers=None):
+		
+		headers = headers if headers else self.headers
+
+		r = requests.post(url, data, headers=headers)
+
+		if r.status_code != 200:
+			raise ConnectionException(self.errors['connection'])
+		else:
+			return 'ok'
+
+	def save_system_stats(self, data):
+		url = self.connection_url() + '/api/system'
+		data = self.to_json(data)
+
+
+
+	def save_process_stats(self, data):
+		pass
+
+remote = Remote()
+
