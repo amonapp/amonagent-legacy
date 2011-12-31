@@ -1,5 +1,5 @@
-from amon.system.collector import system_info_collector, process_info_collector
-from amon.core import settings
+from amonagent.collector import system_info_collector, process_info_collector
+from amonagent.settings import settings
 from time import time
 import sys
 

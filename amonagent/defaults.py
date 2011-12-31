@@ -10,8 +10,6 @@ try:
 except:
 	config = {}
 
-print config
-
 #  Amon agent Defaults
 _remote = config.get('remote', {})
 
@@ -36,6 +34,5 @@ REMOTE = {
 	'port': _remote.get('port', 2464)
 }
 
-server_key = config.get('server_key', None)
-
+SERVER_KEY = config.get('server_key', None)
 

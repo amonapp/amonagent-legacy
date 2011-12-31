@@ -3,11 +3,10 @@ try:
 except ImportError:
     import simplejson as json
 import requests 
-from amonagent.exception import ConnectionException
+from amonagent.exceptions import ConnectionException
 from amonagent.settings import settings
 
 class Remote(object):
-	pass
 
 	def __init__(self):
 		self.server_key = None
@@ -57,10 +56,17 @@ class Remote(object):
 		url = self.connection_url() + '/api/system'
 		data = self.to_json(data)
 
+		return self._post(url, data)
 
 
 	def save_process_stats(self, data):
-		pass
+		url = self.connection_url() + '/api/processes'
+		data = self.to_json(data)
+
+		return self._post(url, data)
 
 remote = Remote()
 
+
+class LocalCache(object):
+	pass
