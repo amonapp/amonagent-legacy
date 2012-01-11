@@ -17,7 +17,7 @@ except:
 	sys.exit()
 
 from amonagent.daemon import Daemon
-from amonagent import settings
+from amonagent.settings import settings
 from amonagent.runner import runner
 from amonagent.backends import remote
 

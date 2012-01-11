@@ -36,3 +36,4 @@ REMOTE = {
 
 SERVER_KEY = config.get('server_key', None)
 
+CACHE_DIR = config.get('cache_dir', '/usr/local/amon/')

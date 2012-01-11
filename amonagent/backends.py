@@ -6,10 +6,27 @@ import requests
 from amonagent.exceptions import ConnectionException
 from amonagent.settings import settings
 
+class LocalCache(object):
+
+	def __init__(self):
+		self.cache_dir = settings.CACHE_DIR 
+
+	def save(self, type, data):
+		if type == 'system':
+			json_file = self.cache_dir + 'amonagent_system_cache.json'
+		else:
+			json_file =  self.cache_dir + 'amonagent_process_cache.json'
+
+		pass
+		#with open(json_file, "a") as f:
+			#f.write(data)
+
+local_cache = LocalCache()
+
 class Remote(object):
 
 	def __init__(self):
-		self.server_key = None
+		self.server_key = settings.SERVER_KEY
 		self.port = None
 		self.host = None
 
@@ -32,7 +49,6 @@ class Remote(object):
 	def connection_url(self):
 		return "{0}:{1}".format(self.connection_host(), self.connection_port())
 
-
 	headers = {"Content-type": "application/json"}
 
 	errors = {'connection': 'Could not establish connection to the Amon API.\
@@ -50,23 +66,22 @@ class Remote(object):
 		if r.status_code != 200:
 			raise ConnectionException(self.errors['connection'])
 		else:
-			return 'ok'
+			return True
 
 	def save_system_stats(self, data):
-		url = self.connection_url() + '/api/system'
+		url = "{0}/api/system/{1}".format(self.connection_url(), self.server_key)
 		data = self.to_json(data)
 
-		return self._post(url, data)
-
+		try:
+			self._post(url, data)
+		except:
+			local_cache.save('system', data)
 
 	def save_process_stats(self, data):
-		url = self.connection_url() + '/api/processes'
+		url = "{0}/api/processes/{1}".format(self.connection_url(), self.server_key)
 		data = self.to_json(data)
 
 		return self._post(url, data)
 
 remote = Remote()
 
-
-class LocalCache(object):
-	pass
