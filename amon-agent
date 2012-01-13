@@ -26,7 +26,8 @@ PIDFILE = '/var/run/amon-agent.pid'
 LOGFILE = '/usr/local/amon/amon-agent.log'
 
 # Configure logging
-logging.basicConfig(filename=LOGFILE,level=logging.DEBUG)
+logging.basicConfig(filename=LOGFILE, level=logging.ERROR)
+log = logging.getLogger('amonagent')
 
 class AmonAgentDaemon(Daemon):
 	
@@ -35,8 +36,8 @@ class AmonAgentDaemon(Daemon):
 		system_info_empty = runner.empty()
 		try:
 			remote.save_system_stats(system_info_empty)
-		except Exception, e:
-			logging.exception('Saving empty system info failed')
+		except Exception, ex:
+			log.exception('Saving empty system info failed')
 
 	# Executed on stop and restart
 	def __del__(self):
@@ -52,15 +53,15 @@ class AmonAgentDaemon(Daemon):
 			system_info = runner.system()
 			try:			
 				remote.save_system_stats(system_info)
-			except Exception, e:			
-				logging.exception('Saving system info failed')
+			except Exception, ex:			
+				log.exception('Saving system info failed')
 			
 			process_info = runner.processes()
 
 			try:
 				remote.save_process_stats(process_info)
-			except Exception, e:			
-				logging.exception('Saving process info failed')
+			except Exception, ex:			
+				log.exception('Saving process info failed')
 
 			# Checks the system every 60 seconds
 			time.sleep(settings.SYSTEM_CHECK_PERIOD)
@@ -73,6 +74,7 @@ if __name__ == "__main__":
 		if 'start' == sys.argv[1]:
 			try:
 				daemon.start()
+				print "Starting the Amon agent ..."
 			except Exception, e:
 				print "The Amon agent couldn't be started. Please check /usr/local/amon/amon-agent.log for details"
 				logging.exception("The Amon agent couldn't be started")
