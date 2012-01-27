@@ -11,15 +11,17 @@ import sys, time
 import logging
 
 try:
-	import amonagent
+    import amonagent
 except:
-	print 'The Amon agent is not installed'
-	sys.exit()
+    print 'The Amon agent is not installed'
+    sys.exit()
+
 
 from amonagent.daemon import Daemon
 from amonagent.settings import settings
 from amonagent.runner import runner
 from amonagent.backends import remote
+from amonagent.cache import cache
 
 PIDFILE = '/var/run/amon-agent.pid'
 # Keep all log files in one place
@@ -30,80 +32,90 @@ logging.basicConfig(filename=LOGFILE, level=logging.ERROR)
 log = logging.getLogger('amonagent')
 
 class AmonAgentDaemon(Daemon):
-	
-	# Add an empty dictionary on start/end to avoid chart bugs
-	def empty(self):
-		system_info_empty = runner.empty()
-		try:
-			remote.save_system_stats(system_info_empty)
-		except Exception, ex:
-			log.exception('Saving empty system info failed')
 
-	# Executed on stop and restart
-	def __del__(self):
-		self.empty()
-		
-	def __init__(self, pidfile):
-		super(AmonAgentDaemon, self).__init__(pidfile)
-		self.empty()
-	
-	def run(self):
-		
-		while True:
-			system_info = runner.system()
-			try:			
-				remote.save_system_stats(system_info)
-			except Exception, ex:			
-				log.exception('Saving system info failed')
-			
-			process_info = runner.processes()
+    # Add an empty dictionary on start/end to avoid chart bugs
+    def empty(self):
+        system_info_empty = runner.empty()
+        try:
+            remote.save_system_stats(system_info_empty)
+        except Exception, ex:
+            log.exception('Saving empty system info failed')
 
-			try:
-				remote.save_process_stats(process_info)
-			except Exception, ex:			
-				log.exception('Saving process info failed')
+    # Executed on stop and restart
+    def __del__(self):
+        self.empty()
 
-			# Checks the system every 60 seconds
-			time.sleep(settings.SYSTEM_CHECK_PERIOD)
+    def __init__(self, pidfile):
+        super(AmonAgentDaemon, self).__init__(pidfile)
+        self.empty()
+
+    def run(self):
+
+        while True:
+            system_info = runner.system()
+            try:			
+                remote.save_system_stats(system_info)
+            except Exception:
+                log.exception('Saving system info failed')
+                
+                try:
+                    cache.store(system_info, 'process')
+                except: 
+                    log.exception('Saving process data in cache failed')
+
+            process_info = runner.processes()
+
+            try:
+                remote.save_process_stats(process_info)
+            except Exception:			
+                log.exception('Saving process info failed')
+                
+                try:
+                    cache.store(process_info, 'process')
+                except: 
+                    log.exception('Saving process data in cache failed')
+
+            # Checks the system every 60 seconds
+            time.sleep(settings.SYSTEM_CHECK_PERIOD)
 
 if __name__ == "__main__":
 
-	daemon = AmonAgentDaemon(PIDFILE)
-	
-	if len(sys.argv) == 2:
-		if 'start' == sys.argv[1]:
-			try:
-				daemon.start()
-				print "Starting the Amon agent ..."
-			except Exception, e:
-				print "The Amon agent couldn't be started. Please check /usr/local/amon/amon-agent.log for details"
-				logging.exception("The Amon agent couldn't be started")
-		elif 'stop' == sys.argv[1]:
-			print "Stopping the Amon agent ..."
-			daemon.stop()
-		elif 'restart' == sys.argv[1]:
-			print "Restaring the Amon agent ..."
-			daemon.restart()
-		elif 'status' == sys.argv[1]:
-			try:
-				pf = file(PIDFILE,'r')
-				pid = int(pf.read().strip())
-				pf.close()
-			except IOError:
-				pid = None
-			except SystemExit:
-				pid = None
+    daemon = AmonAgentDaemon(PIDFILE)
 
-			if pid:
-				print 'The Amon agent is running as pid %s' % pid
-			else:
-				print 'The Amon agent is not running.'
-		
-		else:
-			print "Unknown command"
-			sys.exit(2)
-			sys.exit(0)
-	else:
-		print "usage: %s start|stop|restart|status" % sys.argv[0]
-		sys.exit(2)
+    if len(sys.argv) == 2:
+        if 'start' == sys.argv[1]:
+            try:
+                daemon.start()
+                print "Starting the Amon agent ..."
+            except Exception, e:
+                print "The Amon agent couldn't be started. Please check /usr/local/amon/amon-agent.log for details"
+                logging.exception("The Amon agent couldn't be started")
+        elif 'stop' == sys.argv[1]:
+            print "Stopping the Amon agent ..."
+            daemon.stop()
+        elif 'restart' == sys.argv[1]:
+            print "Restaring the Amon agent ..."
+            daemon.restart()
+        elif 'status' == sys.argv[1]:
+            try:
+                pf = file(PIDFILE,'r')
+                pid = int(pf.read().strip())
+                pf.close()
+            except IOError:
+                pid = None
+            except SystemExit:
+                pid = None
+
+            if pid:
+                print 'The Amon agent is running as pid %s' % pid
+            else:
+                print 'The Amon agent is not running.'
+
+        else:
+            print "Unknown command"
+            sys.exit(2)
+            sys.exit(0)
+    else:
+        print "usage: %s start|stop|restart|status" % sys.argv[0]
+        sys.exit(2)
 
