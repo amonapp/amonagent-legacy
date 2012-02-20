@@ -55,7 +55,7 @@ class Remote(object):
 		url = "{0}/api/system/{1}".format(self.connection_url(), self.server_key)
 		data = self.to_json(data)
 
-		self._post(url, data)
+		return self._post(url, data)
 
 	def save_process_stats(self, data):
 		url = "{0}/api/processes/{1}".format(self.connection_url(), self.server_key)

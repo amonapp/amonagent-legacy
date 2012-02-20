@@ -1,5 +1,4 @@
 from amonagent.backends import remote
-from nose.tools import eq_
 from amonagent.runner import runner
 import requests
 
