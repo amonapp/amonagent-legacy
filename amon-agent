@@ -21,7 +21,6 @@ from amonagent.daemon import Daemon
 from amonagent.settings import settings
 from amonagent.runner import runner
 from amonagent.backends import remote
-from amonagent.cache import cache
 
 PIDFILE = '/var/run/amon-agent.pid'
 # Keep all log files in one place
@@ -58,11 +57,6 @@ class AmonAgentDaemon(Daemon):
             except Exception:
                 log.exception('Saving system info failed')
                 
-                try:
-                    cache.store(system_info, 'process')
-                except: 
-                    log.exception('Saving process data in cache failed')
-
             process_info = runner.processes()
 
             try:
@@ -70,11 +64,6 @@ class AmonAgentDaemon(Daemon):
             except Exception:			
                 log.exception('Saving process info failed')
                 
-                try:
-                    cache.store(process_info, 'process')
-                except: 
-                    log.exception('Saving process data in cache failed')
-
             # Checks the system every 60 seconds
             time.sleep(settings.SYSTEM_CHECK_PERIOD)
 

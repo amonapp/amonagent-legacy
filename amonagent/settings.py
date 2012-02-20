@@ -8,6 +8,5 @@ class Settings(object):
 			if setting == setting.upper():
 				setattr(self, setting, getattr(defaults, setting))
 
-
 settings = Settings()
 

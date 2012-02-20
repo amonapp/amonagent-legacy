@@ -6,23 +6,6 @@ import requests
 from amonagent.exceptions import ConnectionException
 from amonagent.settings import settings
 
-class LocalCache(object):
-
-	def __init__(self):
-		self.cache_dir = settings.CACHE_DIR 
-
-	def save(self, type, data):
-		if type == 'system':
-			json_file = self.cache_dir + 'amonagent_system_cache.json'
-		else:
-			json_file =  self.cache_dir + 'amonagent_process_cache.json'
-
-		pass
-		#with open(json_file, "a") as f:
-			#f.write(data)
-
-local_cache = LocalCache()
-
 class Remote(object):
 
 	def __init__(self):
@@ -72,10 +55,7 @@ class Remote(object):
 		url = "{0}/api/system/{1}".format(self.connection_url(), self.server_key)
 		data = self.to_json(data)
 
-		try:
-			self._post(url, data)
-		except:
-			local_cache.save('system', data)
+		self._post(url, data)
 
 	def save_process_stats(self, data):
 		url = "{0}/api/processes/{1}".format(self.connection_url(), self.server_key)
