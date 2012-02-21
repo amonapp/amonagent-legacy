@@ -13,7 +13,7 @@ import logging
 try:
     import amonagent
 except:
-    print 'The Amon agent is not installed'
+    print 'The agent is not installed'
     sys.exit()
 
 
@@ -24,7 +24,7 @@ from amonagent.backends import remote
 
 PIDFILE = '/var/run/amon-agent.pid'
 # Keep all log files in one place
-LOGFILE = '/usr/local/amon/amon-agent.log'
+LOGFILE = '/usr/local/amonplus/amon-agent.log'
 
 # Configure logging
 logging.basicConfig(filename=LOGFILE, level=logging.ERROR)
@@ -75,15 +75,15 @@ if __name__ == "__main__":
         if 'start' == sys.argv[1]:
             try:
                 daemon.start()
-                print "Starting the Amon agent ..."
+                print "Starting the agent ..."
             except Exception, e:
-                print "The Amon agent couldn't be started. Please check /usr/local/amon/amon-agent.log for details"
-                logging.exception("The Amon agent couldn't be started")
+                print "The Amon agent couldn't be started. Please check /usr/local/amonplus/amon-agent.log for details"
+                logging.exception("The agent couldn't be started")
         elif 'stop' == sys.argv[1]:
-            print "Stopping the Amon agent ..."
+            print "Stopping the agent ..."
             daemon.stop()
         elif 'restart' == sys.argv[1]:
-            print "Restaring the Amon agent ..."
+            print "Restaring the agent ..."
             daemon.restart()
         elif 'status' == sys.argv[1]:
             try:
@@ -96,9 +96,9 @@ if __name__ == "__main__":
                 pid = None
 
             if pid:
-                print 'The Amon agent is running as pid %s' % pid
+                print 'The agent is running as pid %s' % pid
             else:
-                print 'The Amon agent is not running.'
+                print 'The agent is not running.'
 
         else:
             print "Unknown command"
