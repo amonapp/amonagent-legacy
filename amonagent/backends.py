@@ -8,60 +8,63 @@ from amonagent.settings import settings
 
 class Remote(object):
 
-	def __init__(self):
-		self.server_key = settings.SERVER_KEY
-		self.port = None
-		self.host = None
+    def __init__(self):
+        self.server_key = settings.SERVER_KEY
+        self.port = None
+        self.host = None
 
-	def connection_host(self):
-		local_hosts = ['127.0.0.1', 'localhost']
-		hostaddr =  settings.REMOTE['host']
-		
-		if hostaddr in local_hosts:
-			hostaddr =  "http://{0}".format(hostaddr)
+    def connection_host(self):
+        local_hosts = ['127.0.0.1', 'localhost']
+        hostaddr =  settings.REMOTE['host']
 
-		# Add http if its a numeric ip address
-		if not hostaddr.startswith('http'):
-			hostaddr =  "http://{0}".format(hostaddr)
+        if hostaddr in local_hosts:
+            hostaddr =  "http://{0}".format(hostaddr)
 
-		return hostaddr
+        # Add http if its a numeric ip address
+        if not hostaddr.startswith('http'):
+            hostaddr =  "http://{0}".format(hostaddr)
+        
+        # Cleanup any slashes at the end of the url
+        hostaddr.rstrip('/')
 
-	def connection_port(self):
-		return settings.REMOTE['port']
+        return hostaddr
 
-	def connection_url(self):
-		return "{0}:{1}".format(self.connection_host(), self.connection_port())
+    def connection_port(self):
+        return settings.REMOTE['port']
 
-	headers = {"Content-type": "application/json"}
+    def connection_url(self):
+        return "{0}:{1}".format(self.connection_host(), self.connection_port())
 
-	errors = {'connection': 'Could not establish connection to the Amon API.\
-			Please ensure that the web application is running'}
+    headers = {"Content-type": "application/json"}
 
-	def to_json(self, data):
-		return json.dumps(data)
+    errors = {'connection': 'Could not establish connection to the Amon API.\
+            Please ensure that the web application is running'}
 
-	def _post(self, url, data, headers=None):
-		
-		headers = headers if headers else self.headers
+    def to_json(self, data):
+        return json.dumps(data)
 
-		r = requests.post(url, data, headers=headers)
+    def _post(self, url, data, headers=None):
 
-		if r.status_code != 200:
-			raise ConnectionException(self.errors['connection'])
-		else:
-			return True
+        headers = headers if headers else self.headers
 
-	def save_system_stats(self, data):
-		url = "{0}/api/system/{1}".format(self.connection_url(), self.server_key)
-		data = self.to_json(data)
+        r = requests.post(url, data, headers=headers)
 
-		return self._post(url, data)
+        if r.status_code != 200:
+            raise ConnectionException(self.errors['connection'])
+        else:
+            return True
 
-	def save_process_stats(self, data):
-		url = "{0}/api/processes/{1}".format(self.connection_url(), self.server_key)
-		data = self.to_json(data)
+    def save_system_stats(self, data):
+        url = "{0}/api/system/{1}".format(self.connection_url(), self.server_key)
+        data = self.to_json(data)
 
-		return self._post(url, data)
+        return self._post(url, data)
+
+    def save_process_stats(self, data):
+        url = "{0}/api/processes/{1}".format(self.connection_url(), self.server_key)
+        data = self.to_json(data)
+
+        return self._post(url, data)
 
 remote = Remote()
 
