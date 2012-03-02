@@ -37,7 +37,7 @@ class AmonAgentDaemon(Daemon):
         system_info_empty = runner.empty()
         try:
             remote.save_system_stats(system_info_empty)
-        except Exception, ex:
+        except Exception:
             log.exception('Saving empty system info failed')
 
     # Executed on stop and restart
@@ -77,7 +77,7 @@ if __name__ == "__main__":
                 daemon.start()
                 print "Starting the agent ..."
             except Exception, e:
-                print "The Amon agent couldn't be started. Please check /usr/local/amonplus/amon-agent.log for details"
+                print "The agent couldn't be started. Please check /usr/local/amonplus/amon-agent.log for details"
                 logging.exception("The agent couldn't be started")
         elif 'stop' == sys.argv[1]:
             print "Stopping the agent ..."

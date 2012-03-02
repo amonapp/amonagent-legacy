@@ -1,10 +1,9 @@
 from setuptools import setup, find_packages
- 
-version = "0.2"
+from amonagent import __version__
  
 setup(
     name='amonagent',
-    version=version,
+    version=__version__,
     description="Cross platform system and process information collector",
     author='Martin Rusev',
     author_email='martin@amon.cx',

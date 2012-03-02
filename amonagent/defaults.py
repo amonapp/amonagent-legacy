@@ -7,8 +7,9 @@ except ImportError:
 try:
 	config_file = file('/etc/amon-agent.conf').read()
 	config = json.loads(config_file)
-except:
-	config = {}
+except Exception, e:
+    print "There was an error in your configuration file (/etc/amon-agent.conf)"
+    raise e
 
 #  Amon agent Defaults
 _remote = config.get('remote', {})

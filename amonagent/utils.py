@@ -1,5 +1,8 @@
 import subprocess	
 import sys
+from datetime import datetime
+import calendar
+
 def get_disk_volumes():
 		df = subprocess.Popen(['df','-h'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]	
 		
@@ -16,7 +19,6 @@ def get_disk_volumes():
 
 		return volumes_list
 
-
 def get_network_interfaces():
 	if sys.platform == 'darwin':
 		return False
@@ -32,3 +34,11 @@ def get_network_interfaces():
 			interfaces_list.append(interface)
 
 	return interfaces_list
+
+
+# Used in the collector, saves all the data in UTC
+def unix_utc_now():
+    d = datetime.utcnow()
+    _unix = calendar.timegm(d.utctimetuple())
+
+    return _unix
