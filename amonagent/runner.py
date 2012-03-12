@@ -76,5 +76,7 @@ class Runner(object):
         return process_info_dict
 
 runner = Runner()
+print runner.system()
+
 
 
