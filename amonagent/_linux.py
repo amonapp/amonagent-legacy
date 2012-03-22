@@ -99,7 +99,7 @@ class LinuxSystemCollector(object):
                 if interface not in ['IFACE', 'lo']:
                     # rxkB/s - Total number of kilobytes received per second  
                     # txkB/s - Total number of kilobytes transmitted per second
-                    data[interface] = {"kb_received": elements[3] , "kb_transmitted": elements[4]}
+                    data[interface] = {"kb_received": elements[4] , "kb_transmitted": elements[5]}
 
         return data
 
@@ -135,8 +135,9 @@ class LinuxSystemCollector(object):
 
     def get_cpu_utilization(self):
 
-        # Get only the cpu stats
-        mpstat = subprocess.Popen(['iostat', '-c'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
+        # Get the cpu stats
+        #mpstat = subprocess.Popen(['iostat', '-c'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
+        mpstat = subprocess.Popen(['sar', '1','1'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
 
         cpu_columns = []
         cpu_values = []
@@ -144,7 +145,6 @@ class LinuxSystemCollector(object):
         # International float numbers - could be 0.00 or 0,00
         value_regex = re.compile(r'\d+[\.,]\d+') 
         stats = mpstat.split('\n')
-
 
         for value in stats:
             values = re.findall(value_regex, value)
@@ -157,7 +157,6 @@ class LinuxSystemCollector(object):
                 cpu_columns = map(lambda x: x.replace('%', ''), header) 
 
         cpu_dict = dict(zip(cpu_columns, cpu_values))
-
-
+        
         return cpu_dict
 
