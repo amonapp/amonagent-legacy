@@ -96,6 +96,11 @@ class LinuxSystemCollector(object):
             if line.startswith('Average'):
                 elements = line.split()
                 interface = elements[1]
+                
+                # interface name with . 
+                if '.' in interface:
+                    interface = interface.replace('.','-')
+
                 if interface not in ['IFACE', 'lo']:
                     # rxkB/s - Total number of kilobytes received per second  
                     # txkB/s - Total number of kilobytes transmitted per second
