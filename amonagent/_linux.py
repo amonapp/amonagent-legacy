@@ -88,7 +88,7 @@ class LinuxSystemCollector(object):
 
     def get_network_traffic(self):
 
-        stats = subprocess.Popen(['LC_ALL=en_US', 'sar','-n','DEV','1','1'], stdout=subprocess.PIPE, close_fds=True)\
+        stats = subprocess.Popen(['sar','-n','DEV','1','1'], env={'LC_ALL': 'en_us'}, stdout=subprocess.PIPE, close_fds=True)\
                 .communicate()[0]
         network_data = stats.splitlines()
         data = {}
@@ -141,7 +141,7 @@ class LinuxSystemCollector(object):
     def get_cpu_utilization(self):
 
         # Get the cpu stats
-        mpstat = subprocess.Popen(['LC_ALL=en_US', 'sar', '1','1'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
+        mpstat = subprocess.Popen(['sar', '1','1'], env={'LC_ALL': 'en_us'}, stdout=subprocess.PIPE, close_fds=True).communicate()[0]
 
         cpu_columns = []
         cpu_values = []
