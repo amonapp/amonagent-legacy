@@ -1,5 +1,6 @@
 from amonagent.collector import system_info_collector, process_info_collector
 import sys
+import re
 
 class TestSystemCheck(object):
 
@@ -34,12 +35,6 @@ class TestSystemCheck(object):
     def test_cpu(self):
         cpu = system_info_collector.get_cpu_utilization()
 
-        # For debugging purposes only
-        #print cpu
-        #import subprocess
-        #mpstat = subprocess.Popen(['iostat', '-c'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
-        #print mpstat
-
         assert 'idle' in cpu
         assert 'user' in cpu
         assert 'system' in cpu
@@ -50,6 +45,9 @@ class TestSystemCheck(object):
             else:
                 # Could be 1.10 - 4, 10.10 - 5, 100.00 - 6
                 assert len(v) == 4 or len(v) == 5 or len(v) == 6
+
+                value_regex = re.compile(r'\d+[\.]\d+')
+                assert re.match(value_regex, v)
 
 
     def test_loadavg(self):
@@ -64,14 +62,25 @@ class TestSystemCheck(object):
         assert isinstance(loadavg['minute'], str)
         assert isinstance(loadavg['five_minutes'], str)
         assert isinstance(loadavg['fifteen_minutes'], str)
+        
+        value_regex = re.compile(r'\d+[\.]\d+')
+
+        assert re.match(value_regex, loadavg['minute'])
+        assert re.match(value_regex, loadavg['five_minutes'])
+        assert re.match(value_regex, loadavg['fifteen_minutes'])
 
     def test_network(self):
         network_data = system_info_collector.get_network_traffic()
+       
+        value_regex = re.compile(r'\d+[\.]\d+')        
         assert isinstance(network_data, dict)
         for key, value in network_data.iteritems():
             assert key not in ['lo', 'IFACE']
             for k in value.keys():
                 assert k in ['kb_received', 'kb_transmitted']
+
+            for k, v in value.items():
+                assert re.match(value_regex, v)
 
 class TestProcessCheck(object):
 
@@ -85,4 +94,9 @@ class TestProcessCheck(object):
 
             assert 'memory' in process_dict
             assert 'cpu' in process_dict
+
+            value_regex = re.compile(r'\d+[\.]\d+')
+
+            assert re.match(value_regex, process_dict['cpu'])
+            assert re.match(value_regex, process_dict['memory'])
 

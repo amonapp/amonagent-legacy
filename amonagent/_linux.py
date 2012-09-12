@@ -88,7 +88,8 @@ class LinuxSystemCollector(object):
 
     def get_network_traffic(self):
 
-        stats = subprocess.Popen(['sar','-n','DEV','1','1'], env={'LC_ALL': 'en_us'}, stdout=subprocess.PIPE, close_fds=True)\
+        stats = subprocess.Popen(['sar','-n','DEV','1','1'], 
+            stdout=subprocess.PIPE, close_fds=True)\
                 .communicate()[0]
         network_data = stats.splitlines()
         data = {}
@@ -104,7 +105,14 @@ class LinuxSystemCollector(object):
                 if interface not in ['IFACE', 'lo']:
                     # rxkB/s - Total number of kilobytes received per second  
                     # txkB/s - Total number of kilobytes transmitted per second
-                    data[interface] = {"kb_received": elements[4] , "kb_transmitted": elements[5]}
+                    
+                    kb_received = elements[4].replace(',', '.')
+                    kb_received = format(float(kb_received), ".2f")
+
+                    kb_transmitted = elements[4].replace(',', '.')
+                    kb_transmitted = format(float(kb_transmitted), ".2f")
+
+                    data[interface] = {"kb_received": kb_received , "kb_transmitted": kb_transmitted}
 
         return data
 
@@ -141,7 +149,8 @@ class LinuxSystemCollector(object):
     def get_cpu_utilization(self):
 
         # Get the cpu stats
-        mpstat = subprocess.Popen(['sar', '1','1'], env={'LC_ALL': 'en_us'}, stdout=subprocess.PIPE, close_fds=True).communicate()[0]
+        mpstat = subprocess.Popen(['sar', '1','1'], 
+            stdout=subprocess.PIPE, close_fds=True).communicate()[0]
 
         cpu_columns = []
         cpu_values = []

@@ -31,7 +31,9 @@ class ProcessInfoCollector(object):
 			cpu_memory = map(lambda x:  float(x), cpu_memory)
 			lines[0] = lines[0]+cpu_memory[0]
 			lines[1] = lines[1]+cpu_memory[1]
+
 		lines  = map(lambda x:  "{0:.2f}".format(x), lines)
+		lines = map(lambda x: x.replace(",", "."), lines)
 		
 		cpu, memory = lines[0], lines[1]
 
