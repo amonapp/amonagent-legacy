@@ -109,7 +109,7 @@ class LinuxSystemCollector(object):
                     kb_received = elements[4].replace(',', '.')
                     kb_received = format(float(kb_received), ".2f")
 
-                    kb_transmitted = elements[4].replace(',', '.')
+                    kb_transmitted = elements[5].replace(',', '.')
                     kb_transmitted = format(float(kb_transmitted), ".2f")
 
                     data[interface] = {"kb_received": kb_received , "kb_transmitted": kb_transmitted}
