@@ -24,29 +24,13 @@ from amonagent.backends import remote
 
 PIDFILE = '/var/run/amon-agent.pid'
 # Keep all log files in one place
-LOGFILE = '/usr/local/amonplus/amon-agent.log'
+LOGFILE = '/usr/local/amon/amon-agent.log'
 
 # Configure logging
 logging.basicConfig(filename=LOGFILE, level=logging.ERROR)
 log = logging.getLogger('amonagent')
 
 class AmonAgentDaemon(Daemon):
-
-    # Add an empty dictionary on start/end to avoid chart bugs
-    def empty(self):
-        system_info_empty = runner.empty()
-        try:
-            remote.save_system_stats(system_info_empty)
-        except Exception:
-            log.exception('Saving empty system info failed')
-
-    # Executed on stop and restart
-    def __del__(self):
-        self.empty()
-
-    def __init__(self, pidfile):
-        super(AmonAgentDaemon, self).__init__(pidfile)
-        self.empty()
 
     def run(self):
 
@@ -77,7 +61,7 @@ if __name__ == "__main__":
                 daemon.start()
                 print "Starting the agent ..."
             except Exception, e:
-                print "The agent couldn't be started. Please check /usr/local/amonplus/amon-agent.log for details"
+                print "The agent couldn't be started. Please check {0} for details".format(LOGFILE)
                 logging.exception("The agent couldn't be started")
         elif 'stop' == sys.argv[1]:
             print "Stopping the agent ..."

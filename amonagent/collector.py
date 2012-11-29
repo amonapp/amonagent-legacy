@@ -1,5 +1,6 @@
 import subprocess
 import sys
+import re
 
 if sys.platform == 'darwin':
 	from amonagent._macos import MacOSSystemCollector
@@ -42,6 +43,36 @@ class ProcessInfoCollector(object):
 		process_info = {'cpu': cpu, 'memory': memory}
 		
 		return process_info
+
+	def process_list(self):
+		stats = subprocess.Popen(['pidstat','-ruh'], 
+			stdout=subprocess.PIPE, close_fds=True)\
+				.communicate()[0]
+
+		stats_data = stats.splitlines()
+		del stats_data[0:2] # Deletes Unix system data
+
+		converted_data = []
+		for line in stats_data:
+			if re.search('command', line, re.IGNORECASE): # Matches the first line
+				header = line.split()
+				del header[0] # Deletes the # symbol
+			else:
+				command = line.split()
+				data_dict = dict(zip(header, command))
+				
+				process_memory_mb = float(self.total_memory/100) * float(data_dict["%MEM"]) # Convert the % in MB
+				memory = "{0:.3}".format(process_memory_mb)
+
+				cpu = "{0:.2f}".format(float(data_dict["%CPU"]))
+				cpu = cpu.replace(",", ".")
+				
+				extracted_data = {"cpu": cpu,
+								  "memory": memory,
+								  "command": data_dict["Command"]}
+				converted_data.append(extracted_data)
+
+		return converted_data
 	
 process_info_collector = ProcessInfoCollector()
 
