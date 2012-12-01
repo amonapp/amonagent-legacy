@@ -13,7 +13,7 @@ import logging
 try:
     import amonagent
 except:
-    print 'The agent is not installed'
+    print 'amonagent is not installed'
     sys.exit()
 
 
@@ -59,15 +59,15 @@ if __name__ == "__main__":
         if 'start' == sys.argv[1]:
             try:
                 daemon.start()
-                print "Starting the agent ..."
+                print "Starting amonagent ..."
             except Exception, e:
-                print "The agent couldn't be started. Please check {0} for details".format(LOGFILE)
+                print "amonagent couldn't be started. Please check {0} for details".format(LOGFILE)
                 logging.exception("The agent couldn't be started")
         elif 'stop' == sys.argv[1]:
-            print "Stopping the agent ..."
+            print "Stopping amonagent ..."
             daemon.stop()
         elif 'restart' == sys.argv[1]:
-            print "Restaring the agent ..."
+            print "Restaring amonagent ..."
             daemon.restart()
         elif 'status' == sys.argv[1]:
             try:
@@ -80,9 +80,9 @@ if __name__ == "__main__":
                 pid = None
 
             if pid:
-                print 'The agent is running as pid %s' % pid
+                print 'amonagent is running as pid %s' % pid
             else:
-                print 'The agent is not running.'
+                print 'amonagent is not running.'
 
         else:
             print "Unknown command"

@@ -12,10 +12,8 @@ class TestSettings(object):
 		
 		assert settings.SYSTEM_CHECKS
 		
-		if sys.platform == 'Darwin':
-			system_checks = ['cpu', 'memory', 'disk', 'loadavg']
-		else:
-			system_checks = ['cpu', 'memory', 'disk', 'network', 'loadavg']
+
+		system_checks = ['cpu', 'memory', 'disk', 'network', 'loadavg']
 
 		eq_(settings.SYSTEM_CHECKS, system_checks)
 

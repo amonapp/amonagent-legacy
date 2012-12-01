@@ -7,7 +7,6 @@ class Runner(object):
 
     def __init__(self):
         self.active_checks = settings.SYSTEM_CHECKS
-        self.process_checks = settings.PROCESS_CHECKS
 
     def system(self):
 
@@ -54,16 +53,6 @@ class Runner(object):
                 system_info_dict['network'] = network
 
         return system_info_dict
-
-    # empty dictionary, used when stopping the daemon to avoid chart bugs
-    def empty(self):
-        empty_dict = {}
-        now = unix_utc_now()
-
-        for check in self.active_checks:
-            empty_dict[check] = {'time': now, 'last': 1}
-
-        return empty_dict
 
     def processes(self):
         now = unix_utc_now()

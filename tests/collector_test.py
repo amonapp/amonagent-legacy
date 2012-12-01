@@ -4,8 +4,6 @@ import re
 
 class TestSystemCheck(object):
 
-    def __init__(self):
-        pass
 
     def test_memory(self):
         memory_dict = system_info_collector.get_memory_info()
@@ -40,14 +38,11 @@ class TestSystemCheck(object):
         assert 'system' in cpu
 
         for v in cpu.values():
-            if sys.platform == 'darwin':
-                assert isinstance(v, int)
-            else:
-                # Could be 1.10 - 4, 10.10 - 5, 100.00 - 6
-                assert len(v) == 4 or len(v) == 5 or len(v) == 6
+            # Could be 1.10 - 4, 10.10 - 5, 100.00 - 6
+            assert len(v) == 4 or len(v) == 5 or len(v) == 6
 
-                value_regex = re.compile(r'\d+[\.]\d+')
-                assert re.match(value_regex, v)
+            value_regex = re.compile(r'\d+[\.]\d+')
+            assert re.match(value_regex, v)
 
 
     def test_loadavg(self):

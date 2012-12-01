@@ -1,6 +1,5 @@
 from amonagent.utils import *
-from nose.plugins.skip import SkipTest
-import sys
+
 
 class TestSystemUtils(object):
 
@@ -12,8 +11,6 @@ class TestSystemUtils(object):
 			assert isinstance(v, str)
 
 	def test_network_interfaces(self):
-		if sys.platform == 'darwin':
-			raise SkipTest
 
 		interfaces = get_network_interfaces()
 

@@ -4,10 +4,10 @@ from amonagent import __version__
 setup(
     name='amonagent',
     version=__version__,
-    description="Cross platform system and process information collector",
+    description="Linux system and process information collector",
     author='Martin Rusev',
     author_email='martin@amon.cx',
     zip_safe=False,
 	packages=find_packages(),
-    install_requires=['requests'],
+    install_requires=['requests>=0.14.2'],
 ) 
