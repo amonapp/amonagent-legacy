@@ -57,10 +57,14 @@ class Runner(object):
     def processes(self):
         now = unix_utc_now()
 
+        process_checks = process_info_collector.process_list()
+
         process_info_dict = {}
-        for process in self.process_checks:
-            process_info_dict[process]  = process_info_collector.check_process(process)
-            process_info_dict[process]['time'] = now
+        for process in process_checks:
+            command = process["command"]
+            del process["command"]
+            process_info_dict[command]  = process
+            process_info_dict[command]['time'] = now
 
         return process_info_dict
 

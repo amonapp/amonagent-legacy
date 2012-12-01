@@ -4,14 +4,28 @@ import re
 
 class TestSystemCheck(object):
 
+    def test_uptime(self):
+        uptime = system_info_collector.get_uptime()
+
+        assert isinstance(uptime, str)
+
+    def test_distro_info(self):
+        distro_info = system_info_collector.get_distro_info()
+
+        assert 'distibution' in distro_info
+        assert 'release' in distro_info
 
     def test_memory(self):
         memory_dict = system_info_collector.get_memory_info()
 
-        assert 'memfree' in memory_dict
-        assert 'memtotal' in memory_dict
-        assert 'swapfree' in memory_dict
-        assert 'swaptotal' in memory_dict
+        assert 'memory:free:mb' in memory_dict
+        assert 'memory:total:mb' in memory_dict
+        assert 'memory:used:mb' in memory_dict
+        assert 'memory:used:%' in memory_dict
+        assert 'swap:free:mb' in memory_dict
+        assert 'swap:used:mb' in memory_dict
+        assert 'swap:used:%' in memory_dict
+        assert 'swap:total:mb' in memory_dict
 
         for v in memory_dict.values():
             assert isinstance(v, int)
@@ -82,16 +96,8 @@ class TestProcessCheck(object):
     def __init__(self):
         self.process_checks = ('cron',) # something that's available in most linux distributions
 
-
-    def test_process(self):
-        for process in self.process_checks:
-            process_dict = process_info_collector.check_process(process)
-
-            assert 'memory' in process_dict
-            assert 'cpu' in process_dict
-
-            value_regex = re.compile(r'\d+[\.]\d+')
-
-            assert re.match(value_regex, process_dict['cpu'])
-            assert re.match(value_regex, process_dict['memory'])
+    def test_process_list(self):
+        for process in process_info_collector.process_list():
+            assert 'memory:mb' in process
+            assert 'cpu:%' in process
 

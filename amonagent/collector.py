@@ -6,6 +6,27 @@ import glob
 
 class LinuxSystemCollector(object):
 
+
+    def get_uptime(self):
+
+        with open('/proc/uptime', 'r') as line:
+            contents = line.read().split()
+
+        total_seconds = float(contents[0])
+
+        MINUTE  = 60
+        HOUR    = MINUTE * 60
+        DAY     = HOUR * 24
+
+        days    = int( total_seconds / DAY )
+        hours   = int( ( total_seconds % DAY ) / HOUR )
+        minutes = int( ( total_seconds % HOUR ) / MINUTE )
+        seconds = int( total_seconds % MINUTE )
+
+        uptime = "{0} days {1} hours {2} minutes {3} seconds".format(days, hours, minutes, seconds)
+
+        return uptime
+
     def get_distro_info(self):
         distro_info_file = glob.glob('/etc/*-release')
         distro_info = subprocess.Popen(["cat"] + distro_info_file, stdout=subprocess.PIPE, close_fds=True,
@@ -59,6 +80,10 @@ class LinuxSystemCollector(object):
                 "swap:used:mb": swap_used,
                 "swap:used:%": swap_percent_used
             }
+
+            # Convert everything to int to avoid float localization problems
+            for k,v in extracted_data.items():
+            	extracted_data[k] = int(v)
            
             return extracted_data
 
@@ -102,27 +127,6 @@ class LinuxSystemCollector(object):
                 data[_name] = _volume
 
         return data
-
-
-    def get_uptime(self):
-
-        with open('/proc/uptime', 'r') as line:
-            contents = line.read().split()
-
-        total_seconds = float(contents[0])
-
-        MINUTE  = 60
-        HOUR    = MINUTE * 60
-        DAY     = HOUR * 24
-
-        days    = int( total_seconds / DAY )
-        hours   = int( ( total_seconds % DAY ) / HOUR )
-        minutes = int( ( total_seconds % HOUR ) / MINUTE )
-        seconds = int( total_seconds % MINUTE )
-
-        uptime = "{0} days {1} hours {2} minutes {3} seconds".format(days, hours, minutes, seconds)
-
-        return uptime
 
 
 

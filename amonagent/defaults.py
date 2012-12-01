@@ -36,3 +36,13 @@ REMOTE = {
 }
 
 SERVER_KEY = config.get('server_key', None)
+
+_plugins = config.get('plugins', None)
+
+
+if _plugins:
+	nginx = _plugins.get('nginx', None)
+
+	NGINX = {
+		'status_url': nginx.get('status_url', 'http://127.0.0.1/nginx_status')
+	}

@@ -7,8 +7,7 @@ class TestRunner(object):
 		system_test = runner.system()
 
 		assert isinstance(system_test, dict)
-		if sys.platform != 'darwin':
-			assert 'network' in system_test
+		assert 'network' in system_test
 		assert 'memory' in system_test
 		assert 'cpu' in system_test
 		assert 'disk' in system_test
@@ -20,9 +19,8 @@ class TestRunner(object):
 		assert isinstance(processes, dict)
 		for process in processes:
 			process_dict = processes[process]
-			
 			assert 'time' in process_dict
-			assert 'memory' in process_dict
-			assert 'cpu' in process_dict
+			assert 'memory:mb' in process_dict
+			assert 'cpu:%' in process_dict
 
 
