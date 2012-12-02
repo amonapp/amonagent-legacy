@@ -26,10 +26,14 @@ PIDFILE = '/var/run/amon-agent.pid'
 
 class AmonAgentDaemon(Daemon):
 
+    def start(self):
+        print 'boo'
+
     def run(self):
 
         while True:
             system_info = runner.system()
+
             try:			
                 remote.save_system_stats(system_info)
             except Exception:

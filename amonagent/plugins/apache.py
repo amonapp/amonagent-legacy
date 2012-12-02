@@ -1,8 +1,5 @@
 import requests
 
-import sys
-sys.path.insert(0,'/home/martin/amonagent')
-
 from amonagent.utils import unix_utc_now, slugify
 from amonagent.settings import settings
 from amonagent.log import log
