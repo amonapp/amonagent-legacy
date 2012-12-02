@@ -2,7 +2,8 @@
 ======
 
 * Improved memory usage stats
-* Gets Linux distribution information
+* Improved logging
+* Reports distribution information
 
 
 0.3.4

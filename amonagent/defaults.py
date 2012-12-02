@@ -19,12 +19,6 @@ SYSTEM_CHECK_PERIOD = config.get('system_check_period', 60)
 
 SYSTEM_CHECKS = ['cpu', 'memory', 'disk', 'network', 'loadavg']
 
-if sys.platform == 'darwin':
-	del SYSTEM_CHECKS[3] # Don't check the network on MacOS
-
-PROCESS_CHECKS = config.get('process_checks', [])
-
-
 host = _remote.get('host', 'http://127.0.0.1')
 
 if not host.startswith('http'):
@@ -37,12 +31,7 @@ REMOTE = {
 
 SERVER_KEY = config.get('server_key', None)
 
-_plugins = config.get('plugins', None)
+PLUGINS = config.get('plugins', None)
 
-
-if _plugins:
-	nginx = _plugins.get('nginx', None)
-
-	NGINX = {
-		'status_url': nginx.get('status_url', 'http://127.0.0.1/nginx_status')
-	}
+CACHE = config.get("cache", '/usr/local/amonagent/amonagent.db')
+LOGFILE = config.get("logfile", '/var/log/amonagent.log')

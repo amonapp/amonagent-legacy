@@ -8,7 +8,6 @@
 ### END INIT INFO
 
 import sys, time
-import logging
 
 try:
     import amonagent
@@ -21,14 +20,9 @@ from amonagent.daemon import Daemon
 from amonagent.settings import settings
 from amonagent.runner import runner
 from amonagent.backends import remote
+from amonagent.log import log
 
 PIDFILE = '/var/run/amon-agent.pid'
-# Keep all log files in one place
-LOGFILE = '/usr/local/amon/amon-agent.log'
-
-# Configure logging
-logging.basicConfig(filename=LOGFILE, level=logging.ERROR)
-log = logging.getLogger('amonagent')
 
 class AmonAgentDaemon(Daemon):
 

@@ -2,4 +2,5 @@
 _build/
 dist/
 .DS_Store
+test.db
 
