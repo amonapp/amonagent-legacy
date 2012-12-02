@@ -4,6 +4,7 @@
 * Improved memory usage stats
 * Improved logging
 * Reports distribution information
+* Plugins - apache, nginx
 
 
 0.3.4

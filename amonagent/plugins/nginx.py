@@ -11,10 +11,9 @@ class AmonNginxPlugin(object):
 
 	def __init__(self):
 		nginx_config = settings.PLUGINS.get("nginx", None)
+		nginx_status_url = "http://127.0.0.1/nginx_status" # Provide default
 		if nginx_config:
 			nginx_status_url = nginx_config.get("status_url", None)
-		if not nginx_status_url: # Provide default
-			nginx_status_url = "http://127.0.0.1/nginx_status"
 
 		self.url = nginx_status_url
 

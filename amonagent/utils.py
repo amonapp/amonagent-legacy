@@ -44,3 +44,18 @@ def unix_utc_now():
     _unix = calendar.timegm(d.utctimetuple())
 
     return _unix
+
+def slugify(string):
+
+    """
+    Slugify a unicode string.
+
+    """
+
+    return re.sub(r'[-\s]+', '-',
+            unicode(
+                re.sub(r'[^\w\s-]', '',
+                    unicodedata.normalize('NFKD', string)
+                    .encode('ascii', 'ignore'))
+                .strip()
+                .lower()))
