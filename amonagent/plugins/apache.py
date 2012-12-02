@@ -29,7 +29,4 @@ class AmonApachePlugin(object):
 		
 		return status_dict
 		
-
-
 plugin = AmonApachePlugin()
-print plugin.build_report()

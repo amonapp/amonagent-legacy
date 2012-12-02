@@ -27,22 +27,24 @@ PIDFILE = '/var/run/amon-agent.pid'
 class AmonAgentDaemon(Daemon):
 
     def start(self):
-        print 'boo'
+        distribution_info = runner.distribution_info()
+        
+        super(AmonAgentDaemon, self).start()
 
     def run(self):
 
         while True:
-            system_info = runner.system()
+            system_stats = runner.system()
 
             try:			
-                remote.save_system_stats(system_info)
+                remote.save_system_stats(system_stats)
             except Exception:
                 log.exception('Saving system info failed')
                 
-            process_info = runner.processes()
+            processes_stats = runner.processes()
 
             try:
-                remote.save_process_stats(process_info)
+                remote.save_process_stats(processes_stats)
             except Exception:			
                 log.exception('Saving process info failed')
                 
@@ -59,8 +61,8 @@ if __name__ == "__main__":
                 daemon.start()
                 print "Starting amonagent ..."
             except Exception, e:
-                print "amonagent couldn't be started. Please check {0} for details".format(LOGFILE)
-                logging.exception("The agent couldn't be started")
+                print "amonagent couldn't be started. Please check {0} for details".format(settings.LOGFILE)
+                log.exception("The agent couldn't be started")
         elif 'stop' == sys.argv[1]:
             print "Stopping amonagent ..."
             daemon.stop()

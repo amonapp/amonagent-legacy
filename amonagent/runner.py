@@ -68,6 +68,34 @@ class Runner(object):
 
         return process_info_dict
 
+    def plugins(self):
+        loaded_plugins = settings.PLUGINS
+        plugins_dict = {}
+        if loaded_plugins:
+            for plugin in loaded_plugins.keys():
+                if plugin == 'apache':
+                    apache = __import__("amonagent.plugins.apache" ,globals(), locals(), 'plugin')
+                    p = apache.plugin
+                    plugins_dict['apache'] = p.build_report()
+                    plugins_dict['apache']['time'] = unix_utc_now()
+                if plugin == 'nginx':
+                    nginx = __import__("amonagent.plugins.nginx" ,globals(), locals(), 'plugin')
+                    p = nginx.plugin
+                    plugins_dict['nginx'] = p.build_report()
+                    plugins_dict['nginx']['time'] = unix_utc_now()
+
+        return plugins_dict
+                   
+
+
+    def distribution_info(self):
+        distribution_info = system_info_collector.get_distro_info()
+        distribution_info['plugins'] = settings.PLUGINS.keys()
+        distribution_info['time'] = unix_utc_now()
+
+        return distribution_info
+
+
 runner = Runner()
 
 

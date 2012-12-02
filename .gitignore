@@ -1,6 +1,7 @@
 *.pyc
-_build/
+*build/
 dist/
 .DS_Store
 test.db
+*egg-info
 
