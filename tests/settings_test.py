@@ -17,5 +17,7 @@ class TestSettings(object):
 
 		eq_(settings.SYSTEM_CHECKS, system_checks)
 
-		assert settings.PROCESS_CHECKS
 		assert settings.SERVER_KEY
+		assert settings.LOGFILE
+		assert settings.CACHE
+		assert settings.PLUGINS

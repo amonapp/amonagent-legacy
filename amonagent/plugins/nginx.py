@@ -18,13 +18,14 @@ class AmonNginxPlugin(object):
 
 		self.url = nginx_status_url
 
+
+	def build_report(self):
+		
 		try:
 			self.db = shelve.open(settings.CACHE)
 		except Exception, error:
 			log.exception("Can't open cache file")
 
-
-	def build_report(self):
 		response = requests.get(self.url)
 
 		if response.status_code == 200:
@@ -50,6 +51,8 @@ class AmonNginxPlugin(object):
 
 		self.db["nginx:last_check"] = unix_utc_now()
 		self.db["nginx:last_request_value"] = status_dict["requests"]
+
+		self.db.close()
 
 		return status_dict
 
