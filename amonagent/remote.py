@@ -66,5 +66,17 @@ class Remote(object):
 
         return self._post(url, data)
 
+    def save_distribution_info(self, data):
+        url = "{0}/api/distro/{1}".format(self.connection_url(), self.server_key)
+        data = self.to_json(data)
+
+        return self._post(url, data)
+
+    def save_plugin_data(self, data):
+        url = "{0}/api/plugins/{1}".format(self.connection_url(), self.server_key)
+        data = self.to_json(data)
+
+        return self._post(url, data)
+
 remote = Remote()
 

@@ -15,11 +15,11 @@ except:
     print 'amonagent is not installed'
     sys.exit()
 
-
+from amonagent import __version__
 from amonagent.daemon import Daemon
 from amonagent.settings import settings
 from amonagent.runner import runner
-from amonagent.backends import remote
+from amonagent.remote import remote
 from amonagent.log import log
 
 PIDFILE = '/var/run/amon-agent.pid'
@@ -29,6 +29,11 @@ class AmonAgentDaemon(Daemon):
     def start(self):
         distribution_info = runner.distribution_info()
         
+        try:
+            remote.save_distribution_info(distribution_info)
+        except:
+            pass
+
         super(AmonAgentDaemon, self).start()
 
     def run(self):
@@ -59,7 +64,7 @@ if __name__ == "__main__":
         if 'start' == sys.argv[1]:
             try:
                 daemon.start()
-                print "Starting amonagent ..."
+                print "Starting amonagent {0}...".format(__version__)
             except Exception, e:
                 print "amonagent couldn't be started. Please check {0} for details".format(settings.LOGFILE)
                 log.exception("The agent couldn't be started")
@@ -80,7 +85,7 @@ if __name__ == "__main__":
                 pid = None
 
             if pid:
-                print 'amonagent is running as pid %s' % pid
+                print 'amonagent {0} is running as pid {1}'.format(__version__, pid)
             else:
                 print 'amonagent is not running.'
 
