@@ -18,5 +18,11 @@ class TestSystemUtils(object):
 
 		for v in interfaces:
 			assert isinstance(v, str)
+
+	def test_slugify(self):
+		pass
+
+	def split_and_slugify(self):
+		pass
 	
 

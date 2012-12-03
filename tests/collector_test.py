@@ -9,11 +9,15 @@ class TestSystemCheck(object):
 
         assert isinstance(uptime, str)
 
-    def test_distro_info(self):
-        distro_info = system_info_collector.get_distro_info()
+    def test_system_info(self):
+        system_info = system_info_collector.get_system_info()
 
-        assert 'distibution' in distro_info
-        assert 'release' in distro_info
+        assert 'distibution' in system_info["distro"]
+        assert 'release' in system_info["distro"]
+
+        assert 'model-name' in system_info["processor"]
+        assert 'cpu-cores' in system_info["processor"]
+        assert 'cpu-mhz' in system_info["processor"]
 
     def test_memory(self):
         memory_dict = system_info_collector.get_memory_info()

@@ -59,3 +59,22 @@ def slugify(string):
                     .encode('ascii', 'ignore'))
                 .strip()
                 .lower()))
+
+
+def split_and_slugify(string, separator=":"):
+    _string = string.strip().split(separator)
+    
+    if len(_string) == 2: # Only key, value
+        data = {}
+        key = slugify(unicode(_string[0]))
+        
+        try:
+            if len(_string[1]) > 0:
+                data[key] = str(_string[1].strip())
+        except:
+            pass
+
+        return data
+    
+    else:
+        return None

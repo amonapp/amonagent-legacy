@@ -4,6 +4,9 @@ import re
 import os
 import glob
 
+from amonagent.utils import split_and_slugify
+
+
 class LinuxSystemCollector(object):
 
 
@@ -27,23 +30,39 @@ class LinuxSystemCollector(object):
 
         return uptime
 
-    def get_distro_info(self):
+    def get_system_info(self):
         distro_info_file = glob.glob('/etc/*-release')
         distro_info = subprocess.Popen(["cat"] + distro_info_file, stdout=subprocess.PIPE, close_fds=True,
             ).communicate()[0]
 
-        extracted_data = {}
+        system_info = {}
+        distro = {}
         for line in distro_info.splitlines():
             if re.search('distrib_id', line, re.IGNORECASE):
                 info = line.split("=")
                 if len(info) == 2:
-                    extracted_data['distibution'] = info[1]
+                    distro['distibution'] = info[1]
             if re.search('distrib_release', line, re.IGNORECASE):
                 info = line.split("=")
                 if len(info) == 2:
-                    extracted_data['release'] = info[1]
+                    distro['release'] = info[1]
+        
+        system_info["distro"] = distro
 
-        return extracted_data
+        processor_info = subprocess.Popen(["cat", '/proc/cpuinfo'], stdout=subprocess.PIPE, close_fds=True,
+            ).communicate()[0]
+
+        processor = {}
+        for line in processor_info.splitlines():
+            parsed_line = split_and_slugify(line)
+            if parsed_line and isinstance(parsed_line, dict):
+                key = parsed_line.keys()[0]
+                value = parsed_line.values()[0]
+                processor[key] = value
+
+        system_info["processor"] = processor
+          
+        return system_info
 
     def get_memory_info(self):
 
@@ -218,6 +237,7 @@ class LinuxSystemCollector(object):
         return cpu_dict
 
 system_info_collector = LinuxSystemCollector()
+
 
 class ProcessInfoCollector(object):
 

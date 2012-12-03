@@ -5,57 +5,35 @@ import sys
 
 class Runner(object):
 
-    def __init__(self):
-        self.active_checks = settings.SYSTEM_CHECKS
-
     def system(self):
 
         system_info_dict = {}
 
-        now = unix_utc_now()
+        memory = system_info_collector.get_memory_info()
+        cpu = system_info_collector.get_cpu_utilization()
+        loadavg = system_info_collector.get_load_average()
+        disk = system_info_collector.get_disk_usage()
+        network = system_info_collector.get_network_traffic()
 
-        if 'memory' in self.active_checks:
-            memory = system_info_collector.get_memory_info()
+        if memory != False:
+            system_info_dict['memory'] = memory
 
-            if memory != False:
-                memory['time'] = now
-                system_info_dict['memory'] = memory
+        if cpu != False:
+            system_info_dict['cpu'] = cpu
 
+        if loadavg != False:
+            system_info_dict['loadavg'] = loadavg
 
-        if 'cpu' in self.active_checks:
-            cpu = system_info_collector.get_cpu_utilization()
+        if disk != False: 
+            system_info_dict['disk'] = disk
 
-            if cpu != False:
-                cpu['time'] = now
-                system_info_dict['cpu'] = cpu
+        if network != False:
+            system_info_dict['network'] = network
 
-
-        if 'loadavg' in self.active_checks:
-            loadavg = system_info_collector.get_load_average()
-
-            if loadavg != False:
-                loadavg['time'] = now
-                system_info_dict['loadavg'] = loadavg
-
-
-        if 'disk' in self.active_checks:
-            disk = system_info_collector.get_disk_usage()
-
-            if disk != False:
-                disk['time'] = now
-                system_info_dict['disk'] = disk
-
-        if 'network' in self.active_checks and sys.platform != 'darwin':
-            network = system_info_collector.get_network_traffic()
-
-            if network != False:
-                network['time'] = now
-                system_info_dict['network'] = network
 
         return system_info_dict
 
     def processes(self):
-        now = unix_utc_now()
 
         process_checks = process_info_collector.process_list()
 
@@ -64,7 +42,6 @@ class Runner(object):
             command = process["command"]
             del process["command"]
             process_info_dict[command]  = process
-            process_info_dict[command]['time'] = now
 
         return process_info_dict
 
@@ -75,14 +52,10 @@ class Runner(object):
             for plugin in loaded_plugins.keys():
                 if plugin == 'apache':
                     apache = __import__("amonagent.plugins.apache" ,globals(), locals(), 'plugin')
-                    p = apache.plugin
-                    plugins_dict['apache'] = p.build_report()
-                    plugins_dict['apache']['time'] = unix_utc_now()
+                    plugins_dict['apache'] = apache.plugin.build_report()
                 if plugin == 'nginx':
                     nginx = __import__("amonagent.plugins.nginx" ,globals(), locals(), 'plugin')
-                    p = nginx.plugin
-                    plugins_dict['nginx'] = p.build_report()
-                    plugins_dict['nginx']['time'] = unix_utc_now()
+                    plugins_dict['nginx'] = nginx.plugin.build_report()
 
         return plugins_dict
                    
@@ -91,7 +64,6 @@ class Runner(object):
     def distribution_info(self):
         distribution_info = system_info_collector.get_distro_info()
         distribution_info['plugins'] = settings.PLUGINS.keys()
-        distribution_info['time'] = unix_utc_now()
 
         return distribution_info
 
