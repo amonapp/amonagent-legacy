@@ -32,7 +32,7 @@ class AmonAgentDaemon(Daemon):
         try:
             remote.save_distribution_info(distribution_info)
         except:
-            pass
+            log.exception("Saving distribution info failed")
 
         super(AmonAgentDaemon, self).start()
 
