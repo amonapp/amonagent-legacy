@@ -62,7 +62,7 @@ class Runner(object):
 
 
     def distribution_info(self):
-        distribution_info = system_info_collector.get_distro_info()
+        distribution_info = system_info_collector.get_system_info()
         distribution_info['plugins'] = settings.PLUGINS.keys()
 
         return distribution_info

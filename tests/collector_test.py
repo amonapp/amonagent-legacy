@@ -12,7 +12,7 @@ class TestSystemCheck(object):
     def test_system_info(self):
         system_info = system_info_collector.get_system_info()
 
-        assert 'distibution' in system_info["distro"]
+        assert 'distribution' in system_info["distro"]
         assert 'release' in system_info["distro"]
 
         assert 'model-name' in system_info["processor"]

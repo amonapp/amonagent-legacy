@@ -41,7 +41,7 @@ class LinuxSystemCollector(object):
             if re.search('distrib_id', line, re.IGNORECASE):
                 info = line.split("=")
                 if len(info) == 2:
-                    distro['distibution'] = info[1]
+                    distro['distribution'] = info[1]
             if re.search('distrib_release', line, re.IGNORECASE):
                 info = line.split("=")
                 if len(info) == 2:
