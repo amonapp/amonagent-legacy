@@ -9,5 +9,5 @@ setup(
     author_email='martin@amon.cx',
     zip_safe=False,
 	packages=find_packages(),
-    install_requires=['requests>=0.14.2'],
+    install_requires=['requests==1.1.0'],
 ) 

@@ -14,6 +14,7 @@ class Runner(object):
         loadavg = system_info_collector.get_load_average()
         disk = system_info_collector.get_disk_usage()
         network = system_info_collector.get_network_traffic()
+        uptime = system_info_collector.get_uptime()
 
         if memory != False:
             system_info_dict['memory'] = memory
@@ -29,6 +30,9 @@ class Runner(object):
 
         if network != False:
             system_info_dict['network'] = network
+
+        if uptime != False:
+            system_info_dict['uptime'] = uptime
 
 
         return system_info_dict
