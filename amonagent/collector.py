@@ -86,6 +86,8 @@ class LinuxSystemCollector(object):
             memory_percent_used = (float(memory_used)/float(memory_dict['memtotal'])*100)
             
             swap_used = memory_dict["swaptotal"]-memory_dict["swapfree"]
+            swap_percent_used = 0
+            
             if memory_dict["swaptotal"] > 0:
                 swap_percent_used = (float(swap_used)/float(memory_dict["swaptotal"]) * 100)
 
