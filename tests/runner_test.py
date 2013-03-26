@@ -19,7 +19,6 @@ class TestRunner(object):
 		assert isinstance(processes, dict)
 		for process in processes:
 			process_dict = processes[process]
-			assert 'time' in process_dict
 			assert 'memory:mb' in process_dict
 			assert 'cpu:%' in process_dict
 

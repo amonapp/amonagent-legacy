@@ -4,104 +4,101 @@ import re
 
 class TestSystemCheck(object):
 
-    def test_uptime(self):
-        uptime = system_info_collector.get_uptime()
+	def test_uptime(self):
+		uptime = system_info_collector.get_uptime()
 
-        assert isinstance(uptime, str)
+		assert isinstance(uptime, str)
 
-    def test_system_info(self):
-        system_info = system_info_collector.get_system_info()
+	def test_system_info(self):
+		system_info = system_info_collector.get_system_info()
 
-        assert 'distribution' in system_info["distro"]
-        assert 'release' in system_info["distro"]
+		assert 'distribution' in system_info["distro"]
+		assert 'release' in system_info["distro"]
 
-        assert 'model-name' in system_info["processor"]
-        assert 'cpu-cores' in system_info["processor"]
-        assert 'cpu-mhz' in system_info["processor"]
+		assert 'model-name' in system_info["processor"]
+		assert 'cpu-cores' in system_info["processor"]
+		assert 'cpu-mhz' in system_info["processor"]
 
-    def test_memory(self):
-        memory_dict = system_info_collector.get_memory_info()
+	def test_memory(self):
+		memory_dict = system_info_collector.get_memory_info()
 
-        assert 'memory:free:mb' in memory_dict
-        assert 'memory:total:mb' in memory_dict
-        assert 'memory:used:mb' in memory_dict
-        assert 'memory:used:%' in memory_dict
-        assert 'swap:free:mb' in memory_dict
-        assert 'swap:used:mb' in memory_dict
-        assert 'swap:used:%' in memory_dict
-        assert 'swap:total:mb' in memory_dict
+		assert 'memory:free:mb' in memory_dict
+		assert 'memory:total:mb' in memory_dict
+		assert 'memory:used:mb' in memory_dict
+		assert 'memory:used:%' in memory_dict
+		assert 'swap:free:mb' in memory_dict
+		assert 'swap:used:mb' in memory_dict
+		assert 'swap:used:%' in memory_dict
+		assert 'swap:total:mb' in memory_dict
 
-        for v in memory_dict.values():
-            assert isinstance(v, int)
-
-
-    def test_disk(self):
-        disk = system_info_collector.get_disk_usage()
-
-        for k in disk:
-            _dict = disk[k]
-
-            assert 'used' in _dict
-            assert 'percent' in _dict
-            assert 'free' in _dict
-            assert 'volume' in _dict
-            assert 'total' in _dict
+		for v in memory_dict.values():
+			assert isinstance(v, int)
 
 
-    def test_cpu(self):
-        cpu = system_info_collector.get_cpu_utilization()
+	def test_disk(self):
+		disk = system_info_collector.get_disk_usage()
 
-        assert 'idle' in cpu
-        assert 'user' in cpu
-        assert 'system' in cpu
+		for k in disk:
+			_dict = disk[k]
 
-        for v in cpu.values():
-            # Could be 1.10 - 4, 10.10 - 5, 100.00 - 6
-            assert len(v) == 4 or len(v) == 5 or len(v) == 6
-
-            value_regex = re.compile(r'\d+[\.]\d+')
-            assert re.match(value_regex, v)
+			assert 'used' in _dict
+			assert 'percent' in _dict
+			assert 'free' in _dict
+			assert 'volume' in _dict
+			assert 'total' in _dict
 
 
-    def test_loadavg(self):
-        loadavg = system_info_collector.get_load_average()
+	def test_cpu(self):
+		cpu = system_info_collector.get_cpu_utilization()
 
-        assert 'minute' in loadavg
-        assert 'five_minutes' in loadavg
-        assert 'fifteen_minutes' in loadavg
-        assert 'cores' in loadavg
+		assert 'idle' in cpu
+		assert 'user' in cpu
+		assert 'system' in cpu
 
-        assert isinstance(loadavg['cores'], int)
-        assert isinstance(loadavg['minute'], str)
-        assert isinstance(loadavg['five_minutes'], str)
-        assert isinstance(loadavg['fifteen_minutes'], str)
-        
-        value_regex = re.compile(r'\d+[\.]\d+')
+		for v in cpu.values():
+			# Could be 1.10 - 4, 10.10 - 5, 100.00 - 6
+			assert len(v) == 4 or len(v) == 5 or len(v) == 6
 
-        assert re.match(value_regex, loadavg['minute'])
-        assert re.match(value_regex, loadavg['five_minutes'])
-        assert re.match(value_regex, loadavg['fifteen_minutes'])
+			value_regex = re.compile(r'\d+[\.]\d+')
+			assert re.match(value_regex, v)
 
-    def test_network(self):
-        network_data = system_info_collector.get_network_traffic()
-       
-        value_regex = re.compile(r'\d+[\.]\d+')        
-        assert isinstance(network_data, dict)
-        for key, value in network_data.iteritems():
-            assert key not in ['lo', 'IFACE']
-            for k in value.keys():
-                assert k in ['kb_received', 'kb_transmitted']
 
-            for k, v in value.items():
-                assert re.match(value_regex, v)
+	def test_loadavg(self):
+		loadavg = system_info_collector.get_load_average()
+
+		assert 'minute' in loadavg
+		assert 'five_minutes' in loadavg
+		assert 'fifteen_minutes' in loadavg
+		assert 'cores' in loadavg
+
+		assert isinstance(loadavg['cores'], int)
+		assert isinstance(loadavg['minute'], str)
+		assert isinstance(loadavg['five_minutes'], str)
+		assert isinstance(loadavg['fifteen_minutes'], str)
+		
+		value_regex = re.compile(r'\d+[\.]\d+')
+
+		assert re.match(value_regex, loadavg['minute'])
+		assert re.match(value_regex, loadavg['five_minutes'])
+		assert re.match(value_regex, loadavg['fifteen_minutes'])
+
+	def test_network(self):
+		network_data = system_info_collector.get_network_traffic()
+	   
+		value_regex = re.compile(r'\d+[\.]\d+')        
+		assert isinstance(network_data, dict)
+		for key, value in network_data.iteritems():
+			assert key not in ['lo', 'IFACE']
+			for k in value.keys():
+				assert k in ['kb_received', 'kb_transmitted']
+
+			for k, v in value.items():
+				assert re.match(value_regex, v)
 
 class TestProcessCheck(object):
 
-    def __init__(self):
-        self.process_checks = ('cron',) # something that's available in most linux distributions
-
-    def test_process_list(self):
-        for process in process_info_collector.process_list():
-            assert 'memory:mb' in process
-            assert 'cpu:%' in process
+	def test_process_list(self):
+		for process in process_info_collector.process_list():
+			assert 'memory:mb' in process
+			assert 'cpu:%' in process
 

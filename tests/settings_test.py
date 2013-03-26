@@ -8,7 +8,7 @@ class TestSettings(object):
 		assert settings.REMOTE['host']
 		assert settings.REMOTE['port']
 		
-		eq_(settings.SYSTEM_CHECK_PERIOD, 2) 
+		eq_(settings.SYSTEM_CHECK_PERIOD, 5) 
 		
 		assert settings.SYSTEM_CHECKS
 		
