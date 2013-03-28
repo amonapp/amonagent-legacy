@@ -19,5 +19,3 @@ class TestSettings(object):
 
 		assert settings.SERVER_KEY
 		assert settings.LOGFILE
-		assert settings.CACHE
-		assert settings.PLUGINS

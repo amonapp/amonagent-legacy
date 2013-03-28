@@ -31,7 +31,4 @@ REMOTE = {
 
 SERVER_KEY = config.get('server_key', None)
 
-PLUGINS = config.get('plugins', None)
-
-CACHE = config.get("cache", '/usr/local/amonagent/amonagent.db')
 LOGFILE = config.get("logfile", '/var/log/amonagent.log')

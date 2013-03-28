@@ -35,6 +35,7 @@ class LinuxSystemCollector(object):
 		debian_version = glob.glob('/etc/debian_version')
 
 		debian = False
+		distro_info = None
 		try: 
 			distro_info = subprocess.Popen(["cat"] + distro_info_file, stdout=subprocess.PIPE, close_fds=True,
 				).communicate()[0]
@@ -42,8 +43,6 @@ class LinuxSystemCollector(object):
 			distro_info = subprocess.Popen(["cat"] + debian_version, stdout=subprocess.PIPE, close_fds=True,
 				).communicate()[0]
 			debian = True
-		finally:
-			distro_info = None
 
 		system_info = {}
 		distro = {}

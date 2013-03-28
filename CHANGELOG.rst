@@ -1,3 +1,13 @@
+0.5.2
+======
+
+* Fix for Debian (the agent doesn't start, because it can't get the distro information)
+
+0.5.1
+======
+
+* Fix Memory collecting issue when there is no buffer and cache data
+
 0.5
 ======
 
