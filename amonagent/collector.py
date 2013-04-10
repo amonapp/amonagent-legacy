@@ -284,6 +284,7 @@ class ProcessInfoCollector(object):
 				
 				process_memory_mb = float(self.total_memory/100) * float(data_dict["%MEM"]) # Convert the % in MB
 				memory = "{0:.3}".format(process_memory_mb)
+				memory = memory.replace(",", ".")
 
 				cpu = "{0:.2f}".format(float(data_dict["%CPU"]))
 				cpu = cpu.replace(",", ".")

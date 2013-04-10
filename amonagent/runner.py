@@ -44,6 +44,7 @@ class Runner(object):
 		process_info_dict = {}
 		for process in process_checks:
 			command = process["command"]
+			command = command.replace(".", "")
 			del process["command"]
 			process_info_dict[command]  = process
 
