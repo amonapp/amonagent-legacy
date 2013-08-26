@@ -11,7 +11,7 @@ class Remote(object):
 
 	def __init__(self):
 		self.server_key = settings.SERVER_KEY
-		self.port = None
+		self.port = settings.REMOTE.get('port', None)
 		self.host = None
 
 	def connection_host(self):
@@ -31,10 +31,15 @@ class Remote(object):
 		return hostaddr
 
 	def connection_port(self):
-		return settings.REMOTE['port']
+		if self.port != None:
+			port = ":{0}".format(self.port)
+		else:
+			port = ''
 
+		return port
+		
 	def connection_url(self):
-		return "{0}:{1}".format(self.connection_host(), self.connection_port())
+		return "{0}{1}".format(self.connection_host(), self.connection_port())
 
 	headers = {"Content-type": "application/json"}
 

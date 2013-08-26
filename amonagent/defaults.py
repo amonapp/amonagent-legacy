@@ -26,7 +26,7 @@ if not host.startswith('http'):
 
 REMOTE = {
 	'host': host,
-	'port': _remote.get('port', 2464)
+	'port': _remote.get('port', None)
 }
 
 SERVER_KEY = config.get('server_key', None)

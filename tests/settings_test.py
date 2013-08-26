@@ -5,9 +5,11 @@ import sys
 class TestSettings(object):
 
 	def test_settings_dict(self):
-		assert settings.REMOTE['host']
-		assert settings.REMOTE['port']
+
+		if settings.REMOTE['port'] != None:
+			assert settings.REMOTE['port']
 		
+		assert settings.REMOTE['host']
 		eq_(settings.SYSTEM_CHECK_PERIOD, 5) 
 		
 		assert settings.SYSTEM_CHECKS
