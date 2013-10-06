@@ -9,9 +9,9 @@ setup(
 	author_email='martin@amon.cx',
 	zip_safe=False,
 	packages=find_packages(),
-	 data_files=[
+	data_files=[
 		('/etc', ['amon-agent.conf']),
-		('/etc/init.d', ['amon-agent'])]
-	 )
-	install_requires=['requests==2.0.0'],
+		('/etc/init.d', ['amon-agent'])
+	],
+	install_requires=['requests==2.0.0', 'unidecode'],
 ) 
