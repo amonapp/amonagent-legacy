@@ -110,14 +110,14 @@ class LinuxSystemCollector(object):
 				swap_percent_used = (float(swap_used)/float(swap_total) * 100)
 
 			extracted_data = {
-				"memory:total:mb": memory_dict["memtotal"],
-				"memory:free:mb": memory_free,
-				"memory:used:mb": memory_used,
-				"memory:used:%": memory_percent_used,
-				"swap:total:mb":swap_total,
-				"swap:free:mb": swap_free,
-				"swap:used:mb": swap_used,
-				"swap:used:%": swap_percent_used
+				"total_mb": memory_dict["memtotal"],
+				"free_mb": memory_free,
+				"used_mb": memory_used,
+				"used_percent": memory_percent_used,
+				"swap_total_mb":swap_total,
+				"swap_free_mb": swap_free,
+				"swap_used_mb": swap_used,
+				"swap_used_percent": swap_percent_used
 			}
 
 			# Convert everything to int to avoid float localization problems
@@ -263,7 +263,7 @@ class ProcessInfoCollector(object):
 
 	def __init__(self):
 		memory = system_info_collector.get_memory_info()
-		self.total_memory = memory['memory:total:mb']
+		self.total_memory = memory['total_mb']
 
 	def process_list(self):
 		stats = subprocess.Popen(['pidstat','-ruht'], 
@@ -292,8 +292,8 @@ class ProcessInfoCollector(object):
 				command = data_dict["Command"]
 
 				if not re.search('_', command, re.IGNORECASE):
-					extracted_data = {"cpu:%": cpu,
-								  "memory:mb": memory,
+					extracted_data = {"cpu": cpu,
+								  "memory_mb": memory,
 								  "command": command}
 					converted_data.append(extracted_data)
 
