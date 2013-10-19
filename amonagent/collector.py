@@ -1,7 +1,5 @@
 import subprocess
-import sys
 import re
-import os
 import glob
 
 from amonagent.utils import split_and_slugify
@@ -189,19 +187,19 @@ class LinuxSystemCollector(object):
 					# rxkB/s - Total number of kilobytes received per second  
 					# txkB/s - Total number of kilobytes transmitted per second
 					
-					kb_received = elements[4].replace(',', '.')
-					kb_received = format(float(kb_received), ".2f")
+					inbound = elements[4].replace(',', '.')
+					inbound = "{0:.2f}".format(float(inbound))
 
-					kb_transmitted = elements[5].replace(',', '.')
-					kb_transmitted = format(float(kb_transmitted), ".2f")
+					outbound = elements[5].replace(',', '.')
+					outbound = "{0:.2f}".format(float(outbound))
 
-					data[interface] = {"kb_received": kb_received , "kb_transmitted": kb_transmitted}
+					data[interface] = {"inbound": inbound , "outbound": outbound}
 
 		return data
 
 	 
 	def get_load_average(self):
-		_loadavg_columns = ['minute','five_minutes','fifteen_minutes','scheduled_processes']
+		_loadavg_columns = ['minute','five_minutes','fifteen_minutes']
 
 
 		lines = open('/proc/loadavg','r').readlines()
