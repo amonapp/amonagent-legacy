@@ -42,7 +42,6 @@ class Remote(object):
 		return "{0}{1}".format(self.connection_host(), self.connection_port())
 
 	headers = {"Content-type": "application/json"}
-
 	errors = {'connection': 'Could not establish connection to the Amon API.'}
 
 	def to_json(self, data):

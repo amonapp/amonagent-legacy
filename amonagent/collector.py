@@ -1,5 +1,11 @@
 import subprocess
+<<<<<<< HEAD
 import re
+=======
+import sys
+import re
+import os
+>>>>>>> d1e4b3347853e74e1dce1c4019119c32685912a6
 import glob
 
 from amonagent.utils import split_and_slugify
@@ -195,6 +201,7 @@ class LinuxSystemCollector(object):
 
 					data[interface] = {"inbound": inbound , "outbound": outbound}
 
+
 		return data
 
 	 
@@ -262,6 +269,7 @@ class ProcessInfoCollector(object):
 	def __init__(self):
 		memory = system_info_collector.get_memory_info()
 		self.total_memory = memory['total_mb']
+
 
 	def process_list(self):
 		stats = subprocess.Popen(['pidstat','-ruht'], 
