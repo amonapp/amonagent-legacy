@@ -1,15 +1,5 @@
 import subprocess
-<<<<<<< HEAD
 import re
-=======
-import sys
-import re
-import os
->>>>>>> d1e4b3347853e74e1dce1c4019119c32685912a6
-import glob
-
-from amonagent.utils import split_and_slugify
-
 
 class LinuxSystemCollector(object):
 
@@ -34,52 +24,7 @@ class LinuxSystemCollector(object):
 
 		return uptime
 
-	def get_system_info(self):
-		distro_info_file = glob.glob('/etc/*-release')
-		debian_version = glob.glob('/etc/debian_version')
 
-		debian = False
-		distro_info = None
-		try: 
-			distro_info = subprocess.Popen(["cat"] + distro_info_file, stdout=subprocess.PIPE, close_fds=True,
-				).communicate()[0]
-		except:
-			distro_info = subprocess.Popen(["cat"] + debian_version, stdout=subprocess.PIPE, close_fds=True,
-				).communicate()[0]
-			debian = True
-
-		system_info = {}
-		distro = {}
-		if debian is False:
-			for line in distro_info.splitlines():
-				if re.search('distrib_id', line, re.IGNORECASE):
-					info = line.split("=")
-					if len(info) == 2:
-						distro['distribution'] = info[1]
-				if re.search('distrib_release', line, re.IGNORECASE):
-					info = line.split("=")
-					if len(info) == 2:
-						distro['release'] = info[1]
-		else:
-			distro['distribution'] = 'Debian'
-			distro['release'] = distro_info
-		
-		system_info["distro"] = distro
-
-		processor_info = subprocess.Popen(["cat", '/proc/cpuinfo'], stdout=subprocess.PIPE, close_fds=True,
-			).communicate()[0]
-
-		processor = {}
-		for line in processor_info.splitlines():
-			parsed_line = split_and_slugify(line)
-			if parsed_line and isinstance(parsed_line, dict):
-				key = parsed_line.keys()[0]
-				value = parsed_line.values()[0]
-				processor[key] = value
-
-		system_info["processor"] = processor
-		  
-		return system_info
 
 	def get_memory_info(self):
 

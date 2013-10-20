@@ -1,7 +1,4 @@
 from amonagent.collector import system_info_collector, process_info_collector
-from amonagent.settings import settings
-from amonagent.utils import unix_utc_now
-import sys
 
 class Runner(object):
 
@@ -49,11 +46,6 @@ class Runner(object):
 			process_info_dict[command]  = process
 
 		return process_info_dict
-
-	def distribution_info(self):
-		distribution_info = system_info_collector.get_system_info()
-
-		return distribution_info
 
 
 runner = Runner()

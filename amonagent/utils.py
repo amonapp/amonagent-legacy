@@ -1,9 +1,6 @@
 import subprocess	
-import sys
-import calendar
 import unicodedata
 import re
-from datetime import datetime
 
 def get_disk_volumes():
 		df = subprocess.Popen(['df','-h'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]	
@@ -22,9 +19,6 @@ def get_disk_volumes():
 		return volumes_list
 
 def get_network_interfaces():
-	if sys.platform == 'darwin':
-		return False
-
 	interfaces_info = open('/proc/net/dev' , 'r').readlines()
 
 	interfaces_list = []
@@ -38,43 +32,37 @@ def get_network_interfaces():
 	return interfaces_list
 
 
-# Used in the collector, saves all the data in UTC
-def unix_utc_now():
-    d = datetime.utcnow()
-    _unix = calendar.timegm(d.utctimetuple())
-
-    return _unix
 
 def slugify(string):
 
-    """
-    Slugify a unicode string.
+	"""
+	Slugify a unicode string.
 
-    """
+	"""
 
-    return re.sub(r'[-\s]+', '-',
-            unicode(
-                re.sub(r'[^\w\s-]', '',
-                    unicodedata.normalize('NFKD', string)
-                    .encode('ascii', 'ignore'))
-                .strip()
-                .lower()))
+	return re.sub(r'[-\s]+', '-',
+			unicode(
+				re.sub(r'[^\w\s-]', '',
+					unicodedata.normalize('NFKD', string)
+					.encode('ascii', 'ignore'))
+				.strip()
+				.lower()))
 
 
 def split_and_slugify(string, separator=":"):
-    _string = string.strip().split(separator)
-    
-    if len(_string) == 2: # Only key, value
-        data = {}
-        key = slugify(unicode(_string[0]))
-        
-        try:
-            if len(_string[1]) > 0:
-                data[key] = str(_string[1].strip())
-        except:
-            pass
+	_string = string.strip().split(separator)
+	
+	if len(_string) == 2: # Only key, value
+		data = {}
+		key = slugify(unicode(_string[0]))
+		
+		try:
+			if len(_string[1]) > 0:
+				data[key] = str(_string[1].strip())
+		except:
+			pass
 
-        return data
-    
-    else:
-        return None
+		return data
+	
+	else:
+		return None

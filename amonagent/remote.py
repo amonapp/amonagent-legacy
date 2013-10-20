@@ -11,35 +11,8 @@ class Remote(object):
 
 	def __init__(self):
 		self.server_key = settings.SERVER_KEY
-		self.port = settings.REMOTE.get('port', None)
-		self.host = None
+		self.host = settings.REMOTE.get('host', "https://amon.cx")
 
-	def connection_host(self):
-		local_hosts = ['127.0.0.1', 'localhost']
-		hostaddr =  settings.REMOTE['host']
-
-		if hostaddr in local_hosts:
-			hostaddr =  "http://{0}".format(hostaddr)
-
-		# Add http if its a numeric ip address
-		if not hostaddr.startswith('http'):
-			hostaddr =  "http://{0}".format(hostaddr)
-		
-		# Cleanup any slashes at the end of the url
-		hostaddr.rstrip('/')
-
-		return hostaddr
-
-	def connection_port(self):
-		if self.port != None:
-			port = ":{0}".format(self.port)
-		else:
-			port = ''
-
-		return port
-		
-	def connection_url(self):
-		return "{0}{1}".format(self.connection_host(), self.connection_port())
 
 	headers = {"Content-type": "application/json"}
 	errors = {'connection': 'Could not establish connection to the Amon API.'}
@@ -59,20 +32,14 @@ class Remote(object):
 			return True
 
 	def save_system_stats(self, data):
-		url = "{0}/api/system/{1}".format(self.connection_url(), self.server_key)
+		url = "{0}/api/system/{1}".format(self.host, self.server_key)
 		data = self.to_json(data)
 
 		return self._post(url, data)
 
 	def save_process_stats(self, data):
-		url = "{0}/api/processes/{1}".format(self.connection_url(), self.server_key)
+		url = "{0}/api/processes/{1}".format(self.host, self.server_key)
 		log.info(url)
-		data = self.to_json(data)
-
-		return self._post(url, data)
-
-	def save_distribution_info(self, data):
-		url = "{0}/api/distro/{1}".format(self.connection_url(), self.server_key)
 		data = self.to_json(data)
 
 		return self._post(url, data)
