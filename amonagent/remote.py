@@ -11,7 +11,7 @@ class Remote(object):
 
 	def __init__(self):
 		self.server_key = settings.SERVER_KEY
-		self.host = settings.REMOTE.get('host', "https://amon.cx")
+		self.host = settings.HOST
 
 
 	headers = {"Content-type": "application/json"}
