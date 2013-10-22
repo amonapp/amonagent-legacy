@@ -31,6 +31,14 @@ class Remote(object):
 		else:
 			return True
 
+
+	def save_plugin_stats(self, data):
+		url = "{0}/api/plugins/{1}".format(self.host, self.server_key)
+		data = self.to_json(data)
+
+		return self._post(url, data)
+
+
 	def save_system_stats(self, data):
 		url = "{0}/api/system/{1}".format(self.host, self.server_key)
 		data = self.to_json(data)

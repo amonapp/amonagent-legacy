@@ -1,4 +1,3 @@
-import sys
 try:
     import json
 except ImportError:
@@ -23,3 +22,5 @@ HOST = config.get('host', 'https://amon.cx')
 SERVER_KEY = config.get('server_key', None)
 
 LOGFILE = config.get("logfile", '/var/log/amonagent.log')
+
+PLUGINS = config.get('plugins', None)
