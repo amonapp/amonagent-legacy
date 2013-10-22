@@ -84,7 +84,7 @@ class AmonNginxPlugin(object):
 				"requests_per_second": temp_report['requests_per_second']
 			}
 		})	
-	
+	l
 		return report
 
 
