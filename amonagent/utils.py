@@ -1,6 +1,8 @@
 import subprocess	
 import unicodedata
 import re
+import calendar
+from datetime import datetime
 
 def get_disk_volumes():
 		df = subprocess.Popen(['df','-h'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]	
@@ -66,3 +68,11 @@ def split_and_slugify(string, separator=":"):
 	
 	else:
 		return None
+
+
+# Used in the collector, saves all the data in UTC
+def unix_utc_now():
+	d = datetime.utcnow()
+	_unix = calendar.timegm(d.utctimetuple())
+
+	return _unix
