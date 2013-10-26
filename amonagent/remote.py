@@ -5,7 +5,6 @@ except ImportError:
 import requests 
 from amonagent.exceptions import ConnectionException
 from amonagent.settings import settings
-from amonagent.log import log
 
 class Remote(object):
 
@@ -47,7 +46,6 @@ class Remote(object):
 
 	def save_process_stats(self, data):
 		url = "{0}/api/processes/{1}".format(self.host, self.server_key)
-		log.info(url)
 		data = self.to_json(data)
 
 		return self._post(url, data)

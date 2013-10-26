@@ -39,7 +39,6 @@ class AmonNginxPlugin(object):
 		# }
 		report = {"plugin": "nginx", "graphs": []}
 		temp_report = {} # Used for internal storage
-		graphs = ['Requests per second', 'Connections']
 
 		result = requests.get(self.url)
 		whitelist = ['accepts','handled','requests']
@@ -58,6 +57,7 @@ class AmonNginxPlugin(object):
 						temp_report[filtered_key] = int(val)
 		
 		# Calculate requests per second
+		requests_per_second = 0
 		if len(temp_report) > 0:
 			total_requests = temp_report.get('requests', 0)
 			handled = temp_report.get('handled', 0)
@@ -67,24 +67,23 @@ class AmonNginxPlugin(object):
 				if requests_per_second > 0:
 					for key in whitelist:
 						del temp_report[key]
-					
-					temp_report['requests_per_second'] = requests_per_second
 			
-		report['graphs'].append({"name": "Connections", 
-			"data": {	
-				"connections": temp_report['connections'],
-				"reading": temp_report['reading'],
-				"writing": temp_report['writing'],
-				"waiting": temp_report['waiting']
-			}
-		})
+			report['graphs'].append({"name": "Connections", 
+				"data": {	
+					"connections": temp_report['connections'],
+					"reading": temp_report.get('reading', 0),
+					"writing": temp_report.get('writing', 0),
+					"waiting": temp_report.get('waiting', 0)
+				}
+			})
 
-		report['graphs'].append({"name": "Requests per second",
-			"data": {
-				"requests_per_second": temp_report['requests_per_second']
-			}
-		})	
-	l
+			if requests_per_second > 0:
+				report['graphs'].append({"name": "Requests per second",
+					"data": {
+						"requests_per_second": requests_per_second
+					}
+				})	
+	
 		return report
 
 
