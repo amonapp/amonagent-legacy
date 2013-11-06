@@ -48,6 +48,13 @@ class Runner(object):
 		return process_info_dict
 
 
+	def distribution_info(self):
+		distribution_info = system_info_collector.get_distro_info()
+
+		return distribution_info
+
+
+
 runner = Runner()
 
 

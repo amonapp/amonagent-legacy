@@ -1,7 +1,29 @@
 import subprocess
 import re
+import glob
 
 class LinuxSystemCollector(object):
+
+
+
+	def get_distro_info(self):
+		distro_info_file = glob.glob('/etc/*-release')
+		distro_info = subprocess.Popen(["cat"] + distro_info_file, stdout=subprocess.PIPE, close_fds=True,
+			).communicate()[0]
+
+		extracted_data = {}
+		for line in distro_info.splitlines():
+			if re.search('distrib_id', line, re.IGNORECASE):
+				info = line.split("=")
+				if len(info) == 2:
+					extracted_data['distibution'] = info[1]
+			if re.search('distrib_release', line, re.IGNORECASE):
+				info = line.split("=")
+				if len(info) == 2:
+					extracted_data['release'] = info[1]
+
+		return extracted_data
+
 
 
 	def get_uptime(self):

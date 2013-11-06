@@ -28,6 +28,17 @@ PIDFILE = '/var/run/amon-agent.pid'
 
 class AmonAgentDaemon(Daemon):
 
+	def start(self):
+		distribution_info = runner.distribution_info()
+		
+		try:
+			remote.save_distribution_info(distribution_info)
+		except:
+			log.exception("Saving distribution info failed")
+
+		super(AmonAgentDaemon, self).start()
+		
+
 	def run(self):
 
 		while True:
