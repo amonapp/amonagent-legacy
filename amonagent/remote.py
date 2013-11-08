@@ -44,12 +44,6 @@ class Remote(object):
 
 		return self._post(url, data)
 
-	def save_process_stats(self, data):
-		url = "{0}/api/processes/{1}".format(self.host, self.server_key)
-		data = self.to_json(data)
-
-		return self._post(url, data)
-
 
 remote = Remote()
 

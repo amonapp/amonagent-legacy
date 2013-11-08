@@ -34,7 +34,7 @@ class AmonAgentDaemon(Daemon):
 		try:
 			remote.save_distribution_info(distribution_info)
 		except:
-			log.exception("Saving distribution info failed")
+			log.exception("Sending distribution info failed")
 
 		super(AmonAgentDaemon, self).start()
 		
@@ -42,19 +42,16 @@ class AmonAgentDaemon(Daemon):
 	def run(self):
 
 		while True:
-			system_stats = runner.system()
-
+			stats = {
+				'system': runner.system(),
+				'processes': runner.processes()
+			}
+		
 			try:			
-				remote.save_system_stats(system_stats)
+				remote.save_system_stats(stats)
 			except Exception:
-				log.exception('Saving system info failed')
+				log.exception('Sending system info failed')
 				
-			processes_stats = runner.processes()
-
-			try:
-				remote.save_process_stats(processes_stats)
-			except Exception:			
-				log.exception('Saving process info failed')
 				
 			# Checks the system every 60 seconds
 			time.sleep(settings.SYSTEM_CHECK_PERIOD)
