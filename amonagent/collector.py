@@ -5,7 +5,6 @@ import glob
 class LinuxSystemCollector(object):
 
 
-
 	def get_distro_info(self):
 		distro_info_file = glob.glob('/etc/*-release')
 		distro_info = subprocess.Popen(["cat"] + distro_info_file, stdout=subprocess.PIPE, close_fds=True,
@@ -99,6 +98,7 @@ class LinuxSystemCollector(object):
 
 
 	def get_disk_usage(self):
+		# du -h --max-depth=1 /  | sort -n
 		df = subprocess.Popen(['df','-h'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]	
 
 		volumes = df.split('\n')	
@@ -112,6 +112,7 @@ class LinuxSystemCollector(object):
 		previous_line = None
 
 		for volume in volumes:
+
 			line = volume.split(None, 6)
 
 			if len(line) == 1: # If the length is 1 then this just has the mount name
@@ -126,6 +127,26 @@ class LinuxSystemCollector(object):
 				_volume = dict(zip(_columns, line))
 
 				_volume['percent'] = _volume['percent'].replace("%",'') # Delete the % sign for easier calculation later
+
+				directory_data = []
+				# Get detailed disk usage
+				du = subprocess.Popen(['du','-h', '--max-depth=1', '--bytes',
+				 _volume['path']], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
+			
+				
+				directories = du.split('\n')
+				for line in directories:
+					if re.match('^\s*[0-9]', line) is not None:
+						usage, mount = line.split('\t')
+						usage = int(usage)
+
+						if mount != _volume['path'] and usage > 4096:
+							usage_dict = {'usage': usage, 'mount': mount}
+							directory_data.append(usage_dict)
+			
+
+				if len(directory_data) > 0:
+					_volume['directory_data'] = directory_data
 
 				# strip /dev/
 				_name = _volume['volume'].replace('/dev/', '')
