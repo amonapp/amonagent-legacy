@@ -1,4 +1,4 @@
 amonagent
 =========
 
-Monitoring agent for AMon
+Monitoring agent for Amon
