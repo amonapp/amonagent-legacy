@@ -146,7 +146,7 @@ class LinuxSystemCollector(object):
 			
 
 				if len(directory_data) > 0:
-					_volume['directory_data'] = directory_data
+					_volume['detailed_usage'] = directory_data
 
 				# strip /dev/
 				_name = _volume['volume'].replace('/dev/', '')
