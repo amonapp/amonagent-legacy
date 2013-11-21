@@ -19,6 +19,9 @@ class TestSystemCheck(object):
 		assert 'cpu-cores' in system_info["processor"]
 		assert 'cpu-mhz' in system_info["processor"]
 
+
+		assert 'ip_address' in system_info
+
 	def test_memory(self):
 		memory_dict = system_info_collector.get_memory_info()
 

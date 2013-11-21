@@ -2,6 +2,10 @@ from amonagent.collector import system_info_collector, process_info_collector
 
 class Runner(object):
 
+
+	def info(self):
+		return system_info_collector.get_system_info()
+
 	def system(self):
 
 		system_info_dict = {}
@@ -46,14 +50,6 @@ class Runner(object):
 			process_info_dict[command]  = process
 
 		return process_info_dict
-
-
-	def distribution_info(self):
-		distribution_info = system_info_collector.get_distro_info()
-
-		return distribution_info
-
-
 
 runner = Runner()
 

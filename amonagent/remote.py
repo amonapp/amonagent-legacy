@@ -23,12 +23,18 @@ class Remote(object):
 
 		headers = headers if headers else self.headers
 
-		r = requests.post(url, data, headers=headers)
+		r = requests.post(url, data, headers=headers, timeout=10)
 
 		if r.status_code != 200:
 			raise ConnectionException(self.errors['connection'])
 		else:
 			return True
+
+	def save_system_info(self, data):
+		url = "{0}/api/info/{1}".format(self.host, self.server_key)
+		data = self.to_json(data)
+
+		return self._post(url, data)
 
 
 	def save_plugin_stats(self, data):

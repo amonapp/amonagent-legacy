@@ -1,27 +1,56 @@
 import subprocess
 import re
 import glob
+import requests
+from amonagent.utils import split_and_slugify
 
 class LinuxSystemCollector(object):
 
 
-	def get_distro_info(self):
+	def get_system_info(self):
+		system_info = {}
+
+		# Distro Info
 		distro_info_file = glob.glob('/etc/*-release')
 		distro_info = subprocess.Popen(["cat"] + distro_info_file, stdout=subprocess.PIPE, close_fds=True,
 			).communicate()[0]
 
-		extracted_data = {}
+		distro_dict = {}
 		for line in distro_info.splitlines():
 			if re.search('distrib_id', line, re.IGNORECASE):
 				info = line.split("=")
 				if len(info) == 2:
-					extracted_data['distibution'] = info[1]
+					distro_dict['distibution'] = info[1]
 			if re.search('distrib_release', line, re.IGNORECASE):
 				info = line.split("=")
 				if len(info) == 2:
-					extracted_data['release'] = info[1]
+					distro_dict['release'] = info[1]
 
-		return extracted_data
+
+		system_info['distro'] = distro_dict
+
+		# Processor Info
+		processor_info = subprocess.Popen(["cat", '/proc/cpuinfo'], stdout=subprocess.PIPE, close_fds=True,
+						).communicate()[0]
+
+		processor = {}
+		for line in processor_info.splitlines():
+				parsed_line = split_and_slugify(line)
+				if parsed_line and isinstance(parsed_line, dict):
+						key = parsed_line.keys()[0]
+						value = parsed_line.values()[0]
+						processor[key] = value
+
+		system_info["processor"] = processor
+
+
+		# IP Adresss
+		public_ip_request = requests.get('http://ipecho.net/plain', timeout=5)
+		if public_ip_request.status_code == 200:
+			system_info['ip_address'] = public_ip_request.text
+
+		return system_info
+
 
 
 
