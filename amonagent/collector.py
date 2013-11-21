@@ -38,6 +38,7 @@ class LinuxSystemCollector(object):
 				parsed_line = split_and_slugify(line)
 				if parsed_line and isinstance(parsed_line, dict):
 						key = parsed_line.keys()[0]
+						key = key.replace('-', '')
 						value = parsed_line.values()[0]
 						processor[key] = value
 
