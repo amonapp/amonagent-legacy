@@ -16,15 +16,20 @@ class LinuxSystemCollector(object):
 			).communicate()[0]
 
 		distro_dict = {}
-		for line in distro_info.splitlines():
-			if re.search('distrib_id', line, re.IGNORECASE):
-				info = line.split("=")
-				if len(info) == 2:
-					distro_dict['distribution'] = info[1]
-			if re.search('distrib_release', line, re.IGNORECASE):
-				info = line.split("=")
-				if len(info) == 2:
-					distro_dict['release'] = info[1]
+		distro_lines = distro_info.splitlines()
+		total_lines = len(distro_lines)
+		if total_lines == 1:
+			distro_dict['distribution'] = distro_lines
+		else:
+			for line in distro_lines:
+				if re.search('distrib_id', line, re.IGNORECASE):
+					info = line.split("=")
+					if len(info) == 2:
+						distro_dict['distribution'] = info[1]
+				if re.search('distrib_release', line, re.IGNORECASE):
+					info = line.split("=")
+					if len(info) == 2:
+						distro_dict['release'] = info[1]
 
 
 		system_info['distro'] = distro_dict
@@ -49,6 +54,8 @@ class LinuxSystemCollector(object):
 		public_ip_request = requests.get('http://ipecho.net/plain', timeout=5)
 		if public_ip_request.status_code == 200:
 			system_info['ip_address'] = public_ip_request.text
+
+		system_info['uptime'] = self.get_uptime()
 
 		return system_info
 
