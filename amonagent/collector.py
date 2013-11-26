@@ -1,6 +1,7 @@
+from __future__ import with_statement
 import subprocess
 import re
-import glob
+import os
 import requests
 from amonagent.utils import split_and_slugify
 
@@ -10,56 +11,96 @@ class LinuxSystemCollector(object):
 	def get_system_info(self):
 		system_info = {}
 
-		# Distro Info
-		distro_info_file = glob.glob('/etc/*-release')
-		distro_info = subprocess.Popen(["cat"] + distro_info_file, stdout=subprocess.PIPE, close_fds=True,
-			).communicate()[0]
+		system_info["processor"] = self.get_cpu_info()
+		system_info['ip_address'] = self.get_ip()
+		system_info['uptime'] = self.get_uptime()
+		system_info['distro'] = self.get_distro()
 
-		distro_dict = {}
-		distro_lines = distro_info.splitlines()
-		total_lines = len(distro_lines)
-		if total_lines == 1:
-			distro_dict['distribution'] = distro_lines
-		else:
-			for line in distro_lines:
-				if re.search('distrib_id', line, re.IGNORECASE):
-					info = line.split("=")
-					if len(info) == 2:
-						distro_dict['distribution'] = info[1]
-				if re.search('distrib_release', line, re.IGNORECASE):
-					info = line.split("=")
-					if len(info) == 2:
-						distro_dict['release'] = info[1]
+		return system_info
+
+	def get_distro(self):
+	 	distro = {}
+		try:
+			import lsb_release
+			release = lsb_release.get_distro_information()
+			for key, value in release.iteritems():
+				key = key.lower()
+				lsb_param = 'lsb_{0}{1}'.format(
+					'' if key.startswith('distrib_') else 'distrib_',
+					key
+				)
+				distro[lsb_param] = value
+		except ImportError:
+			# if the python library isn't available, default to regex
+			if os.path.isfile('/etc/lsb-release'):
+				with open('/etc/lsb-release') as ifile:
+					for line in ifile:
+						# Matches any possible format:
+						#     DISTRIB_ID="Ubuntu"
+						#     DISTRIB_ID='Mageia'
+						#     DISTRIB_ID=Fedora
+						#     DISTRIB_RELEASE='10.10'
+						#     DISTRIB_CODENAME='squeeze'
+						#     DISTRIB_DESCRIPTION='Ubuntu 10.10'
+						regex = re.compile('^(DISTRIB_(?:ID|RELEASE|CODENAME|DESCRIPTION))=(?:\'|")?([\\w\\s\\.-_]+)(?:\'|")?')
+						match = regex.match(line.rstrip('\n'))
+						if match:
+							# Adds: lsb_distrib_{id,release,codename,description}
+							distro['lsb_{0}'.format(match.groups()[0].lower())] = match.groups()[1].rstrip()
+			elif os.path.isfile('/etc/centos-release'):
+				# CentOS Linux
+				distro['lsb_distrib_id'] = 'CentOS'
+				with open('/etc/centos-release') as ifile:
+					for line in ifile:
+						# Need to pull out the version and codename
+						# in the case of custom content in /etc/centos-release
+						find_release = re.compile(r'\d+\.\d+')
+						find_codename = re.compile(r'(?<=\()(.*?)(?=\))')
+						release = find_release.search(line)
+						codename = find_codename.search(line)
+						if release is not None:
+							distro['lsb_distrib_release'] = release.group()
+						if codename is not None:
+							distro['lsb_distrib_codename'] = codename.group()
+
+			elif os.path.isfile('/etc/system-release'):
+				# Amazon Linux AMI
+				distro['lsb_distrib_id'] = 'Amazon'
+				with open('/etc/system-release') as ifile: 
+					for line in ifile:
+						find_release = re.compile(r'\d+\.\d+')
+						release = find_release.search(line)
+						if release is not None:
+							distro['lsb_distrib_release'] = release.group()
+
+		return distro
 
 
-		system_info['distro'] = distro_dict
-
+	def get_cpu_info(self):
+		processor_dict = {}
 		# Processor Info
 		processor_info = subprocess.Popen(["cat", '/proc/cpuinfo'], stdout=subprocess.PIPE, close_fds=True,
 						).communicate()[0]
 
-		processor = {}
+		
 		for line in processor_info.splitlines():
 				parsed_line = split_and_slugify(line)
 				if parsed_line and isinstance(parsed_line, dict):
 						key = parsed_line.keys()[0]
 						key = key.replace('-', '')
 						value = parsed_line.values()[0]
-						processor[key] = value
+						processor_dict[key] = value
+		
+		return processor_dict
 
-		system_info["processor"] = processor
 
-
-		# IP Adresss
+	def get_ip(self):
+		ip_address = ""
 		public_ip_request = requests.get('http://ipecho.net/plain', timeout=5)
 		if public_ip_request.status_code == 200:
-			system_info['ip_address'] = public_ip_request.text
+			ip_address = public_ip_request.text
 
-		system_info['uptime'] = self.get_uptime()
-
-		return system_info
-
-
+		return ip_address
 
 
 	def get_uptime(self):
