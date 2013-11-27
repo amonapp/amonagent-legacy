@@ -18,7 +18,7 @@ class LinuxSystemCollector(object):
 
 		return system_info
 
-	def get_distro():
+	def get_distro(self):
 		distro = {}
 		try:
 			import lsb_release

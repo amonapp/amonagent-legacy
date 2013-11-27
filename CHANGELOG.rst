@@ -1,10 +1,11 @@
 0.7.1
 ==============
 
-* Better OS detection
+* Improved OS detection (detects Ubuntu, Debian, CentOS, Fedora and Amazon AMI)
+* Uptime data
 
 0.7
 ===============
 
-* Get server public IP Address
-* Sends distro Info 
+* Server public IP Address
+* Distro info
