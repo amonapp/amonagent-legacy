@@ -18,18 +18,17 @@ class LinuxSystemCollector(object):
 
 		return system_info
 
-	def get_distro(self):
-	 	distro = {}
+	def get_distro():
+		distro = {}
 		try:
 			import lsb_release
 			release = lsb_release.get_distro_information()
 			for key, value in release.iteritems():
 				key = key.lower()
-				lsb_param = 'lsb_{0}{1}'.format(
-					'' if key.startswith('distrib_') else 'distrib_',
-					key
-				)
-				distro[lsb_param] = value
+				if key == 'id':
+					distro['id'] = value.lower()
+				if key == 'release':
+					distro['release'] = value
 		except ImportError:
 			# if the python library isn't available, default to regex
 			if os.path.isfile('/etc/lsb-release'):
@@ -46,32 +45,56 @@ class LinuxSystemCollector(object):
 						match = regex.match(line.rstrip('\n'))
 						if match:
 							# Adds: lsb_distrib_{id,release,codename,description}
-							distro['lsb_{0}'.format(match.groups()[0].lower())] = match.groups()[1].rstrip()
+							distro['{0}'.format(match.groups()[0].lower())] = match.groups()[1].rstrip()
+			# Debian 
+			elif os.path.isfile('/etc/debian_version'):
+				with open('/etc/debian_version') as ifile:
+						for line in ifile:
+							find_release = re.compile(r'\d+\.\d+')
+							release = find_release.search(line)
+							if release is not None:
+								distro['release'] = release.group()
+								distro['id'] = 'debian'
 			elif os.path.isfile('/etc/centos-release'):
 				# CentOS Linux
-				distro['lsb_distrib_id'] = 'CentOS'
+				distro['id'] = 'centos'
 				with open('/etc/centos-release') as ifile:
 					for line in ifile:
-						# Need to pull out the version and codename
-						# in the case of custom content in /etc/centos-release
 						find_release = re.compile(r'\d+\.\d+')
-						find_codename = re.compile(r'(?<=\()(.*?)(?=\))')
 						release = find_release.search(line)
-						codename = find_codename.search(line)
 						if release is not None:
-							distro['lsb_distrib_release'] = release.group()
-						if codename is not None:
-							distro['lsb_distrib_codename'] = codename.group()
-
+							distro['release'] = release.group()
+			elif os.path.isfile('/etc/os-release'):
+				# Arch Linux and Fedora
+				with open('/etc/os-release') as ifile:
+					for line in ifile:
+						# NAME="Arch Linux ARM"
+						# VERSION_ID="7"
+						# VERSION="7 (wheezy)"
+						# ID=archarm
+						# ID_LIKE=arch
+						# PRETTY_NAME="Arch Linux ARM"
+						# ANSI_COLOR="0;36"
+						# HOME_URL="http://archlinuxarm.org/"
+						# SUPPORT_URL="https://archlinuxarm.org/forum"
+						# BUG_REPORT_URL="https://github.com/archlinuxarm/PKGBUILDs/issues"
+						regex = re.compile('^([\\w]+)=(?:\'|")?([\\w\\s\\.-_]+)(?:\'|")?')
+						match = regex.match(line.rstrip('\n'))
+						if match:
+							name, value = match.groups()
+							if name.lower() == 'version':
+								distro['release'] = value.strip()
+							if name.lower() == 'name':
+								distro['id'] = value.strip().lower()
 			elif os.path.isfile('/etc/system-release'):
 				# Amazon Linux AMI
-				distro['lsb_distrib_id'] = 'Amazon'
+				distro['id'] = 'amazon'
 				with open('/etc/system-release') as ifile: 
 					for line in ifile:
 						find_release = re.compile(r'\d+\.\d+')
 						release = find_release.search(line)
 						if release is not None:
-							distro['lsb_distrib_release'] = release.group()
+							distro['release'] = release.group()
 
 		return distro
 
