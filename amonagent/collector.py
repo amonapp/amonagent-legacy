@@ -199,8 +199,7 @@ class LinuxSystemCollector(object):
 
 
 	def get_disk_usage(self):
-		# du -h --max-depth=1 /  | sort -n
-		df = subprocess.Popen(['df','-h'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]	
+		df = subprocess.Popen(['df','-m'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]	
 
 		volumes = df.split('\n')	
 		volumes.pop(0)	# remove the header
