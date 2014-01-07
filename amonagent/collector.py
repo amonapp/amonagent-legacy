@@ -241,7 +241,7 @@ class LinuxSystemCollector(object):
 						usage, mount = line.split('\t')
 						usage = int(usage)
 
-						if mount != _volume['path'] and usage > 10485760: # Don't save values below 10MB
+						if mount != _volume['path'] and usage > 104857600: # Don't save values below 100MB
 							usage_list = [usage, mount]
 							directory_data.append(usage_list)
 			
