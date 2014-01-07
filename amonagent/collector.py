@@ -127,7 +127,8 @@ class LinuxSystemCollector(object):
 
 
 	def get_uptime(self):
-
+		uptime = ""
+		
 		with open('/proc/uptime', 'r') as line:
 			contents = line.read().split()
 
@@ -230,7 +231,7 @@ class LinuxSystemCollector(object):
 
 				directory_data = []
 				# Get detailed disk usage
-				du = subprocess.Popen(['du','-h', '--max-depth=1', '--bytes',
+				du = subprocess.Popen(['du','-h', '--max-depth=1', '--bytes', '--exclude=/proc',
 				 _volume['path']], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
 			
 				
