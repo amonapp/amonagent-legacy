@@ -23,12 +23,9 @@ class Remote(object):
 
 		headers = headers if headers else self.headers
 
-		r = requests.post(url, data, headers=headers, timeout=2)
+		r = requests.post(url, data, headers=headers, timeout=5, stream=False)
 
-		if r.status_code != 200:
-			raise ConnectionException(self.errors['connection'])
-		else:
-			return True
+		return True
 
 	def save_system_info(self, data):
 		url = "{0}/api/info/{1}".format(self.host, self.server_key)
