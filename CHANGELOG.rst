@@ -1,3 +1,8 @@
+0.7.3
+==============
+
+* Remove detailed disk usage collector - too slow on big volumes
+
 0.7.2
 ==============
 

@@ -229,25 +229,25 @@ class LinuxSystemCollector(object):
 
 				_volume['percent'] = _volume['percent'].replace("%",'') # Delete the % sign for easier calculation later
 
-				directory_data = []
-				# Get detailed disk usage
-				du = subprocess.Popen(['du','-h', '--max-depth=1', '--bytes', '--exclude=/proc',
-				 _volume['path']], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
+				# directory_data = []
+				# # Get detailed disk usage
+				# du = subprocess.Popen(['du','-h', '--max-depth=1', '--bytes', '--exclude=/proc',
+				#  _volume['path']], stdout=subprocess.PIPE, close_fds=True).communicate()[0]
 			
 				
-				directories = du.split('\n')
-				for line in directories:
-					if re.match('^\s*[0-9]', line) is not None:
-						usage, mount = line.split('\t')
-						usage = int(usage)
+				# directories = du.split('\n')
+				# for line in directories:
+				# 	if re.match('^\s*[0-9]', line) is not None:
+				# 		usage, mount = line.split('\t')
+				# 		usage = int(usage)
 
-						if mount != _volume['path'] and usage > 104857600: # Don't save values below 100MB
-							usage_list = [usage, mount]
-							directory_data.append(usage_list)
+				# 		if mount != _volume['path'] and usage > 104857600: # Don't save values below 100MB
+				# 			usage_list = [usage, mount]
+				# 			directory_data.append(usage_list)
 			
 
-				if len(directory_data) > 0:
-					_volume['detailed_usage'] = directory_data
+				# if len(directory_data) > 0:
+				# 	_volume['detailed_usage'] = directory_data
 
 				# strip /dev/
 				_name = _volume['volume'].replace('/dev/', '')
