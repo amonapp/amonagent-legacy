@@ -1,3 +1,8 @@
+0.7.4
+==============
+
+* Increase the API call timeout to 10 seconds, raise an exception if there is an error
+
 0.7.3
 ==============
 

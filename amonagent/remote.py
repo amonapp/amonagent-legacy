@@ -23,7 +23,10 @@ class Remote(object):
 
 		headers = headers if headers else self.headers
 
-		r = requests.post(url, data, headers=headers, timeout=5, stream=False)
+		
+		r = requests.post(url, data, headers=headers, timeout=10, stream=False)
+		if r.status_code != 200:
+			raise ConnectionException(self.errors['connection'])
 
 		return True
 
