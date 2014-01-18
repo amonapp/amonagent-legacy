@@ -61,8 +61,3 @@ class AmonUptimeScanner(object):
 			result = self._parse_nmap_xml(report_xml)
 		
 		return result 
-
-
-
-uptime_scanner = AmonUptimeScanner(host='127.0.0.1')
-uptime_scanner.scan()

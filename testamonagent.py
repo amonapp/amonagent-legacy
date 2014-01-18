@@ -1,4 +1,5 @@
 from amonagent.collector import system_info_collector, process_info_collector
+from amonagent.uptime.scanner import AmonUptimeScanner
 import requests
 
 OKBLUE = '\033[94m'
@@ -82,7 +83,7 @@ else:
 	message = 'Fail'
 	color = FAIL
 
-print "Network traffict collector: {color}{message}{end}".format(color=color, message=message, end=ENDC)
+print "Network traffic collector: {color}{message}{end}".format(color=color, message=message, end=ENDC)
 
 info = system_info_collector.get_load_average()
 if len(info) > 0:
@@ -114,6 +115,18 @@ else:
 	color = FAIL
 
 print "Process collector: {color}{message}{end}".format(color=color, message=message, end=ENDC)
+
+
+uptime_scanner = AmonUptimeScanner(host='127.0.0.1')
+info = uptime_scanner.scan()
+if len(info) > 0:
+	message = 'OK'
+	color = OKGREEN
+else:
+	message = 'Fail'
+	color = FAIL
+
+print "Uptime collector: {color}{message}{end}".format(color=color, message=message, end=ENDC)
 
 
 amon_api_request = requests.post('https://amon.cx/api/test')

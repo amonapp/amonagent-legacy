@@ -12,5 +12,5 @@ setup(
 	data_files=[
 		('/etc/init.d', ['amon-agent'])
 	],
-	install_requires=['requests==2.0.0', 'unidecode'],
+	install_requires=['requests==2.0.0', 'unidecode', 'xmltodict'],
 ) 
