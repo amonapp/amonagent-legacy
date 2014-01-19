@@ -23,7 +23,7 @@ from amonagent.settings import settings
 from amonagent.runner import runner
 from amonagent.remote import Remote
 from amonagent.log import log
-from amonagent.uptime.scanner import AmonUptimeScanner
+from amonagent.uptime.scanner import uptime_scanner
 
 PIDFILE = '/var/run/amon-agent.pid'
 
@@ -46,7 +46,7 @@ class AmonAgentDaemon(Daemon):
 		while True:
 			stats = {
 				'system': runner.system(),
-				'processes': runner.processes()
+				'processes': runner.processes(),
 			}
 			remote = Remote()
 
@@ -56,13 +56,12 @@ class AmonAgentDaemon(Daemon):
 				log.exception('Sending system data failed')
 
 
-			uptime_scanner = AmonUptimeScanner(host='127.0.0.1')
-			results = uptime_scanner.scan()
-				
-			try:			
-				remote.save_uptime_stats(stats)
-			except Exception:
-				log.exception('Sending Uptime data failed')
+			# uptime_results = uptime_scanner.scan_results()
+
+			# try:			
+			# 	remote.save_uptime_stats(uptime_results)
+			# except Exception:
+			# 	log.exception('Sending Uptime data failed')
 
 
 			# Checks the system every 60 seconds

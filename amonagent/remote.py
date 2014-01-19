@@ -2,6 +2,7 @@ try:
 	import json
 except ImportError:
 	import simplejson as json
+
 import requests 
 from amonagent.exceptions import ConnectionException
 from amonagent.settings import settings
@@ -23,8 +24,8 @@ class Remote(object):
 
 		headers = headers if headers else self.headers
 
-		
 		r = requests.post(url, data, headers=headers, timeout=10, stream=False)
+		
 		if r.status_code != 200:
 			raise ConnectionException(self.errors['connection'])
 
@@ -55,6 +56,8 @@ class Remote(object):
 	def save_uptime_stats(self, data):
 		url = "{0}/api/uptime/{1}".format(self.host, self.server_key)
 		data = self.to_json(data)
+
+		print data
 
 		return self._post(url, data)
 

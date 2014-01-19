@@ -40,7 +40,7 @@ class AmonUptimeScanner(object):
 		
 		return report_list
 
-	def scan(self):
+	def scan_results(self):
 		result = False
 		
 		# -oX - output XML
@@ -60,4 +60,11 @@ class AmonUptimeScanner(object):
 		if len(nmap_err) == 0:
 			result = self._parse_nmap_xml(report_xml)
 		
+
 		return result 
+
+
+
+
+
+uptime_scanner = AmonUptimeScanner(host='127.0.0.1')
