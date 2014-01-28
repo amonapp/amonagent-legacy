@@ -82,7 +82,7 @@ else:
 	message = 'Fail'
 	color = FAIL
 
-print "Network traffict collector: {color}{message}{end}".format(color=color, message=message, end=ENDC)
+print "Network traffic collector: {color}{message}{end}".format(color=color, message=message, end=ENDC)
 
 info = system_info_collector.get_load_average()
 if len(info) > 0:
