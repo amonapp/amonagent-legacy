@@ -1,3 +1,8 @@
+0.7.5
+==============
+
+* Fix locale issues in the process collector module
+
 0.7.4
 ==============
 

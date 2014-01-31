@@ -12,27 +12,24 @@ class TestSystemCheck(object):
 	def test_system_info(self):
 		system_info = system_info_collector.get_system_info()
 
-		assert 'distribution' in system_info["distro"]
-		assert 'release' in system_info["distro"]
-
-		assert 'model-name' in system_info["processor"]
-		assert 'cpu-cores' in system_info["processor"]
-		assert 'cpu-mhz' in system_info["processor"]
-
-
+		assert 'distro' in system_info
+		assert 'uptime' in system_info
+		assert 'processor' in system_info
 		assert 'ip_address' in system_info
+		
+
 
 	def test_memory(self):
 		memory_dict = system_info_collector.get_memory_info()
 
-		assert 'memory:free:mb' in memory_dict
-		assert 'memory:total:mb' in memory_dict
-		assert 'memory:used:mb' in memory_dict
-		assert 'memory:used:%' in memory_dict
-		assert 'swap:free:mb' in memory_dict
-		assert 'swap:used:mb' in memory_dict
-		assert 'swap:used:%' in memory_dict
-		assert 'swap:total:mb' in memory_dict
+		assert 'free_mb' in memory_dict
+		assert 'total_mb' in memory_dict
+		assert 'used_mb' in memory_dict
+		assert 'used_percent' in memory_dict
+		assert 'swap_free_mb' in memory_dict
+		assert 'swap_used_mb' in memory_dict
+		assert 'swap_used_percent' in memory_dict
+		assert 'swap_total_mb' in memory_dict
 
 		for v in memory_dict.values():
 			assert isinstance(v, int)
@@ -93,7 +90,7 @@ class TestSystemCheck(object):
 		for key, value in network_data.iteritems():
 			assert key not in ['lo', 'IFACE']
 			for k in value.keys():
-				assert k in ['kb_received', 'kb_transmitted']
+				assert k in ['inbound', 'outbound']
 
 			for k, v in value.items():
 				assert re.match(value_regex, v)
@@ -102,6 +99,6 @@ class TestProcessCheck(object):
 
 	def test_process_list(self):
 		for process in process_info_collector.process_list():
-			assert 'memory:mb' in process
-			assert 'cpu:%' in process
+			assert 'memory_mb' in process
+			assert 'cpu' in process
 
