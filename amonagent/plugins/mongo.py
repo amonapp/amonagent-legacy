@@ -1,12 +1,10 @@
-import re
 import types
-import time
 
-mongo_uri_re=re.compile(r'mongodb://(?P<username>[^:@]+):(?P<password>[^:@]+)@.*')
+from amonagent.plugin import AmonPlugin
 
-DEFAULT_TIMEOUT = 10
+class MongoPlugin(AmonPlugin):
 
-class MongoDb(object):
+
 
 	GAUGES = [
 		"indexCounters.btree.missRatio",
@@ -31,7 +29,7 @@ class MongoDb(object):
 
 	]
 
-	RATES = [
+	COUNTERS = [
 		"indexCounters.btree.accesses",
 		"indexCounters.btree.hits",
 		"indexCounters.btree.misses",
@@ -60,40 +58,23 @@ class MongoDb(object):
 		"metrics.record.moves",
 	]
 
-	METRICS = GAUGES + RATES
+	METRICS = GAUGES + COUNTERS
 
-	
-	def get_library_versions(self):
-		try:
-			import pymongo
-			version = pymongo.version
-		except ImportError:
-			version = "Not Found"
-		except AttributeError:
-			version = "Unknown"
+	DEFAULT_TIMEOUT = 10
 
-		return {"pymongo": version}
 
-	
+	def collect(self):
+		server =  self.config.get('server')
 
-	def check(self, instance):
-		"""
-		Returns a dictionary that looks a lot like what's sent back by db.serverStatus()
-		"""
-		if 'server' not in instance:
-			# self.log.warn("Missing 'server' in mongo config")
+		if server == None:
+			self.log.warn("Missing 'server' in mongo config")
 			return
-
-		server = instance['server']
-		tags = instance.get('tags', [])
-		tags.append('server:%s' % server)
-		# de-dupe tags to avoid a memory leak
-		tags = list(set(tags))
-
+		
+		
 		try:
 			from pymongo import Connection
 		except ImportError:
-			# self.log.error('mongo.yaml exists but pymongo module can not be imported. Skipping check.')
+			self.log.error('mongo.conf exists but pymongo module can not be imported. Skipping check.')
 			raise Exception('Python PyMongo Module can not be imported. Please check the installation instruction on the Datadog Website')
 
 		try:
@@ -107,25 +88,25 @@ class MongoDb(object):
 				parsed = matches.groupdict()
 			else:
 				parsed = {}
+
 		username = parsed.get('username')
 		password = parsed.get('password')
 		db_name = parsed.get('database')
 
 		if not db_name:
-			# self.log.info('No MongoDB database found in URI. Defaulting to admin.')
+			self.log.info('No MongoDB database found in URI. Defaulting to admin.')
 			db_name = 'admin'
 
 		do_auth = True
 		if username is None or password is None:
-			# self.log.debug("Mongo: cannot extract username and password from config %s" % server)
+			self.log.debug("Mongo: cannot extract username and password from config %s" % server)
 			do_auth = False
 
-		conn = Connection(server, network_timeout=DEFAULT_TIMEOUT)
+		conn = Connection(server, network_timeout=self.DEFAULT_TIMEOUT)
 		db = conn[db_name]
 		if do_auth:
 			if not db.authenticate(username, password):
-				pass
-				# self.log.error("Mongo: cannot connect with config %s" % server)
+				self.log.error("Mongo: cannot connect with config %s" % server)
 
 		status = db["$cmd"].find_one({"serverStatus": 1})
 		status['stats'] = db.command('dbstats')
@@ -161,7 +142,6 @@ class MongoDb(object):
 					data['health'] = current['health']
 
 				data['state'] = replSet['myState']
-				# self.check_last_state(data['state'], server, self.agentConfig)
 				status['replSet'] = data
 		except Exception, e:
 			if "OperationFailure" in repr(e) and "replSetGetStatus" in str(e):
@@ -197,20 +177,8 @@ class MongoDb(object):
 
 			# Check if metric is a gauge or rate
 			if m in self.GAUGES:
-				print "{0}: value: {1}".format(m, value)
-				# print m.lower()
-				# print value
-				# m = self.normalize(m.lower(), 'mongodb')
-				# self.gauge(m, value, tags=tags)
-				pass
+				self.gauge(m, value)
+				
 
-			if m in self.RATES:
-				print "{0}: value: {1}".format(m, value)
-				# print value
-				# m = self.normalize(m.lower(), 'mongodb') + "ps"
-				# self.rate(m, value, tags=tags)
-
-
-
-c = MongoDb()
-c.check({'server': "mongodb://localhost:27017/amon"})
+			if m in self.COUNTERS:
+				self.counter(m, value)

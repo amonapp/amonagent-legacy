@@ -1,90 +1,54 @@
 import requests
 import re
-from amonagent.utils.helpers import slugify
-from amonagent.settings import settings
-from amonagent.log import log
+import sys
 
-class AmonNginxPlugin(object):
+from amonagent.plugin import AmonPlugin
 
+class NginxPlugin(AmonPlugin):
+	"""Tracks basic nginx metrics via the status module
+	* number of connections
+	* number of requets per second
 
-	def __init__(self):
-		configuration = settings.PLUGINS.get('nginx', None)
-		url = configuration.get('url', None)
-		
-		if url is None:
-			log.error('Nginx: Empty status URL in /etc/amonagent.conf:plugins:nginx')
-		else:
-			self.url = configuration.get('url', None)
-		
+	Requires nginx to have the status option compiled.
+	See http://wiki.nginx.org/HttpStubStatusModule for more details
 
-	def build_report(self):
-		# Report format 
-		# {
-		# "plugin": "nginx",
-		# "graphs": [
-		# 	{
-		# 		"name": "Connections",
-		# 		"data": {
-		# 			"connections": 1, 
-		# 			"reading": 0,
-		# 			"writing": 0,
-		# 			"waiting": 0
-		# 	}},
-		# 	{	
-		# 		"name": "Requests per second",
-		# 		"data":  {
-		# 			"requests_per_second": 2
-		# 	}}
-		# ]
-		# }
-		report = {"plugin": "nginx", "graphs": []}
-		temp_report = {} # Used for internal storage
+	$ curl http://localhost/nginx_status/
+	Active connections: 8
+	server accepts handled requests
+	 1156958 1156958 4491319
+	Reading: 0 Writing: 2 Waiting: 6
 
-		result = requests.get(self.url)
+	"""
+	def collect(self):
+		status_url =  self.config.get('status_url')
+
+		response = requests.get(status_url)
 		whitelist = ['accepts','handled','requests']
+		
 
-		if result.text:
-			status = result.text.splitlines()
+		if response.text:
+			status = response.text.splitlines()
 			for line in status:
 				stats_line = re.match('\s*(\d+)\s+(\d+)\s+(\d+)\s*$', line)
 				if stats_line:
-					for i, key in enumerate(whitelist): # Enumerate start is supported only in Python 2.6+
-						temp_report[key] = int(stats_line.group(i+1))
+					result = {}
+					for i, key in enumerate(whitelist):
+						key = self.normalize(key)
+						value = int(stats_line.group(i+1))
+						result[key] = value
 						
+					if len(result) > 0:
+						requests_per_second = 0
+						total_requests = result.get('requests', 0)
+						handled = result.get('handled', 0)
+			
+						if total_requests > 0 and handled > 0:
+							requests_per_second = total_requests/handled
+
+							self.gauge('requests.per.second', requests_per_second)
+
 				else:
 					for (key,val) in re.findall('(\w+):\s*(\d+)', line):
-						filtered_key = slugify(key)
-						temp_report[filtered_key] = int(val)
-		
-		# Calculate requests per second
-		requests_per_second = 0
-		if len(temp_report) > 0:
-			total_requests = temp_report.get('requests', 0)
-			handled = temp_report.get('handled', 0)
-			
-			if total_requests > 0 and handled > 0:
-				requests_per_second = total_requests/handled
-				if requests_per_second > 0:
-					for key in whitelist:
-						del temp_report[key]
-			
-			report['graphs'].append({"name": "Connections", 
-				"data": {	
-					"connections": temp_report['connections'],
-					"reading": temp_report.get('reading', 0),
-					"writing": temp_report.get('writing', 0),
-					"waiting": temp_report.get('waiting', 0)
-				}
-			})
-
-			if requests_per_second > 0:
-				report['graphs'].append({"name": "Requests per second",
-					"data": {
-						"requests_per_second": requests_per_second
-					}
-				})	
-	
-		return report
-
-
-plugin = AmonNginxPlugin()
+						key = self.normalize(key, prefix='connections')
+						self.gauge(key, int(val))
+						

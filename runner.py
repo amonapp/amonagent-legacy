@@ -4,7 +4,9 @@ sys.path.insert(0, '/home/martin/amonagent')
 from amonagent.plugin import discover_plugins
 
 
-plugins = discover_plugins(plugin_paths=['/home/martin/temp/checks'])
+plugins = discover_plugins()
 
 for plugin in plugins:
-	plugin.run()
+	plugin.collect()
+	print plugin.result
+	

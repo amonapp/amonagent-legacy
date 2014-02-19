@@ -1,29 +1,32 @@
 import requests
-from amonagent.utils.helpers import slugify
 
-class AmonApachePlugin(object):
+from amonagent.plugin import AmonPlugin
+
+class ApachePlugin(AmonPlugin):
+	"""Tracks basic apache metrics via the status module
+	* number of workers
+	* number of requets per second
+
+	"""
+
+	GAUGES = {
+		'IdleWorkers': 'performance.idle_workers',
+		'BusyWorkers': 'performance.busy_workers',
+		'ReqPerSec': 'net.requests.per.second', 
+		'Total kBytes': 'net.bytes',
+		'Total Accesses': 'net.hits',
+	}
 
 
-	# TODO
-	# Configuration file
-	def __init__(self):
-		pass
+	def collect(self):
+		status_url =  self.config.get('status_url')
 
-
-	def build_report(self):
-		report = {}
-		result = requests.get("http://www.apache.org/server-status?auto")
-
-		ignore_list = ['Scoreboard']
-		white_list = ['reqpersec','busyworkers','idleworkers','bytespersec']
+		response = requests.get(status_url)
 		
-		status = result.text.splitlines()
+		status = response.text.splitlines()
 		for line in status:
 			key, value = line.split(':')
-
-			if key not in ignore_list:
-				key = slugify(key)
-				if key in white_list:
-					report[key] = float(value)
-		
-		return report
+	
+			if key in self.GAUGES.keys():
+				normalized_key = self.GAUGES[key]
+				self.gauge(normalized_key, value)
