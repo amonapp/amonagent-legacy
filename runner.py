@@ -8,5 +8,6 @@ plugins = discover_plugins()
 
 for plugin in plugins:
 	plugin.collect()
+	print plugin.name
 	print plugin.result
 	
