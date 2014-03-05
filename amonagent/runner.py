@@ -1,4 +1,5 @@
 from amonagent.collector import system_info_collector, process_info_collector
+from amonagent.plugin import discover_plugins
 
 class Runner(object):
 
@@ -50,6 +51,16 @@ class Runner(object):
 			process_info_dict[command]  = process
 
 		return process_info_dict
+
+	def plugins(self):
+		plugins_list = discover_plugins()
+
+		plugin_result_dict = {}
+		for plugin in plugins_list:
+			plugin.collect()
+			plugin_result_dict[plugin.name] = plugin.result
+
+		return plugin_result_dict
 
 runner = Runner()
 

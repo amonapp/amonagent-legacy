@@ -24,7 +24,7 @@ from amonagent.runner import runner
 from amonagent.remote import Remote
 from amonagent.log import log
 
-PIDFILE = '/var/run/amon-agent.pid'
+PIDFILE = '/home/martin/temp/amonagent.pid'
 
 class AmonAgentDaemon(Daemon):
 
@@ -41,11 +41,11 @@ class AmonAgentDaemon(Daemon):
 		
 
 	def run(self):
-
 		while True:
 			stats = {
 				'system': runner.system(),
-				'processes': runner.processes()
+				'processes': runner.processes(), 
+				'plugins': runner.plugins()
 			}
 			remote = Remote()
 
@@ -53,7 +53,6 @@ class AmonAgentDaemon(Daemon):
 				remote.save_system_stats(stats)
 			except Exception:
 				log.exception('Sending system data failed')
-				
 				
 			# Checks the system every 60 seconds
 			time.sleep(settings.SYSTEM_CHECK_PERIOD)
@@ -65,6 +64,7 @@ if __name__ == "__main__":
 	if len(sys.argv) == 2:
 		if 'start' == sys.argv[1]:
 			try:
+
 				daemon.start()
 				print "Starting amonagent {0}...".format(__version__)
 			except Exception, e:
