@@ -136,7 +136,9 @@ def test_plugins():
 
 	enabled_plugis =  discover_plugins()
 	for plugin in enabled_plugis:
+		print '------------------'
 		print "  {color}{plugin}{end}".format(color=OKBLUE, plugin=plugin.name.title(), end=ENDC)
+		print '------------------'
 		error = True
 		
 		try:
@@ -153,5 +155,5 @@ def test_plugins():
 			color = FAIL
 
 	
-	print "Check: {color}{message}{end}".format(color=color, message=message, end=ENDC)
-	print plugin.result
+		print "Check: {color}{message}{end}".format(color=color, message=message, end=ENDC)
+		print plugin.result
