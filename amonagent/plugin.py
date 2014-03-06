@@ -1,8 +1,8 @@
 import imp
 import os
 import re
+import logging 
 
-from amonagent.log import logging
 try:
 	import json
 except ImportError:
