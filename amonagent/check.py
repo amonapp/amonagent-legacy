@@ -1,4 +1,5 @@
 from amonagent.collector import system_info_collector, process_info_collector
+from amonagent.plugin import discover_plugins
 import requests
 
 OKBLUE = '\033[94m'
@@ -127,3 +128,30 @@ def test_checks():
 		color = FAIL
 
 	print "Amon API: {color}{message}{end}".format(color=color, message=message, end=ENDC)
+
+
+def test_plugins():
+	print "Enabled plugins: "
+	
+
+	enabled_plugis =  discover_plugins()
+	for plugin in enabled_plugis:
+		print "  {color}{plugin}{end}".format(color=OKBLUE, plugin=plugin.name.title(), end=ENDC)
+		error = True
+		
+		try:
+			data = plugin.collect()
+			error = False
+		except Exception, e:
+			raise e
+
+		if error == False:
+			message = 'OK'
+			color = OKGREEN
+		else:
+			message = 'Fail'
+			color = FAIL
+
+	
+	print "Check: {color}{message}{end}".format(color=color, message=message, end=ENDC)
+	print plugin.result

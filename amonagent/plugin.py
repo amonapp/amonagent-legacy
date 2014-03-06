@@ -8,6 +8,11 @@ try:
 except ImportError:
 	import simplejson as json
 
+# CONSTANTS
+AMONAGENT_PATH = "/etc/amonagent"
+ENABLED_PLUGINS_PATH = "{0}/plugins-enabled".format(AMONAGENT_PATH)
+AVAILABLE_PLUGINS_PATH	= "{0}/plugins".format(AMONAGENT_PATH)
+
 class PluginMount(type):
 	"""
 	A plugin mount point derived from:
@@ -44,8 +49,8 @@ class AmonPlugin(object):
 
 
 	def _get_configuration_file(self):
-		default_path = '/etc/amonagent/config/'
-		filename = "{0}{1}.conf".format(default_path, self.name)
+		
+		filename = "{0}/{1}.conf".format(ENABLED_PLUGINS_PATH, self.name)
 		config = {}
 		
 		try:
@@ -100,18 +105,26 @@ class AmonPlugin(object):
 def discover_plugins(plugin_paths=[]):
 	""" Discover the plugin classes contained in Python files, given a
 		list of directory names to scan. Return a list of plugin classes.
+		
+		For now this method will look only in /etc/amonagent/plugins with possible 
+		future extension which will permit searching for plugins in 
+		user defined directories
 	"""
-	if len(plugin_paths) == 0:
-		plugin_paths = ['/etc/amonagent/plugins']
 
-	for directory in plugin_paths:
-		for filename in os.listdir(directory):
-			modname, ext = os.path.splitext(filename)
-			if ext == '.py':
-				_file, path, descr = imp.find_module(modname, [directory])
-				if _file:
-					# Loading the module registers the plugin in
-					if modname not in ['base', '__init__']:
-						mod = imp.load_module(modname, _file, path, descr)
+	# Find all enabled plugins
+	for filename in os.listdir(ENABLED_PLUGINS_PATH):
+		plugin_name, ext = os.path.splitext(filename)
+		if ext == ".conf":
+			# Configuration file OK, load the plugin
+			full_plugin_path = "{0}/{1}".format(AVAILABLE_PLUGINS_PATH, plugin_name)
 
+			for filename in os.listdir(full_plugin_path):
+				modname, extension = os.path.splitext(filename)
+				if extension == '.py':
+					_file, path, descr = imp.find_module(modname, [full_plugin_path])
+					if _file:
+						# Loading the module registers the plugin in
+						if modname not in ['base', '__init__']:
+							mod = imp.load_module(modname, _file, path, descr)
+			
 	return AmonPlugin.plugins
