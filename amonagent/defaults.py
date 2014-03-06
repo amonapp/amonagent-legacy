@@ -23,4 +23,4 @@ SERVER_KEY = config.get('server_key', None)
 
 LOGFILE = config.get("logfile", '/var/log/amonagent.log')
 
-PLUGINS = config.get('plugins', None)
+PIDFILE = config.get('pidfile', '/var/run/amonagent.pid')

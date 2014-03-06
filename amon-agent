@@ -9,6 +9,7 @@
 # Description:       Amon agent - collects system and process information.
 ### END INIT INFO
 
+
 import sys, time
 
 try:
@@ -17,14 +18,18 @@ except:
 	print 'amonagent is not installed'
 	sys.exit()
 
+
+# set up logging before importing any other components
+from amonagent.log import initialize_logging; initialize_logging('amonagent')
+
 from amonagent import __version__
 from amonagent.daemon import Daemon
 from amonagent.settings import settings
 from amonagent.runner import runner
 from amonagent.remote import Remote
-from amonagent.log import log
+from amonagent.check import test_checks# Test plugins and collectors
 
-PIDFILE = '/home/martin/temp/amonagent.pid'
+PIDFILE = settings.PIDFILE
 
 class AmonAgentDaemon(Daemon):
 
@@ -76,6 +81,8 @@ if __name__ == "__main__":
 		elif 'restart' == sys.argv[1]:
 			print "Restaring amonagent ..."
 			daemon.restart()
+		elif 'check' == sys.argv[1]:
+			test_checks()
 		elif 'status' == sys.argv[1]:
 			try:
 				pf = file(PIDFILE,'r')
