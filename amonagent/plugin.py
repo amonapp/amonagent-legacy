@@ -93,13 +93,16 @@ class AmonPlugin(object):
 		self.result['gauges'][name] = value
 
 
-	def version(self, library=None, plugin=None):
+	def version(self, library=None, plugin=None, **kwargs):
 
 		if library:
 			self.result['versions']['library'] = library
 		if plugin:
 			self.result['versions']['plugin'] = plugin
 
+		if kwargs:
+			for k,v in kwargs.items():
+				self.result['versions'][k] = v
 
 	def __init__(self, name):
 		self.name = name
