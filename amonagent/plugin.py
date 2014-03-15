@@ -92,11 +92,20 @@ class AmonPlugin(object):
 
 		self.result['gauges'][name] = value
 
+
+	def version(self, library=None, plugin=None):
+
+		if library:
+			self.result['versions']['library'] = library
+		if plugin:
+			self.result['versions']['plugin'] = plugin
+
+
 	def __init__(self, name):
 		self.name = name
 		self.log = logging.getLogger('%s.%s' % (__name__, name))
 		self.config = self._get_configuration_file()
-		self.result = {'gauges': {}, 'counters': {}}
+		self.result = {'gauges': {}, 'counters': {}, 'versions': {}}
 
 	def collect(self):
 		raise NotImplementedError
