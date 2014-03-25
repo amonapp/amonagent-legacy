@@ -1,4 +1,6 @@
 # start
+cd amonagent 
+python setup.py install
 chown -R amon-agent /etc/amon-agent/
 chown -R amon-agent /var/log/amonagent/
 chkconfig --add amon-agent

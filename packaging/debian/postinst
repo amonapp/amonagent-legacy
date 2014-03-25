@@ -4,6 +4,8 @@ set -e
 
 case "$1" in
     configure)
+        cd amonagent 
+        python setup.py install
         update-rc.d amon-agent defaults
         adduser --system amonagent --disabled-login --shell /bin/sh --no-create-home --quiet
         chown root:root /etc/init.d/amon-agent
