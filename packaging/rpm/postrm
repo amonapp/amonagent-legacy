@@ -1,0 +1,3 @@
+getent passwd amon-agent >/dev/null && userdel  amon-agent
+getent group  amon-agent >/dev/null && groupdel amon-agent
+exit 0

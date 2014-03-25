@@ -1,0 +1,7 @@
+getent group amon-agent >/dev/null || groupadd -r amon-agent
+getent passwd amon-agent >/dev/null || \
+    useradd -r -M -g amon-agent -s /bin/sh \
+    -c "Amon Agent" amon-agent
+
+
+exit 0

@@ -6,7 +6,7 @@ test.db
 *egg-info
 *.py[cod]
 
-# Packages
+# Packages 
 *.egg
 *.egg-info
 dist
@@ -24,3 +24,4 @@ lib64
 # Installer logs
 pip-log.txt
 *.deb
+*.rpm

@@ -38,12 +38,6 @@ install_base: source
 	chmod 755 $(BUILD)/var/log/amonagent
 
 
-
-# =====================
-# DEBIAN
-# =====================
-
-install_deb: install_base
 	mkdir -p $(BUILD)/etc/init.d
 	cp -r $(SRC)/amon-agent $(BUILD)/etc/init.d/amon-agent
 	chmod 755 $(BUILD)/etc/init.d/amon-agent
@@ -51,7 +45,14 @@ install_deb: install_base
 	@echo $(VERSION)
 
 
-amon_agent_deb: clean install_deb
+
+# =====================
+# DEBIAN
+# =====================
+
+
+
+amon_agent_deb: clean install_base
 	FPM_EDITOR="echo 'Replaces: amon-agent (<= $(VERSION))' >>" \
 $(FPM_BUILD) -t deb \
 -n amon-agent \
@@ -66,5 +67,18 @@ $(FPM_BUILD) -t deb \
 --pre-uninstall  debian/prerm \
 .
 
+
+amon_agent_rpm: clean install_base
+	FPM_EDITOR="echo ''>>"  \
+$(FPM_BUILD) -t rpm \
+-n "amon-agent" \
+-d "python-devel" \
+-d "sysstat" \
+--conflicts "amon-agent < $(VERSION)" \
+--pre-install	   rpm/preinst \
+--post-install	   rpm/postinst \
+--pre-uninstall	   rpm/prerm \
+--post-uninstall   rpm/postrm \
+.
 
 all: clean deb rpm

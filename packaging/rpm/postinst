@@ -1,0 +1,18 @@
+# start
+chown -R amon-agent /etc/amon-agent/
+chown -R amon-agent /var/log/amonagent/
+chkconfig --add amon-agent
+
+/etc/init.d/amon-agent restart
+RETVAL=$?
+if [ $RETVAL -ne 0 ]; then
+    if [ $RETVAL -eq 3 ]; then
+        # No datadog.conf file is present. The user is probably following
+        # the step-by-step instructions and will add the config file next.
+        exit 0
+    else
+        exit $RETVAL
+    fi
+fi
+
+exit 0
