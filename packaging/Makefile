@@ -60,6 +60,7 @@ $(FPM_BUILD) -t deb \
 -d "python-setuptools" \
 -d "adduser" \
 -d "sysstat" \
+--pre-install debian/preinst \
 --post-install debian/postinst \
 --post-uninstall debian/postrm \
 --pre-uninstall  debian/prerm \
