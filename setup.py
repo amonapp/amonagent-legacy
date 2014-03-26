@@ -1,4 +1,4 @@
-from setuptools import setup, find_packages
+from setuptools import setup
 from amonagent import __version__
  
 setup(
@@ -8,6 +8,6 @@ setup(
 	author='Martin Rusev',
 	author_email='martin@amon.cx',
 	zip_safe=False,
-	packages=find_packages(),
+	packages=['amonagent'],
 	install_requires=['requests==2.0.0', 'unidecode'],
 ) 
