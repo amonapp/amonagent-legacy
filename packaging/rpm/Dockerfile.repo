@@ -1,0 +1,11 @@
+FROM centos:latest
+MAINTAINER Martin Rusev
+
+ADD amon.repo /etc/yum.repos.d/amon.repo
+
+RUN yum -t -y install amon-agent
+
+RUN /etc/init.d/amon-agent status
+RUN /etc/init.d/amon-agent plugins
+
+CMD ["/bin/bash"]

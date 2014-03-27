@@ -25,6 +25,11 @@ Docker images:
 	make test_rpm # Copies the Dockerfile from rpm/Dockerfile and runs it 
 
 
+	# Test packages.amon.cx 
+	make test_debian_repo
+	make test_rpm_repo
+
+
 ## Add files to the Debian repo
 
 	find  -name \*.deb -exec reprepro --ask-passphrase -Vb repo includedeb amon {} \;

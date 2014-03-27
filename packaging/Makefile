@@ -88,3 +88,11 @@ test_debian_repo:
 	cp debian/Dockerfile.repo Dockerfile
 	docker build .
 	rm Dockerfile
+
+
+test_rpm_repo:
+	cp rpm/Dockerfile.repo Dockerfile
+	cp rpm/amon.repo amon.repo
+	docker build .
+	rm Dockerfile
+	rm amon.repo
