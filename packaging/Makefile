@@ -83,3 +83,8 @@ test_rpm:
 	cp rpm/Dockerfile Dockerfile
 	docker build . 
 	rm Dockerfile
+
+test_debian_repo:
+	cp debian/Dockerfile.repo Dockerfile
+	docker build .
+	rm Dockerfile
