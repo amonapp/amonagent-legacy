@@ -1,5 +1,6 @@
 import imp
 import os
+import sys
 import re
 import logging 
 
@@ -12,6 +13,14 @@ except ImportError:
 AMONAGENT_PATH = "/etc/amonagent"
 ENABLED_PLUGINS_PATH = "{0}/plugins-enabled".format(AMONAGENT_PATH)
 AVAILABLE_PLUGINS_PATH	= "{0}/plugins".format(AMONAGENT_PATH)
+LOGGING_MAX_BYTES = 5 * 1024 * 1024
+
+
+def get_log_date_format():
+	return "%Y-%m-%d %H:%M:%S %Z"
+
+def get_log_format(logger_name):
+	 return '%%(asctime)s | %%(levelname)s | dd.%s | %%(name)s(%%(filename)s:%%(lineno)s) | %%(message)s' % logger_name
 
 class PluginMount(type):
 	"""
@@ -46,6 +55,20 @@ class PluginMount(type):
 class AmonPlugin(object):
 
 	__metaclass__ = PluginMount
+
+
+	def initialize_logging(self):
+		log_file = "/var/log/amonagent/{0}.log".format(self.name)
+		self.log = logging.getLogger('%s.%s' % (__name__, self.name))
+
+		if os.access(os.path.dirname(log_file), os.R_OK | os.W_OK):
+			file_handler = logging.handlers.RotatingFileHandler(log_file, maxBytes=LOGGING_MAX_BYTES, backupCount=1)
+			formatter = logging.Formatter(get_log_format(logger_name), get_log_date_format())
+			file_handler.setFormatter(formatter)
+
+			self.log.addHandler(file_handler)
+		else:
+			sys.stderr.write("Log file is unwritable: '%s'\n" % log_file)
 
 
 	def _get_configuration_file(self):
@@ -106,7 +129,8 @@ class AmonPlugin(object):
 
 	def __init__(self, name):
 		self.name = name
-		self.log = logging.getLogger('%s.%s' % (__name__, name))
+		self.initialize_logging()
+
 		self.config = self._get_configuration_file()
 		self.result = {'gauges': {}, 'counters': {}, 'versions': {}}
 
