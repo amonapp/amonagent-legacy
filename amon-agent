@@ -80,9 +80,9 @@ if __name__ == "__main__":
 		elif 'restart' == sys.argv[1]:
 			print "Restaring amonagent ..."
 			daemon.restart()
-		elif 'check' == sys.argv[1]:
+		elif 'test_collectors' == sys.argv[1]:
 			test_checks()
-		elif 'plugins' == sys.argv[1]:
+		elif 'test_plugins' == sys.argv[1]:
 			test_plugins()
 		elif 'status' == sys.argv[1]:
 			try:
