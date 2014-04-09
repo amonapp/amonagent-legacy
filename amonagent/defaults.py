@@ -14,13 +14,15 @@ except Exception, e:
 # 1 minute default
 SYSTEM_CHECK_PERIOD = config.get('system_check_period', 60)
 
-SYSTEM_CHECKS = ['cpu', 'memory', 'disk', 'network', 'loadavg']
 
 HOST = config.get('host', 'https://amon.cx')
 
 
 SERVER_KEY = config.get('server_key', None)
 
-LOGFILE = config.get("logfile", '/var/log/amonagent.log')
-
 PIDFILE = config.get('pidfile', '/var/run/amonagent.pid')
+
+
+# LOGGING DEFAULTS 
+LOGFILE = config.get("logfile", '/var/log/amonagent/amonagent.log')
+LOGGING_MAX_BYTES = 5 * 1024 * 1024

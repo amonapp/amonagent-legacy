@@ -6,40 +6,34 @@ import traceback
 
 from amonagent.settings import settings
 
-LOGGING_MAX_BYTES = 5 * 1024 * 1024
-
-log = logging.getLogger(__name__)
-
-
 def get_log_date_format():
 	return "%Y-%m-%d %H:%M:%S %Z"
 
 def get_log_format(logger_name):
-	 return '%%(asctime)s | %%(levelname)s | dd.%s | %%(name)s(%%(filename)s:%%(lineno)s) | %%(message)s' % logger_name
+	 return '%%(asctime)s | %%(levelname)s | %s | %%(name)s(%%(filename)s:%%(lineno)s) | %%(message)s' % logger_name
 
-	 
+
 def initialize_logging(logger_name):
 
+	log_file = settings.LOGFILE
+
 	logging_config = {
-		'filename': settings.LOGFILE,
+		'filename': log_file,
 		'level': logging.ERROR,
 	}
 	try:
 
 		logging.basicConfig(
 			format=get_log_format(logger_name),
-			level=logging_config['level'] or logging.INFO,
+			level=logging_config['level'],
 		)
 
-
-
-		log_file = logging_config.get('filename')
 
 		if log_file:
 			# make sure the log directory is writeable
 			# NOTE: the entire directory needs to be writable so that rotation works
 			if os.access(os.path.dirname(log_file), os.R_OK | os.W_OK):
-				file_handler = logging.handlers.RotatingFileHandler(log_file, maxBytes=LOGGING_MAX_BYTES, backupCount=1)
+				file_handler = logging.handlers.RotatingFileHandler(log_file, maxBytes=settings.LOGGING_MAX_BYTES, backupCount=1)
 				formatter = logging.Formatter(get_log_format(logger_name), get_log_date_format())
 				file_handler.setFormatter(formatter)
 
@@ -58,6 +52,5 @@ def initialize_logging(logger_name):
 			level=logging.INFO,
 		)
 
-	# re-get the log after logging is initialized
 	global log
 	log = logging.getLogger(__name__)

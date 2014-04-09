@@ -8,7 +8,6 @@
 # Short-Description: Starts the Amon agent
 # Description:       Amon agent - collects system and process information.
 ### END INIT INFO
-
 import logging
 import sys, time
 
@@ -18,8 +17,6 @@ except:
 	print 'amonagent is not installed'
 	sys.exit()
 
-
-# set up logging before importing any other components
 from amonagent.log import initialize_logging; initialize_logging('amonagent')
 
 from amonagent import __version__
@@ -48,6 +45,7 @@ class AmonAgentDaemon(Daemon):
 
 	def run(self):
 		while True:
+			log.error('test')
 			stats = {
 				'system': runner.system(),
 				'processes': runner.processes(), 
