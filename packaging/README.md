@@ -33,3 +33,8 @@ Docker images:
 ## Add files to the Debian repo
 
 	find  -name \*.deb -exec reprepro --ask-passphrase -Vb repo includedeb amon {} \;
+
+
+## Add files to CentOS repo
+
+	createrepo --update /rpmrepo
