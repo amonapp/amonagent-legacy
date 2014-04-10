@@ -45,7 +45,6 @@ class AmonAgentDaemon(Daemon):
 
 	def run(self):
 		while True:
-			log.error('test')
 			stats = {
 				'system': runner.system(),
 				'processes': runner.processes(), 
