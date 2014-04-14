@@ -1,10 +1,11 @@
 # start
-easy_install amonagent
+curl --silent --show-error --retry 5 https://raw.github.com/pypa/pip/master/contrib/get-pip.py | python
+pip install --upgrade 'amonagent>=1.0'
+sh -c "echo  '{\"server_key\": \"test\"}' > /etc/amon-agent.conf"
 chown -R amon-agent /etc/amonagent/
 chown -R amon-agent /var/log/amonagent/
 chown -R amon-agent /var/log/amonagent/amonagent.log
 chkconfig --add amon-agent
-
-sudo /etc/init.d/amon-agent restart
+/etc/init.d/amon-agent restart
 
 exit 0

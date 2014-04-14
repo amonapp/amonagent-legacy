@@ -7,12 +7,12 @@ RUN echo 'deb http://bg.archive.ubuntu.com/ubuntu precise main universe' > /etc/
 
 
 RUN apt-get install -y gdebi-core
-ADD amon-agent_1.0_all.deb var/agent.deb
+ADD amon-agent_1.0.2_all.deb var/agent.deb
 
 RUN gdebi -n /var/agent.deb
 
 RUN /etc/init.d/amon-agent status
-RUN /etc/init.d/amon-agent check
-RUN /etc/init.d/amon-agent plugins
+RUN /etc/init.d/amon-agent test_collectors
+RUN /etc/init.d/amon-agent test_plugins
 
 CMD ["/bin/bash"]

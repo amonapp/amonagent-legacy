@@ -4,6 +4,7 @@ set -e
 if [ "$1" = purge ]; then
     update-rc.d amon-agent remove
     deluser amonagent
+    pip remove amonagent
 fi
 
 exit 0

@@ -4,16 +4,17 @@ set -e
 
 case "$1" in
     configure)
-        easy_install amonagent
+        curl --silent --show-error --retry 5 https://raw.github.com/pypa/pip/master/contrib/get-pip.py | python
+        pip install --upgrade 'amonagent>=1.0'
         update-rc.d amon-agent defaults
+        sh -c "echo  '{\"server_key\": \"test\"}' > /etc/amon-agent.conf"
         adduser --system amonagent --disabled-login --shell /bin/sh --no-create-home --quiet
         chown root:root /etc/init.d/amon-agent
         chown -R amonagent:root /etc/amonagent
         chown -R amonagent:root /var/log/amonagent
-
+        /etc/init.d/amon-agent restart
         set +e
 
-        sudo /etc/init.d/amon-agent restart
     ;;
     abort-upgrade|abort-remove|abort-deconfigure)
     ;;

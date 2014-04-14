@@ -44,7 +44,7 @@ amon_agent_deb: clean install_base
 $(FPM_BUILD) -t deb \
 -n amon-agent \
 -d "python (>= 2.6)" \
--d "python-setuptools" \
+-d "curl" \
 -d "adduser" \
 -d "sysstat" \
 --post-install debian/postinst \
@@ -59,7 +59,7 @@ amon_agent_rpm: clean install_base
 	FPM_EDITOR="echo ''>>"  \
 $(FPM_BUILD) -t rpm \
 -n "amon-agent" \
--d "python-setuptools" \
+-d "curl" \
 -d "sysstat" \
 --conflicts "amon-agent < $(VERSION)" \
 --pre-install	   rpm/preinst \
