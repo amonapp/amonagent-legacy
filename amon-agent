@@ -8,6 +8,7 @@
 # Short-Description: Starts the Amon agent
 # Description:       Amon agent - collects system and process information.
 ### END INIT INFO
+import os; os.umask(022)
 import logging
 import sys, time
 

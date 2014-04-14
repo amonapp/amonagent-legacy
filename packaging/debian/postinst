@@ -13,18 +13,7 @@ case "$1" in
 
         set +e
 
-        /etc/init.d/amon-agent restart
-
-        RETVAL=$?
-        if [ $RETVAL -ne 0 ]; then
-          if [ $RETVAL -eq 3 ]; then
-            # No amonagent.conf file is present. The user is probably following
-            # the step-by-step instructions and will add the config file next.
-            exit 0
-          else
-            exit $?
-          fi
-        fi
+        sudo /etc/init.d/amon-agent restart
     ;;
     abort-upgrade|abort-remove|abort-deconfigure)
     ;;
