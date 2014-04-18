@@ -1,3 +1,8 @@
+1.0.3
+==============
+
+* Processes - read/write per second
+
 0.7.5
 ==============
 

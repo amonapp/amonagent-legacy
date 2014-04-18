@@ -101,4 +101,5 @@ class TestProcessCheck(object):
 		for process in process_info_collector.process_list():
 			assert 'memory_mb' in process
 			assert 'cpu' in process
-
+			assert 'kb_write' in process
+			assert 'kb_read' in process

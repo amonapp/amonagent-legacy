@@ -342,7 +342,7 @@ class ProcessInfoCollector(object):
 
 
 	def process_list(self):
-		stats = subprocess.Popen(['pidstat','-ruht'], 
+		stats = subprocess.Popen(['pidstat','-ruhtd'], 
 			stdout=subprocess.PIPE, close_fds=True)\
 				.communicate()[0]
 
@@ -373,9 +373,17 @@ class ProcessInfoCollector(object):
 				
 				command = data_dict["Command"]
 
+				kb_write = data_dict.get('kB_wr/s')
+				kb_write = kb_write.replace(',', ".")
+				
+				kb_read = data_dict.get('kB_rd/s')
+				kb_read = kb_read.replace(',', ".")
+
 				if not re.search('_', command, re.IGNORECASE):
 					extracted_data = {"cpu": cpu,
 								  "memory_mb": memory,
+								  "kb_read": kb_read,
+								  "kb_write": kb_write,
 								  "command": command}
 					converted_data.append(extracted_data)
 
