@@ -1,7 +1,16 @@
 from amonagent.runner import runner
-import sys
 
 class TestRunner(object):
+
+	def test_info_run(self):
+		info_test = runner.info()
+
+		assert isinstance(info_test, dict)
+		assert 'processor' in info_test
+		assert 'ip_address' in info_test
+		assert 'distro' in info_test
+		assert 'uptime' in info_test
+
 
 	def test_system_run(self):
 		system_test = runner.system()

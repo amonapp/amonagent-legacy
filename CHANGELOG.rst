@@ -1,3 +1,8 @@
+1.1
+==============
+
+* Information about package updates
+
 1.0.3
 ==============
 

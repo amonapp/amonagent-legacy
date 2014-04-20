@@ -3,8 +3,13 @@ try:
 except ImportError:
 	import simplejson as json
 import requests 
-from amonagent.exceptions import ConnectionException
+
 from amonagent.settings import settings
+
+
+class ConnectionException(Exception):
+	" Raised when the Amon Web interface is not responding"
+
 
 class Remote(object):
 
@@ -36,12 +41,6 @@ class Remote(object):
 
 		return self._post(url, data)
 
-
-	def save_plugin_stats(self, data):
-		url = "{0}/api/plugins/{1}".format(self.host, self.server_key)
-		data = self.to_json(data)
-
-		return self._post(url, data)
 
 
 	def save_system_stats(self, data):

@@ -1,56 +1,45 @@
-from amonagent.collector import system_info_collector, process_info_collector
+from amonagent.modules.processes import processes_data_collector
+from amonagent.modules.core import (
+	get_uptime,
+	get_memory_info,
+	get_cpu_utilization,
+	get_load_average,
+	get_disk_usage,
+	get_network_traffic,
+	get_ip_address,
+	get_cpu_info
+)
+from amonagent.modules.distro import get_distro
 from amonagent.plugin import discover_plugins
 
 class Runner(object):
 
 
 	def info(self):
-		return system_info_collector.get_system_info()
-
-	def system(self):
-
-		system_info_dict = {}
-
-		memory = system_info_collector.get_memory_info()
-		cpu = system_info_collector.get_cpu_utilization()
-		loadavg = system_info_collector.get_load_average()
-		disk = system_info_collector.get_disk_usage()
-		network = system_info_collector.get_network_traffic()
-		uptime = system_info_collector.get_uptime()
-
-		if memory != False:
-			system_info_dict['memory'] = memory
-
-		if cpu != False:
-			system_info_dict['cpu'] = cpu
-
-		if loadavg != False:
-			system_info_dict['loadavg'] = loadavg
-
-		if disk != False: 
-			system_info_dict['disk'] = disk
-
-		if network != False:
-			system_info_dict['network'] = network
-
-		if uptime != False:
-			system_info_dict['uptime'] = uptime
-
+		system_info_dict = {
+			'processor': get_cpu_info(),
+			'ip_address': get_ip_address(),
+			'distro': get_distro(),
+			'uptime': get_uptime()
+		}
 
 		return system_info_dict
 
+	def system(self):
+		system_data_dict = {
+			'memory': get_memory_info(),
+			'cpu': get_cpu_utilization(),
+			'disk': get_disk_usage(),
+			'network': get_network_traffic(),
+			'loadavg': get_load_average()
+		}
+
+
+		return system_data_dict
+
 	def processes(self):
-
-		process_checks = process_info_collector.process_list()
-
-		process_info_dict = {}
-		for process in process_checks:
-			command = process["command"]
-			command = command.replace(".", "")
-			del process["command"]
-			process_info_dict[command]  = process
-
-		return process_info_dict
+		return processes_data_collector.collect()
+		
 
 	def plugins(self):
 		plugins_list = discover_plugins()

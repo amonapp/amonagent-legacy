@@ -1,26 +1,48 @@
-from amonagent.collector import system_info_collector, process_info_collector
 import sys
 import re
+import socket
+
+from amonagent.modules.core import (
+	get_uptime,
+	get_memory_info,
+	get_cpu_utilization,
+	get_load_average,
+	get_disk_usage,
+	get_network_traffic,
+	get_ip_address,
+	get_cpu_info
+)
 
 class TestSystemCheck(object):
 
 	def test_uptime(self):
-		uptime = system_info_collector.get_uptime()
+		uptime = get_uptime()
 
 		assert isinstance(uptime, str)
+		
 
-	def test_system_info(self):
-		system_info = system_info_collector.get_system_info()
+	def test_ip_address(self):
+		ip_address = get_ip_address()
 
-		assert 'distro' in system_info
-		assert 'uptime' in system_info
-		assert 'processor' in system_info
-		assert 'ip_address' in system_info
+		valid_ip = False
+		try:
+			socket.inet_pton(socket.AF_INET, ip_address)
+			valid_ip = True
+		except AttributeError:  # no inet_pton here, sorry
+			try:
+				socket.inet_aton(ip_address)
+				valid_ip = True
+			except socket.error:
+				pass
+		except socket.error:  # not a valid address
+			pass
+
+		assert valid_ip
 		
 
 
 	def test_memory(self):
-		memory_dict = system_info_collector.get_memory_info()
+		memory_dict = get_memory_info()
 
 		assert 'free_mb' in memory_dict
 		assert 'total_mb' in memory_dict
@@ -36,7 +58,7 @@ class TestSystemCheck(object):
 
 
 	def test_disk(self):
-		disk = system_info_collector.get_disk_usage()
+		disk = get_disk_usage()
 
 		for k in disk:
 			_dict = disk[k]
@@ -49,7 +71,7 @@ class TestSystemCheck(object):
 
 
 	def test_cpu(self):
-		cpu = system_info_collector.get_cpu_utilization()
+		cpu = get_cpu_utilization()
 
 		assert 'idle' in cpu
 		assert 'user' in cpu
@@ -64,7 +86,7 @@ class TestSystemCheck(object):
 
 
 	def test_loadavg(self):
-		loadavg = system_info_collector.get_load_average()
+		loadavg = get_load_average()
 
 		assert 'minute' in loadavg
 		assert 'five_minutes' in loadavg
@@ -83,7 +105,7 @@ class TestSystemCheck(object):
 		assert re.match(value_regex, loadavg['fifteen_minutes'])
 
 	def test_network(self):
-		network_data = system_info_collector.get_network_traffic()
+		network_data = get_network_traffic()
 	   
 		value_regex = re.compile(r'\d+[\.]\d+')        
 		assert isinstance(network_data, dict)
@@ -95,11 +117,4 @@ class TestSystemCheck(object):
 			for k, v in value.items():
 				assert re.match(value_regex, v)
 
-class TestProcessCheck(object):
 
-	def test_process_list(self):
-		for process in process_info_collector.process_list():
-			assert 'memory_mb' in process
-			assert 'cpu' in process
-			assert 'kb_write' in process
-			assert 'kb_read' in process
