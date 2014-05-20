@@ -73,7 +73,7 @@ all: clean amon_agent_deb amon_agent_rpm
 
 test_debian:
 	cp debian/Dockerfile Dockerfile
-	docker build . 
+	docker build --no-cache . 
 	rm Dockerfile
 
 
@@ -93,6 +93,6 @@ test_debian_repo:
 test_rpm_repo:
 	cp rpm/Dockerfile.repo Dockerfile
 	cp rpm/amon.repo amon.repo
-	docker build .
+	docker build --no-cache .
 	rm Dockerfile
 	rm amon.repo
