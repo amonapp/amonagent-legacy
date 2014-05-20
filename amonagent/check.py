@@ -1,6 +1,19 @@
-from amonagent.collector import system_info_collector, process_info_collector
-from amonagent.plugin import discover_plugins
 import requests
+
+from amonagent.modules.core import (
+	get_uptime,
+	get_memory_info,
+	get_cpu_utilization,
+	get_load_average,
+	get_disk_usage,
+	get_network_traffic,
+	get_ip_address,
+	get_cpu_info
+)
+from amonagent.modules.processes import processes_data_collector
+from amonagent.modules.distro import get_distro
+from amonagent.plugin import discover_plugins
+
 
 OKBLUE = '\033[94m'
 OKGREEN = '\033[92m'
@@ -11,7 +24,7 @@ ENDC = '\033[0m'
 def test_checks():
 	# Distro information 
 
-	distro = system_info_collector.get_distro()
+	distro = get_distro()
 	if len(distro) > 0:
 		message = 'OK'
 		color = OKGREEN
@@ -22,7 +35,7 @@ def test_checks():
 	print "Distro collector: {color}{message}{end}".format(color=color, message=message, end=ENDC)
 
 
-	info = system_info_collector.get_cpu_info()
+	info = get_cpu_info()
 	if len(info) > 0:
 		message = 'OK'
 		color = OKGREEN
@@ -32,7 +45,7 @@ def test_checks():
 
 	print "CPU Info collector: {color}{message}{end}".format(color=color, message=message, end=ENDC)
 
-	info = system_info_collector.get_ip()
+	info = get_ip_address()
 	if len(info) > 0:
 		message = 'OK'
 		color = OKGREEN
@@ -43,7 +56,7 @@ def test_checks():
 	print "IP address collector: {color}{message}{end}".format(color=color, message=message, end=ENDC)
 
 
-	info = system_info_collector.get_uptime()
+	info = get_uptime()
 	if len(info) > 0:
 		message = 'OK'
 		color = OKGREEN
@@ -54,7 +67,7 @@ def test_checks():
 	print "Uptime collector: {color}{message}{end}".format(color=color, message=message, end=ENDC)
 
 
-	info = system_info_collector.get_memory_info()
+	info = get_memory_info()
 	if len(info) > 0:
 		message = 'OK'
 		color = OKGREEN
@@ -65,7 +78,7 @@ def test_checks():
 	print "Memory collector: {color}{message}{end}".format(color=color, message=message, end=ENDC)
 
 
-	info = system_info_collector.get_disk_usage()
+	info = get_disk_usage()
 	if len(info) > 0:
 		message = 'OK'
 		color = OKGREEN
@@ -76,7 +89,7 @@ def test_checks():
 	print "Disk usage collector: {color}{message}{end}".format(color=color, message=message, end=ENDC)
 
 
-	info = system_info_collector.get_network_traffic()
+	info = get_network_traffic()
 	if len(info) > 0:
 		message = 'OK'
 		color = OKGREEN
@@ -86,7 +99,7 @@ def test_checks():
 
 	print "Network traffic collector: {color}{message}{end}".format(color=color, message=message, end=ENDC)
 
-	info = system_info_collector.get_load_average()
+	info = get_load_average()
 	if len(info) > 0:
 		message = 'OK'
 		color = OKGREEN
@@ -97,7 +110,7 @@ def test_checks():
 	print "Load collector: {color}{message}{end}".format(color=color, message=message, end=ENDC)
 
 
-	info = system_info_collector.get_cpu_utilization()
+	info = get_cpu_utilization()
 	if len(info) > 0:
 		message = 'OK'
 		color = OKGREEN
@@ -107,7 +120,7 @@ def test_checks():
 
 	print "CPU collector: {color}{message}{end}".format(color=color, message=message, end=ENDC)
 
-	info = process_info_collector.process_list()
+	info = processes_data_collector.collect()
 	if len(info) > 0:
 		message = 'OK'
 		color = OKGREEN
