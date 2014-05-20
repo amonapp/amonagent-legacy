@@ -1,5 +1,5 @@
 # start
-curl --silent --show-error --retry 5 https://raw.github.com/pypa/pip/master/contrib/get-pip.py | python
+curl --silent --show-error --retry 5 -L https://raw.githubusercontent.com/pypa/pip/master/contrib/get-pip.py | python
 pip install --upgrade 'amonagent>=1.0'
 sh -c "echo  '{\"server_key\": \"test\"}' > /etc/amon-agent.conf"
 chown -R amon-agent /etc/amonagent/

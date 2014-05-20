@@ -4,7 +4,7 @@ set -e
 
 case "$1" in
     configure)
-        curl --silent --show-error --retry 5 https://raw.github.com/pypa/pip/master/contrib/get-pip.py | python
+        curl --silent --show-error --retry 5 -L https://raw.githubusercontent.com/pypa/pip/master/contrib/get-pip.py | python
         pip install --upgrade 'amonagent>=1.0'
         update-rc.d amon-agent defaults
         sh -c "echo  '{\"server_key\": \"test\"}' > /etc/amon-agent.conf"
