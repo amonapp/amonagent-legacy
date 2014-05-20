@@ -30,8 +30,11 @@ def get_distro():
 					regex = re.compile('^(DISTRIB_(?:ID|RELEASE|CODENAME|DESCRIPTION))=(?:\'|")?([\\w\\s\\.-_]+)(?:\'|")?')
 					match = regex.match(line.rstrip('\n'))
 					if match:
+						
 						# Adds: lsb_distrib_{id,release,codename,description}
-						distro['{0}'.format(match.groups()[0].lower())] = match.groups()[1].rstrip()
+						distro_key = '{0}'.format(match.groups()[0].lower())
+						distro_key = distro_key.replace('distrib_', "")
+						distro[distro_key] = match.groups()[1].rstrip()
 			
 			distro['type'] = 'apt'
 		

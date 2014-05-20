@@ -23,9 +23,14 @@ def get_cpu_info():
 
 def get_ip_address():	
 	ip_address = ""
-	public_ip_request = requests.get('http://ipecho.net/plain', timeout=5)
-	if public_ip_request.status_code == 200:
-		ip_address = public_ip_request.text
+	try:
+		request = requests.get('https://amon.cx/checkip', timeout=5)
+	except:
+		request = False
+
+	if request:
+		if request.status_code == 200:
+			ip_address = request.text
 
 	return ip_address
 
