@@ -4,8 +4,11 @@ except ImportError:
 	import simplejson as json
 import requests 
 
+
 from amonagent.settings import settings
 
+import logging
+log = logging.getLogger(__name__)
 
 class ConnectionException(Exception):
 	" Raised when the Amon Web interface is not responding"
@@ -28,10 +31,10 @@ class Remote(object):
 
 		headers = headers if headers else self.headers
 
-		
-		r = requests.post(url, data, headers=headers, timeout=10, stream=False)
-		if r.status_code != 200:
-			raise ConnectionException(self.errors['connection'])
+		try:
+			r = requests.post(url, data, headers=headers, timeout=5, stream=False)
+		except requests.exceptions.RequestException as e:
+			log.exception(e)
 
 		return True
 

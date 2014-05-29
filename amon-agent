@@ -30,16 +30,15 @@ from amonagent.check import test_checks, test_plugins # Test plugins and collect
 PIDFILE = settings.PIDFILE
 log = logging.getLogger(__name__)
 
+
 class AmonAgentDaemon(Daemon):
 
 	def start(self):
 		system_info = runner.info()
 	
 		remote = Remote()
-		try:
-			remote.save_system_info(system_info)
-		except:
-			log.exception("Sending system info failed")
+
+		remote.save_system_info(system_info)
 
 		super(AmonAgentDaemon, self).start()
 		
@@ -52,11 +51,9 @@ class AmonAgentDaemon(Daemon):
 				'plugins': runner.plugins()
 			}
 			remote = Remote()
+			remote.save_system_stats(stats)
 
-			try:			
-				remote.save_system_stats(stats)
-			except Exception:
-				log.exception('Sending system data failed')
+		
 				
 			# Checks the system every 60 seconds
 			time.sleep(settings.SYSTEM_CHECK_PERIOD)
