@@ -198,13 +198,16 @@ def get_load_average():
 
 
 	# Get cpu cores 
-	cpuinfo = subprocess.Popen(['cat', '/proc/cpuinfo'], stdout=subprocess.PIPE, close_fds=True)
-	grep = subprocess.Popen(['grep', 'cores'], stdin=cpuinfo.stdout, stdout=subprocess.PIPE, close_fds=True)
-	sort = subprocess.Popen(['sort', '-u'], stdin=grep.stdout, stdout=subprocess.PIPE, close_fds=True)\
-			.communicate()[0]
+	cpuinfo = subprocess.Popen(['cat', '/proc/cpuinfo'], stderr=subprocess.STDOUT, 
+		stdout=subprocess.PIPE, close_fds=True).communicate()[0]
 
-	cores = re.findall(r'\d+', sort) 
+	cpu_data = cpuinfo.splitlines()
 
+
+	for line in cpu_data:
+		if 'cores' in line:
+			cores = re.findall(r'\d+', line)
+		
 	try:
 		load_dict['cores'] = int(cores[0])
 	except:

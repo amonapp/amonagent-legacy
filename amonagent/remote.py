@@ -33,8 +33,8 @@ class Remote(object):
 
 		try:
 			r = requests.post(url, data, headers=headers, timeout=5, stream=False)
-		except requests.exceptions.RequestException as e:
-			log.exception(e)
+		except Exception:
+			log.error("Can't connect to the Amon API")
 
 		return True
 
