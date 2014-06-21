@@ -47,13 +47,12 @@ class AmonAgentDaemon(Daemon):
 		while True:
 			stats = {
 				'system': runner.system(),
-				'processes': runner.processes(), 
+				'processes': runner.processes(),
 				'plugins': runner.plugins()
 			}
 			remote = Remote()
 			remote.save_system_stats(stats)
 				
-			# Checks the system every 60 seconds
 			time.sleep(settings.SYSTEM_CHECK_PERIOD)
 
 if __name__ == "__main__":

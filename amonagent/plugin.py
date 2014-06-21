@@ -123,21 +123,21 @@ def discover_plugins(plugin_paths=[]):
 		future extension which will permit searching for plugins in 
 		user defined directories
 	"""
+	if os.path.exists(ENABLED_PLUGINS_PATH):
+		# Find all enabled plugins
+		for filename in os.listdir(ENABLED_PLUGINS_PATH):
+			plugin_name, ext = os.path.splitext(filename)
+			if ext == ".conf":
+				# Configuration file OK, load the plugin
+				full_plugin_path = "{0}/{1}".format(AVAILABLE_PLUGINS_PATH, plugin_name)
 
-	# Find all enabled plugins
-	for filename in os.listdir(ENABLED_PLUGINS_PATH):
-		plugin_name, ext = os.path.splitext(filename)
-		if ext == ".conf":
-			# Configuration file OK, load the plugin
-			full_plugin_path = "{0}/{1}".format(AVAILABLE_PLUGINS_PATH, plugin_name)
-
-			for filename in os.listdir(full_plugin_path):
-				modname, extension = os.path.splitext(filename)
-				if extension == '.py':
-					_file, path, descr = imp.find_module(modname, [full_plugin_path])
-					if _file:
-						# Loading the module registers the plugin in
-						if modname not in ['base', '__init__']:
-							mod = imp.load_module(modname, _file, path, descr)
+				for filename in os.listdir(full_plugin_path):
+					modname, extension = os.path.splitext(filename)
+					if extension == '.py':
+						_file, path, descr = imp.find_module(modname, [full_plugin_path])
+						if _file:
+							# Loading the module registers the plugin in
+							if modname not in ['base', '__init__']:
+								mod = imp.load_module(modname, _file, path, descr)
 			
 	return AmonPlugin.plugins

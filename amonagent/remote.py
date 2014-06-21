@@ -32,7 +32,7 @@ class Remote(object):
 		headers = headers if headers else self.headers
 
 		try:
-			r = requests.post(url, data, headers=headers, timeout=5, stream=False)
+			r = requests.post(url, data, headers=headers, timeout=10, stream=False)
 		except Exception:
 			log.error("Can't connect to the Amon API")
 

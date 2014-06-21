@@ -1,3 +1,9 @@
+1.2
+==============
+
+* Fix installation - install both setuptools and pip
+* Don't break the agent if the plugin directories doesn't exist (/etc/amoagent/plugins)
+
 1.1
 ==============
 

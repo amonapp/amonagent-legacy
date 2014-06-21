@@ -31,11 +31,12 @@ class Runner(object):
 			'cpu': get_cpu_utilization(),
 			'disk': get_disk_usage(),
 			'network': get_network_traffic(),
-			'loadavg': get_load_average()
+			'loadavg': get_load_average(),
 		}
 
 
 		return system_data_dict
+
 
 	def processes(self):
 		return processes_data_collector.collect()
