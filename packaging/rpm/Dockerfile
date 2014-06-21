@@ -1,7 +1,7 @@
 FROM centos:latest
 MAINTAINER Martin Rusev
 
-ADD amon-agent-1.1-1.noarch.rpm var/agent.rpm
+ADD amon-agent-1.2-1.noarch.rpm var/agent.rpm
 
 RUN yum -t -y install /var/agent.rpm
 
