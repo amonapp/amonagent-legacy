@@ -15,5 +15,6 @@ RUN apt-get install -y --force-yes amon-agent
 RUN /etc/init.d/amon-agent status
 RUN /etc/init.d/amon-agent test_collectors
 RUN /etc/init.d/amon-agent test_plugins
+RUN ls -lh /etc/amonagent/plugins
 
 CMD ["/bin/bash"]
