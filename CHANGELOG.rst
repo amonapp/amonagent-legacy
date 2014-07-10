@@ -1,3 +1,8 @@
+1.3
+==============
+
+* Install all available plugins with the agent
+
 1.2
 ==============
 
