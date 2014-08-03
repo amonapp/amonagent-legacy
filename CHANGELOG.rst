@@ -1,3 +1,10 @@
+1.5
+==============
+
+* Install plugins from the command line - /etc/init.d/amon-agent install mysql
+* Security update - the daemon for the agent runs under the amonagent user instead of root
+
+
 1.3
 ==============
 

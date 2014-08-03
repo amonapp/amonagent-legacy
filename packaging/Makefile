@@ -22,13 +22,17 @@ install_base:
 	mkdir -p $(BUILD)/etc/amonagent
 	mkdir -p $(BUILD)/etc/amonagent/plugins-enabled
 	mkdir -p $(BUILD)/etc/amonagent/plugins
+	
 	mkdir -p $(BUILD)/var/log/amonagent
+	mkdir -p $(BUILD)/usr/bin
+	mkdir -p $(BUILD)/var/run/amonagent
 
 	chmod 755 $(BUILD)/var/log/amonagent
 
 
 	mkdir -p $(BUILD)/etc/init.d
 	cp -r $(SRC)/amon-agent $(BUILD)/etc/init.d/amon-agent
+	cp -r $(SRC)/amon-agent.py $(BUILD)/usr/bin/amon-agent.py
 	cp -r $(SRC)/amon-agent.conf $(BUILD)/etc/amon-agent.conf
 	cp -r /etc/amonagent/plugins $(BUILD)/etc/amonagent
 	rm -rf  $(BUILD)/etc/amonagent/plugins/.git
@@ -47,7 +51,9 @@ amon_agent_deb: clean install_base
 $(FPM_BUILD) -t deb \
 -n amon-agent \
 -d "python (>= 2.6)" \
+-d "python-dev" \
 -d "curl" \
+-d "gcc" \
 -d "adduser" \
 -d "sysstat" \
 --post-install debian/postinst \
@@ -62,10 +68,11 @@ amon_agent_rpm: clean install_base
 	FPM_EDITOR="echo ''>>"  \
 $(FPM_BUILD) -t rpm \
 -n "amon-agent" \
+-d "python-devel" \
+-d "gcc" \
 -d "curl" \
 -d "sysstat" \
 --conflicts "amon-agent < $(VERSION)" \
---pre-install	   rpm/preinst \
 --post-install	   rpm/postinst \
 --pre-uninstall	   rpm/prerm \
 --post-uninstall   rpm/postrm \
@@ -82,7 +89,7 @@ test_debian:
 
 test_rpm:
 	cp rpm/Dockerfile Dockerfile
-	docker build --no-cache . 
+	docker build . 
 	rm Dockerfile
 
 test_all: test_debian test_rpm

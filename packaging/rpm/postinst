@@ -1,11 +1,22 @@
 # start
- curl --silent --show-error --retry 5 -L https://bootstrap.pypa.io/ez_setup.py -o - | python
+curl --silent --show-error --retry 5 -L https://bootstrap.pypa.io/ez_setup.py -o - | python
 curl --silent --show-error --retry 5 -L https://raw.githubusercontent.com/pypa/pip/master/contrib/get-pip.py | python
-pip install --upgrade 'amonagent>=1.0'
+pip install https://github.com/amonapp/amonagent/archive/master.zip
+pip install ansible
 sh -c "echo  '{\"server_key\": \"test\"}' > /etc/amon-agent.conf"
-chown -R amon-agent /etc/amonagent/
-chown -R amon-agent /var/log/amonagent/
-chown -R amon-agent /var/log/amonagent/amonagent.log
+
+
+getent group amonagent >/dev/null || groupadd -r amonagent
+getent passwd amon-agent >/dev/null || \
+    useradd -r -M -g amonagent -s /bin/sh \
+    -c "Amon Agent" amonagent
+
+
+chown amonagent:amonagent /etc/init.d/amon-agent
+chown amonagent:amonagent /var/run/amonagent
+chown -R amonagent:amonagent /etc/amonagent
+chown -R amonagent:amonagent /var/log/amonagent
+
 chkconfig --add amon-agent
 /etc/init.d/amon-agent restart
 

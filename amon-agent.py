@@ -1,13 +1,4 @@
 #!/usr/bin/python
-### BEGIN INIT INFO
-# Provides:          amon-agent
-# Required-Start:    $remote_fs $syslog
-# Required-Stop:     $remote_fs $syslog
-# Default-Start:     2 3 4 5
-# Default-Stop:      0 1 6
-# Short-Description: Starts the Amon agent
-# Description:       Amon agent - collects system and process information.
-### END INIT INFO
 import logging
 import sys, time
 
@@ -77,7 +68,7 @@ if __name__ == "__main__":
 			test_checks()
 		elif 'install' == sys.argv[1]:
 			if len(sys.argv) == 3:
-				install(sys.argv[2])
+				install_plugin(sys.argv[2])
 		elif 'test_plugins' == sys.argv[1]:
 			test_plugins()
 		elif 'status' == sys.argv[1]:

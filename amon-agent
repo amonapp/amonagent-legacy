@@ -8,9 +8,7 @@
 # Short-Description: Starts the Amon agent
 # Description:       Amon agent - collects system and process information.
 
-# AGENTPATH='/usr/bin/amonagent.py'
-
-AGENTPATH='/home/martin/amonagent/amonagent.py'
+AGENTPATH='/usr/bin/amon-agent.py'
 AGENTUSER="amonagent"
 PIDPATH="/var/run/amonagent/"
 
@@ -26,12 +24,12 @@ case $action in
             chown amonagent:amonagent $PIDPATH
         fi
         
-        sudo su $AGENTUSER -c "python $AGENTPATH stop"
-        sudo su $AGENTUSER -c "python $AGENTPATH start"
+        su $AGENTUSER -c "python $AGENTPATH stop"
+        su $AGENTUSER -c "python $AGENTPATH start"
         ;;
 
     stop)
-        sudo su $AGENTUSER -c "python $AGENTPATH stop"
+        su $AGENTUSER -c "python $AGENTPATH stop"
         exit $?
         ;;
 
@@ -42,21 +40,21 @@ case $action in
         ;;
 
     status)
-        sudo su $AGENTUSER -c "python $AGENTPATH status"
+        su $AGENTUSER -c "python $AGENTPATH status"
         exit $?
         ;;
 
     install)
-        sudo su $AGENTUSER -c "python $AGENTPATH install $2"
+        su -c "python $AGENTPATH install $2"
         exit $?
         ;;
 
     test_collectors)
-        sudo su $AGENTUSER -c "python $AGENTPATH test_collectors"
+        su $AGENTUSER -c "python $AGENTPATH test_collectors"
         ;;
 
     test_plugins)
-        sudo $AGENTUSER -c "python $AGENTPATH test_plugins"
+        su $AGENTUSER -c "python $AGENTPATH test_plugins"
         exit $?
         ;;
 

@@ -1,13 +1,13 @@
 FROM ubuntu:latest
 MAINTAINER Martin Rusev
 
-RUN echo 'deb http://bg.archive.ubuntu.com/ubuntu precise main universe' > /etc/apt/sources.list && \
-    echo 'deb http://bg.archive.ubuntu.com/ubuntu precise-updates universe' >> /etc/apt/sources.list && \
+RUN echo 'deb http://bg.archive.ubuntu.com/ubuntu trusty main universe' > /etc/apt/sources.list && \
+    echo 'deb http://bg.archive.ubuntu.com/ubuntu trusty-updates universe' >> /etc/apt/sources.list && \
     apt-get update
 
 
 RUN apt-get install -y gdebi-core
-ADD amon-agent_1.3.1_all.deb var/agent.deb
+ADD amon-agent_1.5_all.deb var/agent.deb
 
 RUN gdebi -n /var/agent.deb
 

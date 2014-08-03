@@ -6,13 +6,17 @@ case "$1" in
     configure)
         curl --silent --show-error --retry 5 -L https://bootstrap.pypa.io/ez_setup.py -o - | python
         curl --silent --show-error --retry 5 -L https://raw.githubusercontent.com/pypa/pip/master/contrib/get-pip.py | python
-        pip install --upgrade 'amonagent>=1.0'
+        # pip install --upgrade 'amonagent>=1.0'
+        pip install https://github.com/amonapp/amonagent/archive/master.zip
         update-rc.d amon-agent defaults
         sh -c "echo  '{\"server_key\": \"test\"}' > /etc/amon-agent.conf"
         adduser --system amonagent --disabled-login --shell /bin/sh --no-create-home --quiet
-        chown root:root /etc/init.d/amon-agent
-        chown -R amonagent:root /etc/amonagent
-        chown -R amonagent:root /var/log/amonagent
+        groupadd amonagent
+        usermod -a -G amonagent amonagent
+        chown amonagent:amonagent /etc/init.d/amon-agent
+        chown amonagent:amonagent /var/run/amonagent
+        chown -R amonagent:amonagent /etc/amonagent
+        chown -R amonagent:amonagent /var/log/amonagent
         /etc/init.d/amon-agent restart
         set +e
 
