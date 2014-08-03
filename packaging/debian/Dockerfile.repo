@@ -16,5 +16,11 @@ RUN /etc/init.d/amon-agent status
 RUN /etc/init.d/amon-agent test_collectors
 RUN /etc/init.d/amon-agent test_plugins
 RUN ls -lh /etc/amonagent/plugins
+RUN groups amonagent
+RUN addgroup amonagent
+RUN adduser amonagent amonagent
+RUN  chown amonagent:amonagent /etc/init.d/amon-agent
+RUN /etc/init.d/amon-agent restart
+RUN ps aux | grep amon-agent
 
 CMD ["/bin/bash"]

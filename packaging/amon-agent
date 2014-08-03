@@ -1,0 +1,59 @@
+#!/usr/bin/env sh
+### BEGIN INIT INFO
+# Provides:          amon-agent
+# Required-Start:    $remote_fs $syslog
+# Required-Stop:     $remote_fs $syslog
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Starts the Amon agent
+# Description:       Amon agent - collects system and process information.
+
+AGENTPATH='/home/martin/amonagent/agent.py'
+
+action=$1
+
+if [ ! -n "$action" ]; then
+    action="start"
+fi
+
+
+case $action in
+    start)
+        python $AGENTPATH start
+        ;;
+
+    stop)
+       python $AGENTPATH stop
+        exit $?
+        ;;
+
+    restart)
+        python $AGENTPATH stop
+        python $AGENTPATH start
+        exit $?
+        ;;
+
+    status)
+        python $AGENTPATH status
+        exit $?
+        ;;
+
+    install)
+        python $AGENTPATH install $2
+        exit $?
+        ;;
+
+    test_collectors)
+        python $AGENTPATH test_collectors
+        ;;
+
+    test_plugins)
+        python $AGENTPATH test_plugins
+        exit $?
+        ;;
+
+    *)
+        echo "Usage: $0 {start|stop|restart|test_plugins|status|test_collectors|install}"
+        exit 2
+        ;;
+esac

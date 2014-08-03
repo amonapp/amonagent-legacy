@@ -8,7 +8,6 @@
 # Short-Description: Starts the Amon agent
 # Description:       Amon agent - collects system and process information.
 ### END INIT INFO
-import os; os.umask(022)
 import logging
 import sys, time
 
@@ -26,7 +25,7 @@ from amonagent.settings import settings
 from amonagent.runner import runner
 from amonagent.remote import Remote
 from amonagent.check import test_checks, test_plugins # Test plugins and collectors
-from amonagent.installer import install
+from amonagent.plugin import install_plugin
 
 PIDFILE = settings.PIDFILE
 log = logging.getLogger(__name__)
@@ -60,10 +59,9 @@ if __name__ == "__main__":
 
 	daemon = AmonAgentDaemon(PIDFILE)
 
-	if len(sys.argv) >= 2 and len(sys.argv) <= 4:
+	if len(sys.argv) >= 2:
 		if 'start' == sys.argv[1]:
 			try:
-
 				daemon.start()
 				print "Starting amonagent {0}...".format(__version__)
 			except Exception, e:
