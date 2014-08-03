@@ -2,9 +2,7 @@
 curl --silent --show-error --retry 5 -L https://bootstrap.pypa.io/ez_setup.py -o - | python
 curl --silent --show-error --retry 5 -L https://raw.githubusercontent.com/pypa/pip/master/contrib/get-pip.py | python
 pip install https://github.com/amonapp/amonagent/archive/master.zip
-pip install ansible
 sh -c "echo  '{\"server_key\": \"test\"}' > /etc/amon-agent.conf"
-
 
 getent group amonagent >/dev/null || groupadd -r amonagent
 getent passwd amonagent >/dev/null || \
