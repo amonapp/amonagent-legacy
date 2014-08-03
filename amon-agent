@@ -1,0 +1,67 @@
+#!/usr/bin/env sh
+### BEGIN INIT INFO
+# Provides:          amon-agent
+# Required-Start:    $remote_fs $syslog
+# Required-Stop:     $remote_fs $syslog
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Starts the Amon agent
+# Description:       Amon agent - collects system and process information.
+
+# AGENTPATH='/usr/bin/amonagent.py'
+
+AGENTPATH='/home/martin/amonagent/amonagent.py'
+AGENTUSER="amonagent"
+PIDPATH="/var/run/amonagent/"
+
+
+[ -f $AGENTPATH ] || echo "$AGENTPATH not found"
+
+action=$1
+
+case $action in
+    start)
+        if [ ! -d $PIDPATH ]; then
+            mkdir -p $PIDPATH
+            chown amonagent:amonagent $PIDPATH
+        fi
+        
+        sudo su $AGENTUSER -c "python $AGENTPATH stop"
+        sudo su $AGENTUSER -c "python $AGENTPATH start"
+        ;;
+
+    stop)
+        sudo su $AGENTUSER -c "python $AGENTPATH stop"
+        exit $?
+        ;;
+
+    restart)
+        $0 stop
+        $0 start
+        exit $?
+        ;;
+
+    status)
+        sudo su $AGENTUSER -c "python $AGENTPATH status"
+        exit $?
+        ;;
+
+    install)
+        sudo su $AGENTUSER -c "python $AGENTPATH install $2"
+        exit $?
+        ;;
+
+    test_collectors)
+        sudo su $AGENTUSER -c "python $AGENTPATH test_collectors"
+        ;;
+
+    test_plugins)
+        sudo $AGENTUSER -c "python $AGENTPATH test_plugins"
+        exit $?
+        ;;
+
+    *)
+        echo "Usage: $0 {start|stop|restart|test_plugins|status|test_collectors|install}"
+        exit 2
+        ;;
+esac
