@@ -2,6 +2,7 @@ import imp
 import os
 import re
 import logging
+import subprocess
 
 try:
 	import json
@@ -170,6 +171,6 @@ def install_plugin(plugin_name):
 	else:
 		IGNORED_DIRS = ['.git']
 		print "Invalid Plugin name. You can install the following plugins: "
-		for name in os.listdir(BASE_PLUGIN_PATH):
-			if os.path.isdir(os.path.join(BASE_PLUGIN_PATH, name)) and name not in IGNORED_DIRS:
+		for name in os.listdir(AVAILABLE_PLUGINS_PATH):
+			if os.path.isdir(os.path.join(AVAILABLE_PLUGINS_PATH, name)) and name not in IGNORED_DIRS:
 				print name
