@@ -7,7 +7,7 @@ sh -c "echo  '{\"server_key\": \"test\"}' > /etc/amon-agent.conf"
 
 
 getent group amonagent >/dev/null || groupadd -r amonagent
-getent passwd amon-agent >/dev/null || \
+getent passwd amonagent >/dev/null || \
     useradd -r -M -g amonagent -s /bin/sh \
     -c "Amon Agent" amonagent
 

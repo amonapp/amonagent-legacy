@@ -1,4 +1,4 @@
-getent passwd amon-agent >/dev/null && userdel  amon-agent
-getent group  amon-agent >/dev/null && groupdel amon-agent
+getent passwd amonagent >/dev/null && userdel  amonagent
+getent group  amonagent >/dev/null && groupdel amonagent
 pip remove amonagent
 exit 0
