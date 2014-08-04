@@ -5,6 +5,7 @@ RUN echo 'deb http://bg.archive.ubuntu.com/ubuntu trusty main universe' > /etc/a
     echo 'deb http://bg.archive.ubuntu.com/ubuntu trusty-updates universe' >> /etc/apt/sources.list && \
     apt-get update
 
+
 RUN apt-get install -y gdebi-core
 ADD amon-agent_1.5_all.deb var/agent.deb
 
@@ -14,5 +15,6 @@ RUN /etc/init.d/amon-agent status
 RUN /etc/init.d/amon-agent test_collectors
 RUN /etc/init.d/amon-agent test_plugins
 RUN ls -lh /etc/amonagent/plugins
+RUN ps aux | less
 
 CMD ["/bin/bash"]

@@ -85,7 +85,7 @@ test_debian:
 
 test_rpm:
 	cp rpm/Dockerfile Dockerfile
-	docker build . 
+	docker build --no-cache . 
 	rm Dockerfile
 
 test_all: test_debian test_rpm
