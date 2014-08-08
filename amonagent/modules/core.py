@@ -22,15 +22,17 @@ def get_cpu_info():
 
 
 def get_ip_address():	
+	
 	ip_address = ""
 	try:
-		request = requests.get('https://amon.cx/checkip', timeout=5)
+		response = requests.get('https://amon.cx/checkip?format=json', timeout=5)
 	except:
-		request = False
+		response = False
 
-	if request:
-		if request.status_code == 200:
-			ip_address = request.text
+	if response:
+		if response.status_code == 200:
+			json = response.json()
+			ip_address = json.get('ip')
 
 	return ip_address
 
