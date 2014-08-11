@@ -2,6 +2,8 @@ BUILD=build/package
 AGENT=$(BUILD)/amonagent
 SRC=../
 VERSION=`PYTHONPATH=$(SRC) python -c "from amonagent import __version__; print __version__"`
+DEBIAN_REPO_PATH=/home/martin/temp/debianrepo/
+RPM_REPO_PATH=/home/martin/temp/rpmrepo
 
 FPM_BUILD=fpm --epoch 1 -s dir -e -C $(BUILD) \
 -a all -m "Amon Packages <packages@amon.cx>" \
@@ -58,6 +60,8 @@ $(FPM_BUILD) -t deb \
 --post-uninstall debian/postrm \
 --pre-uninstall  debian/prerm \
 .
+	cp "amon-agent_$(VERSION)_all.deb" $(DEBIAN_REPO_PATH)
+	find $(DEBIAN_REPO_PATH)  -name \*.deb -exec reprepro --ask-passphrase -Vb $(DEBIAN_REPO_PATH)repo includedeb amon {} \;
 
 # =====================
 # CentOS/Fedora
@@ -73,6 +77,8 @@ $(FPM_BUILD) -t rpm \
 --pre-uninstall	   rpm/prerm \
 --post-uninstall   rpm/postrm \
 .
+	cp "amon-agent-$(VERSION)-1.noarch.rpm" $(RPM_REPO_PATH)
+	createrepo --update $(RPM_REPO_PATH)
 
 all: clean amon_agent_deb amon_agent_rpm
 
