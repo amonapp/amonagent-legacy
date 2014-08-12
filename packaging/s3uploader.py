@@ -38,7 +38,7 @@ def percent_cb(complete, total):
 	sys.stdout.flush()
 
 def upload(sourcepath, destpath):
-	print "Uploading {0} to S3 bucket {1}".format(destpath, bucket_name)
+	print "Uploading {0} to {1}".format(destpath, bucket_name)
 
 	k = boto.s3.key.Key(bucket)
 	k.key = destpath

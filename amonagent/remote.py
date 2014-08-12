@@ -38,6 +38,7 @@ class Remote(object):
 
 		return True
 
+
 	def save_system_info(self, data):
 		url = "{0}/api/info/{1}".format(self.host, self.server_key)
 		data = self.to_json(data)

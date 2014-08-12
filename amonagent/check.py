@@ -13,6 +13,7 @@ from amonagent.modules.core import (
 from amonagent.modules.processes import processes_data_collector
 from amonagent.modules.distro import get_distro
 from amonagent.plugin import discover_plugins
+from amonagent.settings import settings
 
 
 OKBLUE = '\033[94m'
@@ -131,13 +132,14 @@ def test_checks():
 	print "Process collector: {color}{message}{end}".format(color=color, message=message, end=ENDC)
 
 
-	amon_api_request = requests.post('https://amon.cx/api/test')
+	url = "https://amon.cx/api/test/{1}".format(settings.SERVER_KEY)
+	amon_api_request = requests.post(url)
 
 	if amon_api_request.status_code == 200:
 		message = 'OK'
 		color = OKGREEN
 	else:
-		message = 'Fail'
+		message = 'Fail. Please check that you have a valid server key in /etc/amon-agent.conf'
 		color = FAIL
 
 	print "Amon API: {color}{message}{end}".format(color=color, message=message, end=ENDC)

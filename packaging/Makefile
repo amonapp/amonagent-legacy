@@ -62,8 +62,7 @@ $(FPM_BUILD) -t deb \
 --post-uninstall debian/postrm \
 --pre-uninstall  debian/prerm \
 .
-	cp "amon-agent_$(VERSION)_all.deb" $(DEBIAN_REPO_PATH)
-	find $(DEBIAN_REPO_PATH)  -name \*.deb -exec reprepro --ask-passphrase -Vb $(DEBIAN_REPO_PATH)repo includedeb amon {} \;
+	
 
 # =====================
 # CentOS/Fedora
@@ -79,14 +78,21 @@ $(FPM_BUILD) -t rpm \
 --pre-uninstall	   rpm/prerm \
 --post-uninstall   rpm/postrm \
 .
+	
+
+update_debian_repo:
+	cp "amon-agent_$(VERSION)_all.deb" $(DEBIAN_REPO_PATH)
+	find $(DEBIAN_REPO_PATH)  -name \*.deb -exec reprepro --ask-passphrase -Vb $(DEBIAN_REPO_PATH)repo includedeb amon {} \;
+
+update_rpm_repo:
 	cp "amon-agent-$(VERSION)-1.noarch.rpm" $(RPM_REPO_PATH)
 	createrepo --update $(RPM_REPO_PATH)
 
-upload: 
+
+deploy: update_debian_repo update_rpm_repo
 	python s3uploader.py
 
-
-all: clean amon_agent_deb amon_agent_rpm upload
+all: clean amon_agent_deb amon_agent_rpm
 
 
 test_debian:
