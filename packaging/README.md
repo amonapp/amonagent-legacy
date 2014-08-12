@@ -9,14 +9,14 @@
 
 Docker images:
 
-	docker pull ubuntu
+	docker pull martinrusev/amonbase
 
-	docker pull centos
+	docker pull martinrusev/centos
 
 
 ## Usage 
 
-	make all # Compiles CentOS and Debian packages 
+	make all # Compiles CentOS and Debian packages and uploads to S3
 
 
 ## Testing 
@@ -28,13 +28,3 @@ Docker images:
 	# Test packages.amon.cx 
 	make test_debian_repo
 	make test_rpm_repo
-
-
-## Add files to the Debian repo
-
-	find  -name \*.deb -exec reprepro --ask-passphrase -Vb repo includedeb amon {} \;
-
-
-## Add files to CentOS repo
-
-	createrepo --update /rpmrepo
