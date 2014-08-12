@@ -2,8 +2,10 @@ BUILD=build/package
 AGENT=$(BUILD)/amonagent
 SRC=../
 VERSION=`PYTHONPATH=$(SRC) python -c "from amonagent import __version__; print __version__"`
-DEBIAN_REPO_PATH=/home/martin/temp/debianrepo/
-RPM_REPO_PATH=/home/martin/temp/rpmrepo
+
+PACKAGES_PATH=/home/martin/amon-packages
+DEBIAN_REPO_PATH=$(PACKAGES_PATH)/debian/
+RPM_REPO_PATH=$(PACKAGES_PATH)/centos/
 
 FPM_BUILD=fpm --epoch 1 -s dir -e -C $(BUILD) \
 -a all -m "Amon Packages <packages@amon.cx>" \
@@ -80,7 +82,11 @@ $(FPM_BUILD) -t rpm \
 	cp "amon-agent-$(VERSION)-1.noarch.rpm" $(RPM_REPO_PATH)
 	createrepo --update $(RPM_REPO_PATH)
 
-all: clean amon_agent_deb amon_agent_rpm
+upload: 
+	python s3uploader.py
+
+
+all: clean amon_agent_deb amon_agent_rpm upload
 
 
 test_debian:
@@ -105,10 +111,9 @@ test_debian_repo:
 test_rpm_repo:
 	cp rpm/Dockerfile.repo Dockerfile
 	cp rpm/amon.repo amon.repo
-	docker build  --rm=true --no-cache .
+	docker build --rm=true --no-cache .
 	rm Dockerfile
 	rm amon.repo
-
 
 test_install_script:
 	cp debian/Dockerfile.install Dockerfile

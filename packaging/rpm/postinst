@@ -1,6 +1,6 @@
 # start
-curl --silent --show-error --retry 5 -L https://bootstrap.pypa.io/ez_setup.py -o - | python
-curl --silent --show-error --retry 5 -L https://raw.githubusercontent.com/pypa/pip/master/contrib/get-pip.py | python
+curl --insecure --silent --show-error --retry 5 -L https://bootstrap.pypa.io/ez_setup.py -o - | python
+curl --insecure --silent --show-error --retry 5 -L https://raw.githubusercontent.com/pypa/pip/master/contrib/get-pip.py | python
 pip install https://github.com/amonapp/amonagent/archive/master.zip
 sh -c "echo  '{\"server_key\": \"test\"}' > /etc/amon-agent.conf"
 

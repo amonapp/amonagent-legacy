@@ -1,3 +1,8 @@
+1.5.1
+==============
+
+* Ignore curl certificate check (--insecure) option
+
 1.5
 ==============
 
