@@ -132,7 +132,7 @@ def test_checks():
 	print "Process collector: {color}{message}{end}".format(color=color, message=message, end=ENDC)
 
 
-	url = "https://amon.cx/api/test/{1}".format(settings.SERVER_KEY)
+	url = "https://amon.cx/api/test/{0}".format(settings.SERVER_KEY)
 	amon_api_request = requests.post(url)
 
 	if amon_api_request.status_code == 200:
