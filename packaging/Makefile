@@ -85,32 +85,32 @@ all: clean amon_agent_deb amon_agent_rpm
 
 test_debian:
 	cp debian/Dockerfile Dockerfile
-	docker build --no-cache . 
+	docker build --rm=true --no-cache . 
 	rm Dockerfile
 
 
 test_rpm:
 	cp rpm/Dockerfile Dockerfile
-	docker build --no-cache . 
+	docker build --rm=true --no-cache . 
 	rm Dockerfile
 
 test_all: test_debian test_rpm
 
 test_debian_repo:
 	cp debian/Dockerfile.repo Dockerfile
-	docker build --no-cache . 
+	docker build --rm=true --no-cache . 
 	rm Dockerfile
 
 
 test_rpm_repo:
 	cp rpm/Dockerfile.repo Dockerfile
 	cp rpm/amon.repo amon.repo
-	docker build --no-cache .
+	docker build  --rm=true --no-cache .
 	rm Dockerfile
 	rm amon.repo
 
 
 test_install_script:
 	cp debian/Dockerfile.install Dockerfile
-	docker build --no-cache .
+	docker build --rm=true --no-cache .
 	rm Dockerfile

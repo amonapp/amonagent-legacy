@@ -1,5 +1,5 @@
 [amon]
 name=Amon Repository
-baseurl=http://packages.amon.cx/rpm
+baseurl=http://beta.packages.amon.cx/rpm
 gpgcheck=0
 enabled=1

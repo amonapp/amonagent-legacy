@@ -25,7 +25,7 @@ def get_ip_address():
 	
 	ip_address = ""
 	try:
-		response = requests.get('https://amon.cx/checkip?format=json', timeout=5)
+		response = requests.get('https://amon.cx/api/checkip?format=json', timeout=5)
 	except:
 		response = False
 
