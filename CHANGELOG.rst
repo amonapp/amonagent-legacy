@@ -1,3 +1,8 @@
+1.5.2
+==============
+
+* API Check fixes - test using the real server key
+
 1.5.1
 ==============
 
