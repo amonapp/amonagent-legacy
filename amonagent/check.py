@@ -133,6 +133,7 @@ def test_checks():
 
 
 	url = "https://amon.cx/api/test/{0}".format(settings.SERVER_KEY)
+
 	amon_api_request = requests.post(url)
 
 	if amon_api_request.status_code == 200:
@@ -142,7 +143,8 @@ def test_checks():
 		message = 'Fail. Please check that you have a valid server key in /etc/amon-agent.conf'
 		color = FAIL
 
-	print "Amon API: {color}{message}{end}".format(color=color, message=message, end=ENDC)
+	print "Sending data to {0}".format(url)
+	print "{color}{message}{end}".format(color=color, message=message, end=ENDC)
 
 
 def test_plugins():
