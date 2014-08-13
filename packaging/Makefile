@@ -121,7 +121,12 @@ test_rpm_repo:
 	rm Dockerfile
 	rm amon.repo
 
-test_install_script:
+test_debian_install_script:
 	cp debian/Dockerfile.install Dockerfile
+	docker build --rm=true --no-cache .
+	rm Dockerfile
+
+test_rpm_install_script:
+	cp rpm/Dockerfile.install Dockerfile
 	docker build --rm=true --no-cache .
 	rm Dockerfile
