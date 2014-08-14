@@ -1,0 +1,55 @@
+#!/bin/bash
+### BEGIN INIT INFO
+# Provides:          amonnpm
+# Description:       Amon package manager - installs plugins.
+
+AGENTPATH='amon-agent.py'
+PLUGIN_PATH="/etc/amonagent/plugins/"
+AGENTUSER="amonagent"
+
+function file_exists() {
+    [ -f "$1" ]
+}
+
+# Root user detection
+if [ $(echo "$UID") = "0" ]; then
+    sudo_cmd=''
+else
+    sudo_cmd='sudo'
+fi
+
+[ -f $AGENTPATH ] || echo "$AGENTPATH not found"
+
+action=$1
+
+case $action in
+
+
+    install)
+        PLAYBOOK="$PLUGIN_PATH/$2/$2.yml"
+        
+        if file_exists $PLAYBOOK ; then
+             $sudo_cmd sh -c "ansible-playbook $PLAYBOOK -i /etc/amonagent/plugins/hosts"
+        else
+             printf "\033[31m \n Cant find a plugin named $2\n\033[0m\n"
+             printf "\033[32m Available plugins: \n\033[0m\n"
+             $sudo_cmd ls -l $PLUGIN_PATH --time-style='long-iso' | grep '^d' | awk '{print $8}'
+        fi
+        exit $?
+        ;;
+
+    test)
+        su $AGENTUSER -c "python $AGENTPATH test_plugins"
+        exit $?
+        ;;
+
+    update)
+        su $AGENTUSER -c "git --git-dir=$PLUGIN_PATH/.git --work-tree=$PLUGIN_PATH pull"
+        exit $?
+        ;;
+
+    *)
+        echo "Usage: $0 {install|test|update}"
+        exit 2
+        ;;
+esac
