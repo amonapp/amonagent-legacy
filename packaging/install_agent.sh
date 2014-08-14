@@ -76,7 +76,7 @@ function install_amon() {
 
         printf "\033[34m\n* Installing the Amon Agent package\n\033[0m\n"
         $sudo_cmd apt-get install -y --force-yes python-software-properties software-properties-common
-        $sudo_cmd apt-add-repository ppa:ansible/ansible
+        $sudo_cmd apt-add-repository -y ppa:ansible/ansible
        
         $sudo_cmd apt-get update
         $sudo_cmd apt-get install -y --force-yes amon-agent
