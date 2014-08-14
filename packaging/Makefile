@@ -38,8 +38,7 @@ install_base:
 	cp -r $(SRC)/amon-agent $(BUILD)/etc/init.d/amon-agent
 	cp -r $(SRC)/amon-agent.py $(BUILD)/usr/bin/amon-agent.py
 	cp -r $(SRC)/amon-agent.conf $(BUILD)/etc/amon-agent.conf
-	cp -r /etc/amonagent/plugins $(BUILD)/etc/amonagent
-	rm -rf  $(BUILD)/etc/amonagent/plugins/.git
+	cp -r $(SRC)/amonpm $(BUILD)/usr/bin/amonpm
 	find $(BUILD)/etc/amonagent/ -type f -name "*.pyc" -exec rm -f {} \;
 	chmod 755 $(BUILD)/etc/init.d/amon-agent
 
@@ -58,6 +57,7 @@ $(FPM_BUILD) -t deb \
 -d "curl" \
 -d "adduser" \
 -d "sysstat" \
+-d "git" \
 --post-install debian/postinst \
 --post-uninstall debian/postrm \
 --pre-uninstall  debian/prerm \
@@ -73,6 +73,7 @@ $(FPM_BUILD) -t rpm \
 -n "amon-agent" \
 -d "curl" \
 -d "sysstat" \
+-d "git" \
 --conflicts "amon-agent < $(VERSION)" \
 --post-install	   rpm/postinst \
 --pre-uninstall	   rpm/prerm \

@@ -16,7 +16,6 @@ from amonagent.settings import settings
 from amonagent.runner import runner
 from amonagent.remote import Remote
 from amonagent.check import test_checks, test_plugins # Test plugins and collectors
-from amonagent.plugin import install_plugin
 
 PIDFILE = settings.PIDFILE
 log = logging.getLogger(__name__)
@@ -66,9 +65,6 @@ if __name__ == "__main__":
 			daemon.restart()
 		elif 'test_collectors' == sys.argv[1]:
 			test_checks()
-		elif 'install' == sys.argv[1]:
-			if len(sys.argv) == 3:
-				install_plugin(sys.argv[2])
 		elif 'test_plugins' == sys.argv[1]:
 			test_plugins()
 		elif 'status' == sys.argv[1]:

@@ -12,11 +12,16 @@ case "$1" in
         adduser --system amonagent --disabled-login --shell /bin/sh --no-create-home --quiet
         groupadd amonagent
         usermod -a -G amonagent amonagent
+        
         chown amonagent:amonagent /etc/init.d/amon-agent
+        chown amonagent:amonagent /usr/bin/amonpm
         chown amonagent:amonagent /var/run/amonagent
-        chown -R amonagent:amonagent /etc/amonagent
+        
         chown -R amonagent:amonagent /var/log/amonagent
         /etc/init.d/amon-agent restart
+
+        git clone https://github.com/amonapp/amon-plugins.git /etc/amonagent/plugins
+        chown -R amonagent:amonagent /etc/amonagent
         set +e
 
     ;;

@@ -3,7 +3,7 @@
 # Provides:          amonnpm
 # Description:       Amon package manager - installs plugins.
 
-AGENTPATH='amon-agent.py'
+AGENTPATH='/usr/bin/amon-agent.py'
 PLUGIN_PATH="/etc/amonagent/plugins/"
 AGENTUSER="amonagent"
 
@@ -44,7 +44,7 @@ case $action in
         ;;
 
     update)
-        su $AGENTUSER -c "git --git-dir=$PLUGIN_PATH/.git --work-tree=$PLUGIN_PATH pull"
+        su $AGENTUSER -c "(cd $PLUGIN_PATH && git pull origin master)"
         exit $?
         ;;
 
