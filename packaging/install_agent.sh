@@ -106,7 +106,7 @@ function install_ansible(){
     printf "\033[34m\n* Installing Ansible ...\n\033[0m\n"
 
     if [ $DISTRO == 'debian' ]; then
-        $sudo_cmd sh -c "apt-get install ansible"
+        $sudo_cmd apt-get install -y ansible
 
     elif [ $DISTRO == 'rpm' ]; then
 
