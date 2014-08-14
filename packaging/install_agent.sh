@@ -71,10 +71,13 @@ function install_amon() {
       
     elif [ $DISTRO == 'debian' ]; then
         printf "\033[34m\n* Installing APT package sources for Amon\n\033[0m\n"
-        $sudo_cmd sh -c "echo 'deb http://packages.amon.cx/repo amon contrib' > /etc/apt/sources.list.d/amonagent.list"
+        $sudo_cmd sh -c "echo 'deb http://beta.packages.amon.cx/repo amon contrib' > /etc/apt/sources.list.d/amonagent.list"
         $sudo_cmd apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv AD53961F
 
         printf "\033[34m\n* Installing the Amon Agent package\n\033[0m\n"
+        $sudo_cmd apt-get install -y --force-yes python-software-properties software-properties-common
+        $sudo_cmd apt-add-repository ppa:ansible/ansible
+       
         $sudo_cmd apt-get update
         $sudo_cmd apt-get install -y --force-yes amon-agent
 
@@ -98,9 +101,23 @@ function install_amon() {
 
 }
 
+function install_ansible(){
+    
+    printf "\033[34m\n* Installing Ansible ...\n\033[0m\n"
+
+    if [ $DISTRO == 'debian' ]; then
+        $sudo_cmd sh -c "apt-get install ansible"
+
+    elif [ $DISTRO == 'rpm' ]; then
+
+        $sudo_cmd sh -c "curl -L http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm | rpm -Uvh epel-release-6*.rpm"
+
+    fi
+}
+
 function test_agent() {
 
-    printf "\033[34m* Testing the Agent...\n\033[0m\n"
+    printf "\033[34m\n* Testing the Agent...\n\033[0m\n"
     $sudo_cmd /etc/init.d/amon-agent test_collectors
 
 }
@@ -133,4 +150,5 @@ printf "\033[32m All done. You can see your data at https://amon.cx/servers
 
 install_amon
 test_agent
+install_ansible
 print_troubleshooting_instructions
