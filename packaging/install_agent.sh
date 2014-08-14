@@ -25,7 +25,6 @@ elif file_exists /etc/system-release; then
 fi
 
 
-
 function on_error() {
     printf "\033[31m
 It looks like you hit an issue when trying to install the Agent.
@@ -57,55 +56,81 @@ else
     sudo_cmd='sudo'
 fi
 
-# Install the necessary package sources
-if [ $DISTRO == 'rpm' ]; then
-    echo -e "\033[34m\n* Installing YUM sources for Amon\n\033[0m"
-    $sudo_cmd sh -c "echo -e '[amon]\nname = Amon.\nbaseurl = http://packages.amon.cx/rpm/\nenabled=1\ngpgcheck=0\npriority=1' > /etc/yum.repos.d/amon.repo"
-
-    printf "\033[34m* Installing the Amon Agent package\n\033[0m\n"
-
-    $sudo_cmd yum -y install amon-agent
-  
-elif [ $DISTRO == 'debian' ]; then
-    printf "\033[34m\n* Installing APT package sources for Amon\n\033[0m\n"
-    $sudo_cmd sh -c "echo 'deb http://packages.amon.cx/repo amon contrib' > /etc/apt/sources.list.d/amonagent.list"
-    $sudo_cmd apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv AD53961F
-
-    printf "\033[34m\n* Installing the Amon Agent package\n\033[0m\n"
-    $sudo_cmd apt-get update
-    $sudo_cmd apt-get install -y --force-yes amon-agent
-
-else
-    printf "\033[31mYour OS or distribution are not supported by this install script.
-Please follow the instructions on the Agent setup page:
-
-    https://amon.cx/docs/server-monitoring\033[0m\n"
-    exit;
-fi
-
-printf "\033[34m\n* Adding your API key to the Agent configuration: /etc/amon-agent.conf\n\033[0m\n"
 
 
-$sudo_cmd sh -c "echo  '{\"server_key\": \"$serverkey\"}' > /etc/amon-agent.conf"
+function install_amon() {
+   
+    # Install the necessary package sources
+    if [ $DISTRO == 'rpm' ]; then
+        echo -e "\033[34m\n* Installing YUM sources for Amon\n\033[0m"
+        $sudo_cmd sh -c "echo -e '[amon]\nname = Amon.\nbaseurl = http://packages.amon.cx/rpm/\nenabled=1\ngpgcheck=0\npriority=1' > /etc/yum.repos.d/amon.repo"
+
+        printf "\033[34m* Installing the Amon Agent package\n\033[0m\n"
+
+        $sudo_cmd yum -y install amon-agent
+      
+    elif [ $DISTRO == 'debian' ]; then
+        printf "\033[34m\n* Installing APT package sources for Amon\n\033[0m\n"
+        $sudo_cmd sh -c "echo 'deb http://packages.amon.cx/repo amon contrib' > /etc/apt/sources.list.d/amonagent.list"
+        $sudo_cmd apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv AD53961F
+
+        printf "\033[34m\n* Installing the Amon Agent package\n\033[0m\n"
+        $sudo_cmd apt-get update
+        $sudo_cmd apt-get install -y --force-yes amon-agent
+
+    else
+        printf "\033[31mYour OS or distribution are not supported by this install script.
+    Please follow the instructions on the Agent setup page:
+
+        https://amon.cx/docs/server-monitoring\033[0m\n"
+        exit;
+    fi
+
+    printf "\033[34m\n* Adding your API key to the Agent configuration: /etc/amon-agent.conf\n\033[0m\n"
 
 
-printf "\033[34m* Starting the Agent...\n\033[0m\n"
-$sudo_cmd /etc/init.d/amon-agent restart
+    $sudo_cmd sh -c "echo  '{\"server_key\": \"$serverkey\"}' > /etc/amon-agent.conf"
 
 
+    printf "\033[34m* Starting the Agent...\n\033[0m\n"
+    $sudo_cmd /etc/init.d/amon-agent restart
 
-# Metrics are submitted, echo some instructions and exit
-printf "\033[32m
 
-Your Agent is running and functioning properly. It will continue to run in the
-background and submit metrics to Amon.
+}
 
-If you ever want to stop the Agent, run:
+function test_agent() {
 
-    sudo /etc/init.d/amon-agent stop
+    printf "\033[34m* Testing the Agent...\n\033[0m\n"
+    $sudo_cmd /etc/init.d/amon-agent test_collectors
 
-And to run it again run:
+}
 
-    sudo /etc/init.d/amon-agent start
+
+# Show a message about where to go for help.
+function print_troubleshooting_instructions() {
+
+
+printf "\033[32m All done. You can see your data at https://amon.cx/servers
+   ----------------------------------
+    
+    For troubleshooting instructions, please see the Documentation:
+
+        https://amon.cx/docs/server-monitoring
+
+    If you ever want to stop the Agent, run:
+        
+        sudo /etc/init.d/amon-agent stop
+
+    And to run it again run:
+
+        sudo /etc/init.d/amon-agent start
 
 \033[0m"
+
+
+}
+
+
+install_amon
+test_agent
+print_troubleshooting_instructions
