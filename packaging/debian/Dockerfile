@@ -1,6 +1,5 @@
 FROM amonbase:latest
 
-
 RUN apt-get install -y gdebi-core
 ADD amon-agent_1.5.2_all.deb var/agent.deb
 
