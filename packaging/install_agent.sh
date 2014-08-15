@@ -71,7 +71,7 @@ function install_amon() {
       
     elif [ $DISTRO == 'debian' ]; then
         printf "\033[34m\n* Installing APT package sources for Amon\n\033[0m\n"
-        $sudo_cmd sh -c "echo 'deb http://beta.packages.amon.cx/repo amon contrib' > /etc/apt/sources.list.d/amonagent.list"
+        $sudo_cmd sh -c "echo 'deb http://packages.amon.cx/repo amon contrib' > /etc/apt/sources.list.d/amonagent.list"
         $sudo_cmd apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv AD53961F
 
         printf "\033[34m\n* Installing the Amon Agent package\n\033[0m\n"
