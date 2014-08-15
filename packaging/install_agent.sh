@@ -111,7 +111,7 @@ function install_ansible(){
     elif [ $DISTRO == 'rpm' ]; then
 
         $sudo_cmd sh -c "curl -L http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm | rpm -Uvh epel-release-6*.rpm"
-
+        $sudo_cmd yum -y install ansible
     fi
 }
 
