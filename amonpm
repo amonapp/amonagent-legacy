@@ -26,7 +26,7 @@ case $action in
 
 
     install)
-        PLAYBOOK="$PLUGIN_PATH/$2/$2.yml"
+        PLAYBOOK="$PLUGIN_PATH$2/$2.yml"
         
         if file_exists $PLAYBOOK ; then
              $sudo_cmd sh -c "ansible-playbook $PLAYBOOK -i /etc/amonagent/plugins/hosts"

@@ -188,15 +188,16 @@ def get_network_traffic():
  
 def get_load_average():
 	_loadavg_columns = ['minute','five_minutes','fifteen_minutes']
+	load_dict = {}
 
 
-	lines = open('/proc/loadavg','r').readlines()
+	with open('/proc/loadavg', 'r') as l:
+		lines = l.readlines()
+		load_data = lines[0].split()
 
-	load_data = lines[0].split()
+		_loadavg_values = load_data[:4]
 
-	_loadavg_values = load_data[:4]
-
-	load_dict = dict(zip(_loadavg_columns, _loadavg_values))	
+		load_dict = dict(zip(_loadavg_columns, _loadavg_values))	
 
 
 	# Get cpu cores 

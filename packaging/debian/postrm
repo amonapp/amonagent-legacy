@@ -1,13 +1,8 @@
-#! /bin/bash
-set -e
-
-if [ "$1" = purge ]; then
-    update-rc.d amon-agent remove
-    deluser amonagent
-    groupdel amonagent
-    rm -rf /var/log/amonagent
-    rm -rf /etc/amonagent
-    pip remove amonagent
-fi
+update-rc.d amon-agent remove
+deluser amonagent
+groupdel amonagent
+rm -rf /var/log/amonagent
+rm -rf /etc/amonagent
+pip remove amonagent
 
 exit 0

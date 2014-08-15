@@ -1,3 +1,13 @@
+1.5.5
+==============
+
+* Fix Memory allocation issue in loadavg
+
+1.5.4
+==============
+
+* Fix Debian uninstall script
+
 1.5.3
 ==============
 
