@@ -156,14 +156,10 @@ def test_plugins():
 		print '------------------'
 		print "  {color}{plugin}{end}".format(color=OKBLUE, plugin=plugin.name.title(), end=ENDC)
 		print '------------------'
-		error = True
 		
-		try:
-			data = plugin.collect()
-			error = False
-		except Exception, e:
-			raise e
-
+		data = plugin.collect()	
+		error = plugin.result.get('error')
+		
 		if error == False:
 			message = 'OK'
 			color = OKGREEN
@@ -171,6 +167,6 @@ def test_plugins():
 			message = 'Fail'
 			color = FAIL
 
-	
-		print "Check: {color}{message}{end}".format(color=color, message=message, end=ENDC)
 		print plugin.result
+		print "\nCheck: {color}{message}{end}".format(color=color, message=message, end=ENDC)
+			

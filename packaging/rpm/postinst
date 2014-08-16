@@ -1,4 +1,8 @@
 # start
+PLUGINS_REPO=/etc/amonagent/plugins
+REMOTE_REPO=https://github.com/amonapp/amon-plugins.git
+
+
 curl --insecure --silent --show-error --retry 5 -L https://bootstrap.pypa.io/ez_setup.py -o - | python
 curl --insecure --silent --show-error --retry 5 -L https://raw.githubusercontent.com/pypa/pip/master/contrib/get-pip.py | python
 pip install https://github.com/amonapp/amonagent/archive/master.zip
@@ -18,7 +22,9 @@ chown -R amonagent:amonagent /var/log/amonagent
 chkconfig --add amon-agent
 /etc/init.d/amon-agent restart
 
-git clone https://github.com/amonapp/amon-plugins.git /etc/amonagent/plugins
+rm -rf $PLUGINS_REPO
+git clone $REMOTE_REPO $PLUGINS_REPO
+
 chown -R amonagent:amonagent /etc/amonagent
 
 exit 0

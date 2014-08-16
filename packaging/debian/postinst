@@ -1,4 +1,6 @@
 #! /bin/bash
+PLUGINS_REPO=/etc/amonagent/plugins
+REMOTE_REPO=https://github.com/amonapp/amon-plugins.git
 
 set -e
 
@@ -19,8 +21,12 @@ case "$1" in
         
         chown -R amonagent:amonagent /var/log/amonagent
         /etc/init.d/amon-agent restart
+ 
+        LOCALREPO_VC_DIR=$PLUGINS_REPO/.git
 
-        git clone https://github.com/amonapp/amon-plugins.git /etc/amonagent/plugins
+        rm -rf $PLUGINS_REPO
+        git clone $REMOTE_REPO $PLUGINS_REPO
+        
         chown -R amonagent:amonagent /etc/amonagent
         set +e
 

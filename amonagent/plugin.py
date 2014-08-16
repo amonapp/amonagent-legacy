@@ -110,10 +110,14 @@ class AmonPlugin(object):
 
 		self.config = self._get_configuration_file()
 		self.log = logging.getLogger('%s.%s' % (__name__, name))
-		self.result = {'gauges': {}, 'counters': {}, 'versions': {}}
-
+		self.result = {'gauges': {}, 'counters': {}, 'versions': {}, 'error': False}
+		
 	def collect(self):
 		raise NotImplementedError
+
+	def error(self, error_msg):
+		self.result['error'] = str(error_msg)
+
 
 
 def discover_plugins(plugin_paths=[]):

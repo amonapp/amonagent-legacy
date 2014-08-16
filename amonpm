@@ -23,7 +23,7 @@ fi
 action=$1
 
 case $action in
-
+        
 
     install)
         PLAYBOOK="$PLUGIN_PATH$2/$2.yml"
