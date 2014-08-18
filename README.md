@@ -6,7 +6,7 @@
 
 Amon requires Python 2.5+:
 
-    $ easy_install amonagent
+    $ pip install https://github.com/amonapp/amonagent/archive/master.zip
 
 
 ## Credits / Contact

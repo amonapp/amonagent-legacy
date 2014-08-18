@@ -27,6 +27,7 @@ case $action in
         
 
     install)
+        $0 update
         PLAYBOOK="$PLUGIN_PATH/$2/$2.yml"
         
         if file_exists $PLAYBOOK ; then

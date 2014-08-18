@@ -1,7 +1,7 @@
 1.6
 ==============
 
-* amonpm - Uninstall method
+* amonpm - Uninstall method, Install updates the plugins by default
 
 1.5.5
 ==============
