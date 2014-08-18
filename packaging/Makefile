@@ -110,7 +110,7 @@ test_rpm:
 test_all: test_debian test_rpm
 
 test_debian_repo:
-	cp debian/Dockerfile.repo Dockerfile
+	cp debian/Dockerfile.beta.repo Dockerfile
 	docker build --rm=true --no-cache . 
 	rm Dockerfile
 
