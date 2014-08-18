@@ -47,8 +47,13 @@ class Runner(object):
 
 		plugin_result_dict = {}
 		for plugin in plugins_list:
-			plugin.collect()
-			plugin_result_dict[plugin.name] = plugin.result
+
+			# Don't stop the agent if the plugin data cannot be collected
+			try:
+				plugin.collect()
+				plugin_result_dict[plugin.name] = plugin.result
+			except:
+				pass
 
 		return plugin_result_dict
 

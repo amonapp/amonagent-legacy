@@ -4,7 +4,8 @@
 # Description:       Amon package manager - installs plugins.
 
 AGENTPATH='/usr/bin/amon-agent.py'
-PLUGIN_PATH="/etc/amonagent/plugins/"
+PLUGIN_PATH="/etc/amonagent/plugins"
+PLUGINS_ENABLED="$PLUGIN_PATH/plugins-enabled"
 AGENTUSER="amonagent"
 
 function file_exists() {
@@ -26,7 +27,7 @@ case $action in
         
 
     install)
-        PLAYBOOK="$PLUGIN_PATH$2/$2.yml"
+        PLAYBOOK="$PLUGIN_PATH/$2/$2.yml"
         
         if file_exists $PLAYBOOK ; then
              $sudo_cmd sh -c "ansible-playbook $PLAYBOOK -i /etc/amonagent/plugins/hosts"
@@ -35,11 +36,19 @@ case $action in
              printf "\033[32m Available plugins: \n\033[0m\n"
              $sudo_cmd ls -l $PLUGIN_PATH --time-style='long-iso' | grep '^d' | awk '{print $8}'
         fi
+        su $AGENTUSER -c "python $AGENTPATH restart"
         exit $?
         ;;
 
     test)
         su $AGENTUSER -c "python $AGENTPATH test_plugins"
+        exit $?
+        ;;
+
+    uninstall)
+        CONFIGURATION_FILE="$PLUGINS_ENABLED/$2.conf"
+        $sudo_cmd rm -rf  CONFIGURATION_FILE
+        su $AGENTUSER -c "python $AGENTPATH restart"
         exit $?
         ;;
 
@@ -49,7 +58,7 @@ case $action in
         ;;
 
     *)
-        echo "Usage: $0 {install|test|update}"
+        echo "Usage: $0 {install|test|update|uninstall}"
         exit 2
         ;;
 esac
