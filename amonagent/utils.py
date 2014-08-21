@@ -45,3 +45,10 @@ def unix_utc_now():
 	_unix = calendar.timegm(d.utctimetuple())
 
 	return _unix
+
+def to_float(value):
+	result = value
+	if not isinstance(value, int):
+		result = float(value.replace(",", "."))
+	
+	return result

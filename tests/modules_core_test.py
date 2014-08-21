@@ -7,10 +7,10 @@ from amonagent.modules.core import (
 	get_memory_info,
 	get_cpu_utilization,
 	get_load_average,
-	get_disk_usage,
 	get_network_traffic,
 	get_ip_address,
-	get_cpu_info
+	get_cpu_info, 
+	disk_check
 )
 
 class TestSystemCheck(object):
@@ -64,7 +64,7 @@ class TestSystemCheck(object):
 		assert len(cpu_info.keys()) > 0
 
 	def test_disk(self):
-		disk = get_disk_usage()
+		disk = disk_check.check()
 
 		for k in disk:
 			_dict = disk[k]
