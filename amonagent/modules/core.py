@@ -87,7 +87,8 @@ def get_memory_info():
 
 		memory_free = memory_dict['memfree']+buffers+cached
 		memory_used = memory_dict['memtotal']-memory_free
-		memory_percent_used = (to_float(memory_used)/to_float(memory_dict['memtotal'])*100)
+		
+		memory_percent_used = (float(memory_used)/float(memory_dict['memtotal'])*100)
 		
 		swap_total = memory_dict.get('swaptotal', 0)
 		swap_free = memory_dict.get('swapfree', 0)
@@ -95,7 +96,7 @@ def get_memory_info():
 		swap_percent_used = 0
 		
 		if swap_total > 0:
-			swap_percent_used = (to_float(swap_used)/to_float(swap_total) * 100)
+			swap_percent_used = (float(swap_used)/float(swap_total) * 100)
 
 		extracted_data = {
 			"total_mb": memory_dict["memtotal"],

@@ -44,6 +44,7 @@ class TestSystemCheck(object):
 	def test_memory(self):
 		memory_dict = get_memory_info()
 
+
 		assert 'free_mb' in memory_dict
 		assert 'total_mb' in memory_dict
 		assert 'used_mb' in memory_dict
@@ -52,6 +53,9 @@ class TestSystemCheck(object):
 		assert 'swap_used_mb' in memory_dict
 		assert 'swap_used_percent' in memory_dict
 		assert 'swap_total_mb' in memory_dict
+
+		assert 'used_percent' > 0
+
 
 		for v in memory_dict.values():
 			assert isinstance(v, int)
