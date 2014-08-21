@@ -12,6 +12,9 @@ from amonagent.modules.core import (
 from amonagent.modules.distro import get_distro
 from amonagent.plugin import discover_plugins
 
+import logging
+log = logging.getLogger(__name__)
+
 class Runner(object):
 
 
@@ -53,7 +56,8 @@ class Runner(object):
 				plugin.collect()
 				plugin_result_dict[plugin.name] = plugin.result
 			except:
-				pass
+				log.exception("Can't collect data for plugin: {0}".format(plugin.name))
+				return False
 
 		return plugin_result_dict
 

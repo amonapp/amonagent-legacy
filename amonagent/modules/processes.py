@@ -1,6 +1,9 @@
 import subprocess
 import re
 
+import logging
+log = logging.getLogger(__name__)
+
 from amonagent.modules.core import get_memory_info
 
 class ProcessesDataCollector(object):
@@ -11,9 +14,14 @@ class ProcessesDataCollector(object):
 
 
 	def collect(self):
-		stats = subprocess.Popen(['pidstat','-ruhtd'], 
+
+		try:
+			stats = subprocess.Popen(['pidstat','-ruhtd'], 
 			stdout=subprocess.PIPE, close_fds=True)\
 				.communicate()[0]
+		except:
+			 log.exception('Unable to collect process metrics.')
+			 return False
 
 		stats_data = stats.splitlines()
 		del stats_data[0:2] # Deletes Unix system data

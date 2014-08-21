@@ -57,6 +57,12 @@ class TestSystemCheck(object):
 			assert isinstance(v, int)
 
 
+	def test_cpu_info(self):
+		cpu_info = get_cpu_info()
+
+		assert isinstance(cpu_info, dict)
+		assert len(cpu_info.keys()) > 0
+
 	def test_disk(self):
 		disk = get_disk_usage()
 
@@ -92,6 +98,7 @@ class TestSystemCheck(object):
 		assert 'five_minutes' in loadavg
 		assert 'fifteen_minutes' in loadavg
 		assert 'cores' in loadavg
+
 
 		assert isinstance(loadavg['cores'], int)
 		assert isinstance(loadavg['minute'], str)

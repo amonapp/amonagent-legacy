@@ -1,22 +1,27 @@
 import subprocess
 import re
 import requests
+
+import logging
+log = logging.getLogger(__name__)
+
+
 from amonagent.utils import split_and_slugify
 
 def get_cpu_info():
 	processor_dict = {}
-	# Processor Info
-	processor_info = subprocess.Popen(["cat", '/proc/cpuinfo'], stdout=subprocess.PIPE, close_fds=True,
-					).communicate()[0]
 
-	
-	for line in processor_info.splitlines():
+	with open('/proc/cpuinfo', 'r') as l:
+		lines = l.readlines()
+
+		for line in lines:
 			parsed_line = split_and_slugify(line)
 			if parsed_line and isinstance(parsed_line, dict):
-					key = parsed_line.keys()[0]
-					key = key.replace('-', '')
-					value = parsed_line.values()[0]
-					processor_dict[key] = value
+				key = parsed_line.keys()[0]
+				key = key.replace('-', '')
+				value = parsed_line.values()[0]
+				processor_dict[key] = value
+
 	
 	return processor_dict
 
@@ -111,7 +116,12 @@ def get_memory_info():
 
 
 def get_disk_usage():
-	df = subprocess.Popen(['df','-m'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]	
+
+	try:
+		df = subprocess.Popen(['df','-m'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]	
+	except:
+		log.exception('Unable to collect disk usage metrics.')
+		return False
 
 	volumes = df.split('\n')	
 	volumes.pop(0)	# remove the header
@@ -156,9 +166,14 @@ def get_disk_usage():
 
 def get_network_traffic():
 
-	stats = subprocess.Popen(['sar','-n','DEV','1','1'], 
+	try:
+		stats = subprocess.Popen(['sar','-n','DEV','1','1'], 
 		stdout=subprocess.PIPE, close_fds=True)\
 			.communicate()[0]
+	except:
+		log.exception('Unable to collect network metrics.')
+		return False
+
 	network_data = stats.splitlines()
 	data = {}
 	for line in network_data:
@@ -201,16 +216,13 @@ def get_load_average():
 
 
 	# Get cpu cores 
-	cpuinfo = subprocess.Popen(['cat', '/proc/cpuinfo'], stderr=subprocess.STDOUT, 
-		stdout=subprocess.PIPE, close_fds=True).communicate()[0]
+	with open('/proc/cpuinfo', 'r') as l:
+		lines = l.readlines()
 
-	cpu_data = cpuinfo.splitlines()
+		for line in lines:
+			if 'cores' in line:
+				cores = re.findall(r'\d+', line)
 
-
-	for line in cpu_data:
-		if 'cores' in line:
-			cores = re.findall(r'\d+', line)
-		
 	try:
 		load_dict['cores'] = int(cores[0])
 	except:
@@ -222,12 +234,17 @@ def get_load_average():
 def get_cpu_utilization():
 
 	# Get the cpu stats
-	mpstat = subprocess.Popen(['sar', '1','1'], 
+	try:
+		mpstat = subprocess.Popen(['sar', '1','1'], 
 		stdout=subprocess.PIPE, close_fds=True).communicate()[0]
+	except:
+		log.exception('Unable to collect CPU metrics.')
+		return False
 
 	cpu_columns = []
 	cpu_values = []
 	header_regex = re.compile(r'.*?([%][a-zA-Z0-9]+)[\s+]?') # the header values are %idle, %wait
+	
 	# International float numbers - could be 0.00 or 0,00
 	value_regex = re.compile(r'\d+[\.,]\d+') 
 	stats = mpstat.split('\n')
