@@ -3,6 +3,6 @@ deluser amonagent
 groupdel amonagent
 rm -rf /var/log/amonagent
 rm -rf /etc/amonagent
-pip remove amonagent
+pip uninstall amonagent
 
 exit 0
