@@ -4,7 +4,7 @@ from amonagent.modules.core import (
 	get_memory_info,
 	get_cpu_utilization,
 	get_load_average,
-	get_disk_usage,
+	disk_check,
 	get_network_traffic,
 	get_ip_address,
 	get_cpu_info
@@ -32,7 +32,7 @@ class Runner(object):
 		system_data_dict = {
 			'memory': get_memory_info(),
 			'cpu': get_cpu_utilization(),
-			'disk': get_disk_usage(),
+			'disk': disk_check.check(),
 			'network': get_network_traffic(),
 			'loadavg': get_load_average(),
 		}

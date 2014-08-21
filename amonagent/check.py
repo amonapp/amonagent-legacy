@@ -5,7 +5,7 @@ from amonagent.modules.core import (
 	get_memory_info,
 	get_cpu_utilization,
 	get_load_average,
-	get_disk_usage,
+	disk_check,
 	get_network_traffic,
 	get_ip_address,
 	get_cpu_info
@@ -79,7 +79,7 @@ def test_checks():
 	print "Memory collector: {color}{message}{end}".format(color=color, message=message, end=ENDC)
 
 
-	info = get_disk_usage()
+	info = disk_check.check()
 	if len(info) > 0:
 		message = 'OK'
 		color = OKGREEN
