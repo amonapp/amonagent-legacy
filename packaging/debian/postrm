@@ -1,4 +1,4 @@
-update-rc.d amon-agent remove
+update-rc.d amon-agent remove -f
 deluser amonagent
 groupdel amonagent
 rm -rf /var/log/amonagent

@@ -12,7 +12,7 @@ case "$1" in
         update-rc.d amon-agent defaults
         sh -c "echo  '{\"server_key\": \"test\"}' > /etc/amon-agent.conf"
         adduser --system amonagent --disabled-login --shell /bin/sh --no-create-home --quiet
-        groupadd amonagent
+        groupadd amonagent -f
         usermod -a -G amonagent amonagent
         
         chown amonagent:amonagent /etc/init.d/amon-agent
