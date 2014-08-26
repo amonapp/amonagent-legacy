@@ -55,11 +55,13 @@ class AmonPlugin(object):
 		config = {}
 		
 		try:
-			config_file = file(filename).read()
-			config = json.loads(config_file)
+			with open(filename, 'r') as f:
+				config_file = f.read()
+				config = json.loads(config_file)
 		except Exception, e:
-			print "There was an error in your configuration file ({0})".format(filename)
-			raise e
+			error_message = "There was an error in your configuration file ({0})".format(filename)
+			self.log(error_message)
+
 		
 		return config
 

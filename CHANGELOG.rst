@@ -1,3 +1,9 @@
+1.8 - 26.08.2014
+==============
+
+* Fixed memory leak in the Plugins config reader
+
+
 1.7 - 21.08.2014
 ==============
 
