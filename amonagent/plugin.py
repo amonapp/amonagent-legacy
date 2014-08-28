@@ -141,10 +141,19 @@ def discover_plugins(plugin_paths=[]):
 				for filename in os.listdir(full_plugin_path):
 					modname, extension = os.path.splitext(filename)
 					if extension == '.py':
-						_file, path, descr = imp.find_module(modname, [full_plugin_path])
-						if _file:
+						fp, path, descr = imp.find_module(modname, [full_plugin_path])
+						if fp:
 							# Loading the module registers the plugin in
 							if modname not in ['base', '__init__']:
-								mod = imp.load_module(modname, _file, path, descr)
+								mod = imp.load_module(modname, fp, path, descr)
+							fp.close()
+
+
+						# if modname not in ['base', '__init__']:
+						# 	try:
+						# 		mod = imp.load_module(modname, fp, path, descr)
+						# 	finally:
+						# 		if fp:
+						# 			fp.close()
 			
 	return AmonPlugin.plugins
