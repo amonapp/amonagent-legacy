@@ -147,13 +147,5 @@ def discover_plugins(plugin_paths=[]):
 							if modname not in ['base', '__init__']:
 								mod = imp.load_module(modname, fp, path, descr)
 							fp.close()
-
-
-						# if modname not in ['base', '__init__']:
-						# 	try:
-						# 		mod = imp.load_module(modname, fp, path, descr)
-						# 	finally:
-						# 		if fp:
-						# 			fp.close()
 			
 	return AmonPlugin.plugins
