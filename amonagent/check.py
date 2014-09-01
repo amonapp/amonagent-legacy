@@ -12,7 +12,7 @@ from amonagent.modules.core import (
 )
 from amonagent.modules.processes import processes_data_collector
 from amonagent.modules.distro import get_distro
-from amonagent.plugin import discover_plugins
+from amonagent.modules.plugins import discover_plugins
 from amonagent.settings import settings
 
 
