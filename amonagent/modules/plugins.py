@@ -2,7 +2,6 @@ import imp
 import os
 import re
 import logging
-import subprocess
 
 try:
 	import json
@@ -47,6 +46,14 @@ class PluginMount(type):
 class AmonPlugin(object):
 
 	__metaclass__ = PluginMount
+
+
+	def __init__(self, name):
+		self.name = name
+
+		self.config = self._get_configuration_file()
+		self.log = logging.getLogger('%s.%s' % (__name__, name))
+		self.result = {'gauges': {}, 'counters': {}, 'versions': {}, 'error': False}
 
 
 	def _get_configuration_file(self):
@@ -107,12 +114,7 @@ class AmonPlugin(object):
 			for k,v in kwargs.items():
 				self.result['versions'][k] = v
 
-	def __init__(self, name):
-		self.name = name
-
-		self.config = self._get_configuration_file()
-		self.log = logging.getLogger('%s.%s' % (__name__, name))
-		self.result = {'gauges': {}, 'counters': {}, 'versions': {}, 'error': False}
+	
 		
 	def collect(self):
 		raise NotImplementedError

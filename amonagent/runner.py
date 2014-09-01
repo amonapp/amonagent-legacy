@@ -10,12 +10,16 @@ from amonagent.modules.core import (
 	get_cpu_info
 )
 from amonagent.modules.distro import get_distro
-from amonagent.plugin import discover_plugins
+from amonagent.modules.plugins import discover_plugins
 
 import logging
 log = logging.getLogger(__name__)
 
 class Runner(object):
+
+
+	def __init__(self):
+		self.plugins_list = discover_plugins()
 
 
 	def info(self):
@@ -46,10 +50,8 @@ class Runner(object):
 		
 
 	def plugins(self):
-		plugins_list = discover_plugins()
-
 		plugin_result_dict = {}
-		for plugin in plugins_list:
+		for plugin in self.plugins_list:
 
 			# Don't stop the agent if the plugin data cannot be collected
 			try:

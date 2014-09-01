@@ -18,13 +18,11 @@ chown amonagent:amonagent /etc/init.d/amon-agent
 chown amonagent:amonagent /usr/bin/amonpm
 chown amonagent:amonagent /var/run/amonagent
 chown -R amonagent:amonagent /var/log/amonagent
+chown -R amonagent:amonagent /etc/amonagent
 
 chkconfig --add amon-agent
-/etc/init.d/amon-agent restart
 
 rm -rf $PLUGINS_REPO
 git clone $REMOTE_REPO $PLUGINS_REPO
-
-chown -R amonagent:amonagent /etc/amonagent
 
 exit 0

@@ -34,3 +34,4 @@ def test_open_files():
 	print "### %d OPEN FILES: [%s]" % (len(openfiles), ", ".join(f.x for f in openfiles))
 
 	assert len(openfiles) == 0
+

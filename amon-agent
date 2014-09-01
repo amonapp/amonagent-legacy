@@ -49,17 +49,13 @@ case $action in
         exit $?
         ;;
 
-    test_collectors)
-        su $AGENTUSER -c "python $AGENTPATH test_collectors"
+    test)
+        su $AGENTUSER -c "python $AGENTPATH test"
         ;;
 
-    test_plugins)
-        su $AGENTUSER -c "python $AGENTPATH test_plugins"
-        exit $?
-        ;;
 
     *)
-        echo "Usage: $0 {start|stop|restart|test_plugins|status|test_collectors|install}"
+        echo "Usage: $0 {start|stop|restart|status|test}"
         exit 2
         ;;
 esac
