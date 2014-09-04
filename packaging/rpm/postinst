@@ -2,12 +2,6 @@
 PLUGINS_REPO=/etc/amonagent/plugins
 REMOTE_REPO=https://github.com/amonapp/amon-plugins.git
 
-
-curl --insecure --silent --show-error --retry 5 -L https://bootstrap.pypa.io/ez_setup.py -o - | python
-curl --insecure --silent --show-error --retry 5 -L https://raw.githubusercontent.com/pypa/pip/master/contrib/get-pip.py | python
-pip install https://github.com/amonapp/amonagent/archive/master.zip
-sh -c "echo  '{\"server_key\": \"test\"}' > /etc/amon-agent.conf"
-
 getent group amonagent >/dev/null || groupadd -r amonagent
 getent passwd amonagent >/dev/null || \
     useradd -r -M -g amonagent -s /bin/sh \
@@ -24,5 +18,9 @@ chkconfig --add amon-agent
 
 rm -rf $PLUGINS_REPO
 git clone $REMOTE_REPO $PLUGINS_REPO
+
+curl --insecure --silent --show-error --retry 5 -L https://bootstrap.pypa.io/ez_setup.py -o - | python
+curl --insecure --silent --show-error --retry 5 -L https://raw.githubusercontent.com/pypa/pip/master/contrib/get-pip.py | python
+pip install https://github.com/amonapp/amonagent/archive/master.zip
 
 exit 0

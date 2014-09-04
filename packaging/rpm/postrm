@@ -1,4 +1,6 @@
+#! /bin/sh
+
 getent passwd amonagent >/dev/null && userdel  amonagent
 getent group  amonagent >/dev/null && groupdel amonagent
-pip uninstall amonagent
+/usr/bin/yes | pip uninstall amonagent || true
 exit 0

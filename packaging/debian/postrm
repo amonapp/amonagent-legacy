@@ -1,8 +1,10 @@
-update-rc.d amon-agent remove -f
-deluser amonagent
-groupdel amonagent
+#! /bin/sh
+
+update-rc.d amon-agent remove -f || true 
+getent passwd amonagent >/dev/null && deluser amonagent
+getent group  amonagent >/dev/null && groupdel amonagent
 rm -rf /var/log/amonagent
 rm -rf /etc/amonagent
-pip uninstall amonagent
+/usr/bin/yes | pip uninstall amonagent || true
 
 exit 0

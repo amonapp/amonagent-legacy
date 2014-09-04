@@ -6,14 +6,13 @@ set -e
 
 case "$1" in
     configure)
-        curl --insecure --silent --show-error --retry 5 -L https://bootstrap.pypa.io/ez_setup.py -o - | python
-        curl --insecure --silent --show-error --retry 5 -L https://raw.githubusercontent.com/pypa/pip/master/contrib/get-pip.py | python
-        pip install https://github.com/amonapp/amonagent/archive/master.zip
+       
         update-rc.d amon-agent defaults
-        sh -c "echo  '{\"server_key\": \"test\"}' > /etc/amon-agent.conf"
-        adduser --system amonagent --disabled-login --shell /bin/sh --no-create-home --quiet
-        groupadd amonagent -f
-        usermod -a -G amonagent amonagent
+        getent passwd amonagent >/dev/null || \
+            adduser --system amonagent --disabled-login --shell /bin/sh --no-create-home --quiet
+        
+        getent group amonagent >/dev/null || groupadd amonagent -f
+        usermod -a -G amonagent amonagent || true 
         
         chown amonagent:amonagent /etc/init.d/amon-agent
         chown amonagent:amonagent /usr/bin/amonpm
@@ -29,6 +28,11 @@ case "$1" in
         
         chown -R amonagent:amonagent /etc/amonagent
         set +e
+
+
+        curl --insecure --silent --show-error --retry 5 -L https://bootstrap.pypa.io/ez_setup.py -o - | python
+        curl --insecure --silent --show-error --retry 5 -L https://raw.githubusercontent.com/pypa/pip/master/contrib/get-pip.py | python
+        pip install https://github.com/amonapp/amonagent/archive/master.zip
 
     ;;
     abort-upgrade|abort-remove|abort-deconfigure)
