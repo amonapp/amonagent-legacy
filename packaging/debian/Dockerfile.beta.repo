@@ -10,7 +10,11 @@ RUN /etc/init.d/amon-agent test
 
 
 RUN amonpm install boo
-RUN amonpm update
 
+RUN apt-get remove -y amon-agent
+RUN apt-get install -y --force-yes amon-agent
+
+RUN /etc/init.d/amon-agent status
+RUN /etc/init.d/amon-agent test
 
 CMD ["/bin/bash"]
