@@ -27,7 +27,7 @@ case $action in
         
 
     install)
-        $0 update
+        # $0 update
         PLAYBOOK="$PLUGIN_PATH/$2/$2.yml"
         
         if file_exists $PLAYBOOK ; then
@@ -38,6 +38,11 @@ case $action in
              $sudo_cmd ls -l $PLUGIN_PATH --time-style='long-iso' | grep '^d' | awk '{print $8}'
         fi
         su $AGENTUSER -c "python $AGENTPATH restart"
+        exit $?
+        ;;
+
+    list)
+        $sudo_cmd ls -l $PLUGIN_PATH --time-style='long-iso' | grep '^d' | awk '{print $8}'
         exit $?
         ;;
 
