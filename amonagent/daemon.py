@@ -33,7 +33,7 @@ class Daemon(object):
 				sys.exit(1)
 
 		# decouple from parent environment
-		os.chdir(".") 
+		os.chdir("/") 
 		os.setsid() 
 		os.umask(0) 
 
