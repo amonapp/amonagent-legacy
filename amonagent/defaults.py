@@ -6,11 +6,11 @@ except ImportError:
 import os
 
 try:
-	config_file = file('/etc/amon-agent.conf').read()
-	config = json.loads(config_file)
+	with open("/etc/amon-agent.conf", 'r') as f:
+		config_file = f.read()
+		config = json.loads(config_file)
 except Exception, e:
 	print "There was an error in your configuration file (/etc/amon-agent.conf)"
-	raise e
 
 
 # 1 minute default
@@ -30,3 +30,5 @@ else:
 # LOGGING DEFAULTS 
 LOGFILE = config.get("logfile", '/var/log/amonagent/amonagent.log')
 LOGGING_MAX_BYTES = 5 * 1024 * 1024
+
+AVAILABLE_PLUGINS_PATH	= config.get("plugins_path", '/etc/amonagent/plugins')

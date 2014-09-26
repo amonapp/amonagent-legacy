@@ -8,10 +8,13 @@ try:
 except ImportError:
 	import simplejson as json
 
+from amonagent.settings import settings
+
+
 # CONSTANTS
 AMONAGENT_PATH = "/etc/amonagent"
 ENABLED_PLUGINS_PATH = "{0}/plugins-enabled".format(AMONAGENT_PATH)
-AVAILABLE_PLUGINS_PATH	= "{0}/plugins".format(AMONAGENT_PATH)
+AVAILABLE_PLUGINS_PATH	= settings.AVAILABLE_PLUGINS_PATH
 
 class PluginMount(type):
 	"""
