@@ -51,8 +51,8 @@ class AmonPlugin(object):
 	def __init__(self, name):
 		self.name = name
 
-		self.config = self._get_configuration_file()
 		self.log = logging.getLogger('%s.%s' % (__name__, name))
+		self.config = self._get_configuration_file()
 		self.result = {'gauges': {}, 'counters': {}, 'versions': {}, 'error': False}
 
 

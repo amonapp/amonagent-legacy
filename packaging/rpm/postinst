@@ -23,4 +23,6 @@ curl --insecure --silent --show-error --retry 5 -L https://bootstrap.pypa.io/ez_
 curl --insecure --silent --show-error --retry 5 -L https://raw.githubusercontent.com/pypa/pip/master/contrib/get-pip.py | python
 pip install https://github.com/amonapp/amonagent/archive/master.zip
 
+/etc/init.d/amon-agent restart
+
 exit 0
