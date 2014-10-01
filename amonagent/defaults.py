@@ -5,13 +5,13 @@ except ImportError:
 
 import os
 
+config = {}
 try:
 	with open("/etc/amon-agent.conf", 'r') as f:
 		config_file = f.read()
 		config = json.loads(config_file)
 except Exception, e:
 	print "There was an error in your configuration file (/etc/amon-agent.conf)"
-
 
 # 1 minute default
 SYSTEM_CHECK_PERIOD = config.get('system_check_period', 60)
