@@ -41,7 +41,6 @@ class PluginMount(type):
 		# create a plugin instance and store it
 		# optionally you could just store the plugin class and lazily instantiate
 		instance = plugin(name)
- 
 		# save the plugin reference
 		cls.plugins.append(instance)
  
@@ -71,7 +70,6 @@ class AmonPlugin(object):
 		except Exception, e:
 			error_message = "There was an error in your configuration file ({0})".format(filename)
 			self.log(error_message)
-
 		
 		return config
 
@@ -124,8 +122,6 @@ class AmonPlugin(object):
 
 	def error(self, error_msg):
 		self.result['error'] = str(error_msg)
-
-
 
 def discover_plugins(plugin_paths=[]):
 	""" Discover the plugin classes contained in Python files, given a

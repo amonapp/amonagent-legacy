@@ -150,15 +150,29 @@ def test_checks():
 def test_plugins():
 	print "Enabled plugins: "
 	
+	enabled_plugins = discover_plugins()
 
-	enabled_plugis =  discover_plugins()
-	for plugin in enabled_plugis:
+	unique= []
+	unique_plugins = []
+
+	# Calling discover plugins calls every plugin 2 times,
+	# TODO - debug
+	# Severity: Low
+	for e in enabled_plugins:
+		cls_name = e.__class__.__name__
+
+		if cls_name not in unique:
+			unique.append(cls_name)
+			unique_plugins.append(e)
+
+	for plugin in unique_plugins:
 		print '------------------'
 		print "  {color}{plugin}{end}".format(color=OKBLUE, plugin=plugin.name.title(), end=ENDC)
 		print '------------------'
 		
 		data = plugin.collect()	
 		error = plugin.result.get('error')
+		
 		
 		if error == False:
 			message = 'OK'
