@@ -1,12 +1,17 @@
 #! /bin/sh
 
-if [ "$1" = purge ]; then
-    update-rc.d amon-agent remove -f || true 
-	getent passwd amonagent >/dev/null && deluser amonagent
-	getent group  amonagent >/dev/null && groupdel amonagent
-	rm -rf /var/log/amonagent
-	rm -rf /etc/amonagent
-fi
+case "$*" in
+  0) 
+    # We're uninstalling.
+   	  getent passwd amonagent >/dev/null && userdel  amonagent
+	  getent group  amonagent >/dev/null && groupdel amonagent
+    ;;
+  1)
+    # We're upgrading. 
+    ;;
+  *) 
+    ;;
+esac
 
 /usr/bin/yes | pip uninstall amonagent || true
 

@@ -1,6 +1,8 @@
 # start
 PLUGINS_REPO=/etc/amonagent/plugins
 REMOTE_REPO=https://github.com/amonapp/amon-plugins.git
+LOG_DIR=/var/log/amonagent
+
 
 getent group amonagent >/dev/null || groupadd -r amonagent
 getent passwd amonagent >/dev/null || \
@@ -12,16 +14,23 @@ chown amonagent:amonagent /etc/init.d/amon-agent
 chown amonagent:amonagent /usr/bin/amonpm
 chown amonagent:amonagent /var/run/amonagent
 chown -R amonagent:amonagent /var/log/amonagent
-chown -R amonagent:amonagent /etc/amonagent
+
+
+
+if [ ! -d "$LOG_DIR" ]; then
+    mkdir $LOG_DIR
+fi
+
+chown -R amonagent:amonagent $LOG_DIR
 
 chkconfig --add amon-agent
 
 rm -rf $PLUGINS_REPO
 git clone $REMOTE_REPO $PLUGINS_REPO
 
-curl --insecure --silent --show-error --retry 5 -L https://bootstrap.pypa.io/ez_setup.py -o - | python
-curl --insecure --silent --show-error --retry 5 -L https://raw.githubusercontent.com/pypa/pip/master/contrib/get-pip.py | python
-pip install https://github.com/amonapp/amonagent/archive/master.zip
+curl --insecure --silent --show-error --retry 5 -L https://bootstrap.pypa.io/ez_setup.py -o - | python &> /dev/null 
+curl --insecure --silent --show-error --retry 5 -L https://raw.githubusercontent.com/pypa/pip/master/contrib/get-pip.py | python &> /dev/null 
+pip install https://github.com/amonapp/amonagent/archive/master.zip &> /dev/null 
 
 /etc/init.d/amon-agent restart
 
