@@ -17,6 +17,7 @@ function file_exists() {
     [ -f "$1" ]
 }
 
+# Basic distro detection
 DISTRO=
 if file_exists /etc/debian_version ; then
     DISTRO='debian'
@@ -31,7 +32,7 @@ It looks like you hit an issue when trying to install the Agent.
 
 Troubleshooting and basic usage information for the Agent are available at:
 
-    https://amon.cx/docs/server-monitoring
+   https://amon.cx/docs#monitoring
 
 If you're still having problems, please send an email to martin@amon.cx
 with the contents of amonagent-install.log and we'll do our very best to help you
@@ -75,17 +76,15 @@ function install_amon() {
         $sudo_cmd apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv AD53961F
 
         printf "\033[34m\n* Installing the Amon Agent package\n\033[0m\n"
-        $sudo_cmd apt-get install -y --force-yes python-software-properties software-properties-common
-        $sudo_cmd apt-add-repository -y ppa:ansible/ansible
        
         $sudo_cmd apt-get update
         $sudo_cmd apt-get install -y --force-yes amon-agent
 
     else
         printf "\033[31mYour OS or distribution are not supported by this install script.
-    Please follow the instructions on the Agent setup page:
+            Please follow the instructions on the Agent setup page:
 
-        https://amon.cx/docs/server-monitoring\033[0m\n"
+        https://amon.cx/docs#monitoring\033[0m\n"
         exit;
     fi
 
@@ -107,6 +106,8 @@ function install_ansible(){
 
     if [ $DISTRO == 'debian' ]; then
         $sudo_cmd apt-get install -y ansible
+        $sudo_cmd apt-get install -y --force-yes python-software-properties software-properties-common
+        $sudo_cmd apt-add-repository -y ppa:ansible/ansible
 
     elif [ $DISTRO == 'rpm' ]; then
 
@@ -114,14 +115,6 @@ function install_ansible(){
         $sudo_cmd yum -y install ansible
     fi
 }
-
-function test_agent() {
-
-    printf "\033[34m\n* Testing the Agent...\n\033[0m\n"
-    $sudo_cmd /etc/init.d/amon-agent test_collectors
-
-}
-
 
 # Show a message about where to go for help.
 function print_troubleshooting_instructions() {
@@ -132,7 +125,7 @@ printf "\033[32m All done. You can see your data at https://amon.cx/servers
     
     For troubleshooting instructions, please see the Documentation:
 
-        https://amon.cx/docs/server-monitoring
+        https://amon.cx/docs#monitoring
 
     If you ever want to stop the Agent, run:
         
@@ -149,6 +142,5 @@ printf "\033[32m All done. You can see your data at https://amon.cx/servers
 
 
 install_amon
-test_agent
 install_ansible
 print_troubleshooting_instructions
