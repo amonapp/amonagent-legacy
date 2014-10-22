@@ -40,7 +40,7 @@ def get_distro():
 		if os.path.isfile(path) and os.path.getsize(path) > 0:
 
 			# Set it once, just in case, overwrite later 
-			distro['name'] = name
+			distro['name'], distro['id'] = name, name.lower()
 
 			with open(path) as f:
 				for line in f:
@@ -89,7 +89,6 @@ def get_distro():
 
 						if formated_name in REPORTED_FIELDS:
 							distro[formated_name] = value
-
 
 
 	# Check for data in the distro dict and if empty - try collecting data with Python
