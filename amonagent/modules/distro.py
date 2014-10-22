@@ -1,25 +1,59 @@
 import os 
 import re 
+import platform
+
+
+REPORTED_FIELDS = [
+	'description', 
+	'release',
+	'codename',
+	'id',
+	'name'
+]
+
+
+OSDIST_LIST = ( 
+	('/etc/redhat-release', 'RedHat'),
+	('/etc/system-release', 'OtherLinux'),
+	('/etc/os-release', 'Debian'),
+	('/etc/lsb-release', 'Mandriva'),
+	('/etc/debian_version', 'Ubuntu'),
+	('/etc/centos-release','CentOS') 
+)
+
+
+PKG_MGRS = [ 
+	{'path' : '/usr/bin/yum', 'name' : 'yum'},
+	{'path' : '/usr/bin/apt-get', 'name' : 'apt'},
+]
 
 def get_distro():
-	distro = {}
-	try:
-		import lsb_release
-		release = lsb_release.get_distro_information()
-		for key, value in release.iteritems():
-			key = key.lower()
-			if key == 'id':
-				distro['id'] = value.lower()
-			if key == 'release':
-				distro['release'] = value
-		
-		distro['type'] = 'apt'
 
-	except ImportError:
-		# if the python library isn't available, default to regex
-		if os.path.isfile('/etc/lsb-release'):
-			with open('/etc/lsb-release') as ifile:
-				for line in ifile:
+	distro = {}
+
+	for pm in PKG_MGRS:
+		if os.path.isfile(pm['path']):
+			distro['type'] =  pm['name']
+
+	
+	for (path, name) in OSDIST_LIST:
+		if os.path.isfile(path) and os.path.getsize(path) > 0:
+
+			# Set it once, just in case, overwrite later 
+			distro['name'] = name
+
+			with open(path) as f:
+				for line in f:
+
+					# Barebones match: 
+					# CentOS release 6.5 (Final)
+					find_release = re.compile(r'\d+\.\d+')
+					release = find_release.search(line)
+
+					if release is not None:
+						distro['release'] = release.group()
+
+
 					# Matches any possible format:
 					#     DISTRIB_ID="Ubuntu"
 					#     DISTRIB_ID='Mageia'
@@ -30,66 +64,53 @@ def get_distro():
 					regex = re.compile('^(DISTRIB_(?:ID|RELEASE|CODENAME|DESCRIPTION))=(?:\'|")?([\\w\\s\\.-_]+)(?:\'|")?')
 					match = regex.match(line.rstrip('\n'))
 					if match:
-						
-						# Adds: lsb_distrib_{id,release,codename,description}
+
 						distro_key = '{0}'.format(match.groups()[0].lower())
 						distro_key = distro_key.replace('distrib_', "")
-						distro[distro_key] = match.groups()[1].rstrip()
-			
-			distro['type'] = 'apt'
-		
-		# Debian 
-		elif os.path.isfile('/etc/debian_version'):
-			with open('/etc/debian_version') as ifile:
-					for line in ifile:
-						find_release = re.compile(r'\d+\.\d+')
-						release = find_release.search(line)
-						if release is not None:
-							distro['release'] = release.group()
-							distro['type'] = 'apt'
-							distro['id'] = 'debian'
-		elif os.path.isfile('/etc/centos-release'):
-			# CentOS Linux
-			distro['id'] = 'centos'
-			with open('/etc/centos-release') as ifile:
-				for line in ifile:
-					find_release = re.compile(r'\d+\.\d+')
-					release = find_release.search(line)
-					if release is not None:
-						distro['release'] = release.group()
-						distro['type'] = 'yum'
 
-		elif os.path.isfile('/etc/os-release'):
-			# Arch Linux and Fedora
-			with open('/etc/os-release') as ifile:
-				for line in ifile:
-					# NAME="Arch Linux ARM"
+						if distro_key in REPORTED_FIELDS:
+							distro[distro_key] = match.groups()[1].rstrip()
+
+					# Matches any possible format:
+					# PRETTY_NAME="Debian GNU/Linux 7 (wheezy)"
+					# NAME="Debian GNU/Linux"
 					# VERSION_ID="7"
 					# VERSION="7 (wheezy)"
-					# ID=archarm
-					# ID_LIKE=arch
-					# PRETTY_NAME="Arch Linux ARM"
-					# ANSI_COLOR="0;36"
-					# HOME_URL="http://archlinuxarm.org/"
-					# SUPPORT_URL="https://archlinuxarm.org/forum"
-					# BUG_REPORT_URL="https://github.com/archlinuxarm/PKGBUILDs/issues"
+					# ID=debian
+					# ANSI_COLOR="1;31"
+					# HOME_URL="http://www.debian.org/"
+					# SUPPORT_URL="http://www.debian.org/support/"
+					# BUG_REPORT_URL="http://bugs.debian.org/"
 					regex = re.compile('^([\\w]+)=(?:\'|")?([\\w\\s\\.-_]+)(?:\'|")?')
 					match = regex.match(line.rstrip('\n'))
 					if match:
 						name, value = match.groups()
-						if name.lower() == 'version':
-							distro['release'] = value.strip()
-						if name.lower() == 'name':
-							distro['id'] = value.strip().lower()
-		elif os.path.isfile('/etc/system-release'):
-			# Amazon Linux AMI
-			distro['id'] = 'amazon'
-			distro['type'] = 'yum'
-			with open('/etc/system-release') as ifile: 
-				for line in ifile:
-					find_release = re.compile(r'\d+\.\d+')
-					release = find_release.search(line)
-					if release is not None:
-						distro['release'] = release.group()
+						formated_name = name.lower()
+
+						if formated_name in REPORTED_FIELDS:
+							distro[formated_name] = value
+
+
+
+	# Check for data in the distro dict and if empty - try collecting data with Python
+	release = distro.get('release')
+
+
+	if release == None:
+		distro_info = []
+		try: 
+			distro_info = platform.dist()
+		except:
+			distro_info = platfrom.linux_distribution()
+
+
+		# (distname,version,id)
+		if len(distro_info) == 3:
+			distro['name'], distro['release'], distro['id'] = distro_info
+
+	
 
 	return distro
+
+
+print get_distro()

@@ -1,3 +1,10 @@
+1.9.7 - 22.10.2014
+==============
+
+* CentOS improvements and bug fixes
+* Simplified Distro detection
+
+
 1.9.6 - 20.10.2014
 ==============
 
