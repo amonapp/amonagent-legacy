@@ -140,8 +140,7 @@ class DiskCheck(object):
 
 		return devices
 
-
-	def _is_number(a_string):
+	def _is_number(self, a_string):
 		try:
 			float(a_string)
 		except ValueError:
