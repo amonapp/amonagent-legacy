@@ -25,6 +25,18 @@ elif file_exists /etc/system-release; then
     DISTRO='rpm'
 fi
 
+# Proper distro detection - for Ansible
+DISTRO_ID=$(
+python - <<EOF
+import platform ; print platform.dist()[0].lower()
+EOF
+)
+
+DISTRO_VERSION=$(
+python - <<EOF
+import platform ; print int(float(platform.dist()[1]))
+EOF
+)
 
 function on_error() {
     printf "\033[31m
@@ -103,15 +115,30 @@ function install_amon() {
 function install_ansible(){
     
     printf "\033[34m\n* Installing Ansible ...\n\033[0m\n"
+    # Ansible is separated in several repositories, detect the Distro
 
     if [ $DISTRO == 'debian' ]; then
-        $sudo_cmd apt-get install -y ansible
-        $sudo_cmd apt-get install -y --force-yes python-software-properties software-properties-common
-        $sudo_cmd apt-add-repository -y ppa:ansible/ansible
+
+        if [ $DISTRO_ID == 'ubuntu' ]; then
+            $sudo_cmd apt-get install -y --force-yes python-software-properties software-properties-common
+            $sudo_cmd apt-add-repository -y ppa:ansible/ansible
+            $sudo_cmd apt-get update
+            $sudo_cmd apt-get install ansible
+        elif [ $DISTRO_ID == 'debian' ]; then
+
+            if [ $DISTRO_VERSION == 7 ]; then
+                $sudo_cmd sh -c "echo 'deb http://http.debian.net/debian wheezy-backports main' > /etc/apt/sources.list.d/backports.list"
+                $sudo_cmd apt-get update
+                $sudo_cmd apt-get -t wheezy-backports install "ansible"
+            else
+                $sudo_cmd sh -c "echo 'deb http://http.debian.net/debian-backports squeeze-backports(-sloppy) main' > /etc/apt/sources.list.d/backports.list"
+                $sudo_cmd apt-get update
+                $sudo_cmd apt-get -t squeeze-backports install "ansible"
+            fi 
+        fi
 
     elif [ $DISTRO == 'rpm' ]; then
-
-        $sudo_cmd sh -c "curl -L http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm | rpm -Uvh epel-release-6*.rpm"
+        $sudo_cmd yum install epel-release
         $sudo_cmd yum -y install ansible
     fi
 }
