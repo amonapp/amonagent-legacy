@@ -101,7 +101,7 @@ def get_distro():
 		try: 
 			distro_info = platform.dist()
 		except:
-			distro_info = platfrom.linux_distribution()
+			distro_info = platform.linux_distribution()
 
 
 		# (distname,version,id)
@@ -111,6 +111,3 @@ def get_distro():
 	
 
 	return distro
-
-
-print get_distro()
