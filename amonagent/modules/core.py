@@ -141,6 +141,15 @@ class DiskCheck(object):
 		return devices
 
 
+	def _is_number(a_string):
+		try:
+			float(a_string)
+		except ValueError:
+			return False
+		
+		return True
+
+
 	def _check_blocks(self, blocks):
 		try:
 			number_of_block = float(blocks)
