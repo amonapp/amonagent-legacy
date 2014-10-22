@@ -97,11 +97,13 @@ def get_distro():
 
 
 	if release == None:
-		distro_info = []
+		
 		try: 
 			distro_info = platform.dist()
 		except:
 			distro_info = platform.linux_distribution()
+		else:
+			distro_info = []
 
 
 		# (distname,version,id)
