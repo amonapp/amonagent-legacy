@@ -13,9 +13,6 @@ getent passwd amonagent >/dev/null || \
 chown amonagent:amonagent /etc/init.d/amon-agent
 chown amonagent:amonagent /usr/bin/amonpm
 chown amonagent:amonagent /var/run/amonagent
-chown -R amonagent:amonagent /var/log/amonagent
-
-
 
 if [ ! -d "$LOG_DIR" ]; then
     mkdir $LOG_DIR
@@ -27,6 +24,8 @@ chkconfig --add amon-agent
 
 rm -rf $PLUGINS_REPO
 git clone $REMOTE_REPO $PLUGINS_REPO
+
+chown -R amonagent:amonagent /etc/amonagent
 
 curl --insecure --silent --show-error --retry 5 -L https://bootstrap.pypa.io/ez_setup.py -o - | python &> /dev/null 
 curl --insecure --silent --show-error --retry 5 -L https://raw.githubusercontent.com/pypa/pip/master/contrib/get-pip.py | python &> /dev/null 

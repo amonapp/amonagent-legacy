@@ -1,3 +1,9 @@
+1.9.8 - 24.10.2014
+==============
+
+* CentOS plugin dir permissions (Fixing the error when running amonpm update)
+* Update from github before install
+
 1.9.7 - 22.10.2014
 ==============
 
