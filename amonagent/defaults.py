@@ -31,4 +31,6 @@ else:
 LOGFILE = config.get("logfile", '/var/log/amonagent/amonagent.log')
 LOGGING_MAX_BYTES = 5 * 1024 * 1024
 
-AVAILABLE_PLUGINS_PATH	= config.get("plugins_path", '/etc/amonagent/plugins')
+
+DEFAULT_PLUGINS_PATH = '/etc/amonagent/plugins'
+CUSTOM_PLUGINS_PATH = config.get("custom_plugins_path")

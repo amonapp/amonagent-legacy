@@ -14,7 +14,7 @@ from amonagent.settings import settings
 # CONSTANTS
 AMONAGENT_PATH = "/etc/amonagent"
 ENABLED_PLUGINS_PATH = "{0}/plugins-enabled".format(AMONAGENT_PATH)
-AVAILABLE_PLUGINS_PATH	= settings.AVAILABLE_PLUGINS_PATH
+
 
 class PluginMount(type):
 	"""
@@ -53,7 +53,10 @@ class AmonPlugin(object):
 	def __init__(self, name):
 		self.name = name
 
+
 		self.log = logging.getLogger('%s.%s' % (__name__, name))
+
+		
 		self.config = self._get_configuration_file()
 		self.result = {'gauges': {}, 'counters': {}, 'versions': {}, 'error': False}
 
@@ -63,13 +66,14 @@ class AmonPlugin(object):
 		filename = "{0}/{1}.conf".format(ENABLED_PLUGINS_PATH, self.name)
 		config = {}
 		
+		
 		try:
 			with open(filename, 'r') as f:
 				config_file = f.read()
 				config = json.loads(config_file)
 		except Exception, e:
 			error_message = "There was an error in your configuration file ({0})".format(filename)
-			self.log(error_message)
+			self.log.error(error_message)
 		
 		return config
 
@@ -123,6 +127,21 @@ class AmonPlugin(object):
 	def error(self, error_msg):
 		self.result['error'] = str(error_msg)
 
+
+def find_plugin_path(plugin_name=None):
+
+	path = False
+
+	default_location = "{0}/{1}".format(settings.DEFAULT_PLUGINS_PATH, plugin_name)
+	custom_location = "{0}/{1}".format(settings.CUSTOM_PLUGINS_PATH, plugin_name)
+
+	if os.path.exists(default_location):
+		path = default_location
+	elif os.path.exists(custom_location):
+		path = custom_location
+
+	return path
+
 def discover_plugins(plugin_paths=[]):
 	""" Discover the plugin classes contained in Python files, given a
 		list of directory names to scan. Return a list of plugin classes.
@@ -131,22 +150,26 @@ def discover_plugins(plugin_paths=[]):
 		future extension which will permit searching for plugins in 
 		user defined directories
 	"""
+
 	if os.path.exists(ENABLED_PLUGINS_PATH):
 		# Find all enabled plugins
 		for filename in os.listdir(ENABLED_PLUGINS_PATH):
 			plugin_name, ext = os.path.splitext(filename)
 			if ext == ".conf":
-				# Configuration file OK, load the plugin
-				full_plugin_path = "{0}/{1}".format(AVAILABLE_PLUGINS_PATH, plugin_name)
+				
+				# Configuration file OK, load the plugin				
+				plugin_path = find_plugin_path(plugin_name=plugin_name) # path or False
 
-				for filename in os.listdir(full_plugin_path):
-					modname, extension = os.path.splitext(filename)
-					if extension == '.py':
-						fp, path, descr = imp.find_module(modname, [full_plugin_path])
-						if fp:
-							# Loading the module registers the plugin in
-							if modname not in ['base', '__init__']:
-								mod = imp.load_module(modname, fp, path, descr)
-							fp.close()
+				if plugin_path:
+					for filename in os.listdir(plugin_path):
+						modname, extension = os.path.splitext(filename)
+						if extension == '.py':
+							
+							fp, path, descr = imp.find_module(modname, [plugin_path])
+							if fp:
+								# Loading the module registers the plugin in
+								if modname not in ['base', '__init__']:
+									mod = imp.load_module(modname, fp, path, descr)
+								fp.close()
 			
 	return AmonPlugin.plugins
