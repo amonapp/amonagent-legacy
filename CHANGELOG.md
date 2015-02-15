@@ -1,3 +1,10 @@
+2.0 - 15.02.2015
+==============
+
+* IP Address collector - collect only local info
+* Checker fixes
+
+
 1.9.8 - 24.10.2014
 ==============
 

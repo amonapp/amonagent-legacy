@@ -27,17 +27,18 @@ def get_cpu_info():
 
 
 def get_ip_address():	
-	
 	ip_address = ""
-	try:
-		response = requests.get('https://amon.cx/api/checkip?format=json', timeout=5)
-	except:
-		response = False
 
-	if response:
-		if response.status_code == 200:
-			json = response.json()
-			ip_address = json.get('ip')
+	try:
+		ip = subprocess.Popen(['hostname','-I'], stdout=subprocess.PIPE, close_fds=True).communicate()[0]		
+	except:
+		log.exception('Unable to get IP.')
+		return False
+
+	try:
+		ip_address = ip.split(' ')[0]
+	except:
+		pass
 
 	return ip_address
 

@@ -133,7 +133,7 @@ def test_checks():
 
 
 
-	url = "https://amon.cx/api/test/{0}".format(settings.SERVER_KEY)
+	url = "{0}/api/test/{1}".format(settings.HOST, settings.SERVER_KEY)
 	response = requests.post(url)
 
 	if response.status_code == 200:
