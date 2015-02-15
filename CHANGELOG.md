@@ -3,6 +3,7 @@
 
 * IP Address collector - collect only local info
 * Checker fixes
+* Custom plugins
 
 
 1.9.8 - 24.10.2014
