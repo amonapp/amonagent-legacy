@@ -20,6 +20,8 @@ class Remote(object):
 		self.server_key = settings.SERVER_KEY
 		self.host = settings.HOST
 
+		self.host = self.host.rstrip("/")
+
 
 	headers = {"Content-type": "application/json"}
 	errors = {'connection': 'Could not establish connection to the Amon API.'}
@@ -31,8 +33,12 @@ class Remote(object):
 
 		headers = headers if headers else self.headers
 
+
 		try:
-			r = requests.post(url, data, headers=headers, timeout=10, stream=False)
+			r = requests.post(url, data, headers=headers, timeout=10, 
+				stream=False, 
+				verify=False
+			)
 		except Exception:
 			log.error("Can't connect to the Amon API")
 

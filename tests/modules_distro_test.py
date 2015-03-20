@@ -1,4 +1,4 @@
-from amonagent.modules.distro import get_distro
+from amonagent.modules.distro import get_distro, parse_distro_file
 
 class TestGetDistro(object):
 
@@ -11,3 +11,10 @@ class TestGetDistro(object):
 		assert 'type' in result
 
 
+	def test_parse_distro_file(self):
+
+		centos = ["CentOS Linux release 7.0.1406 (Core)"]
+
+		print parse_distro_file(centos)
+
+		assert False

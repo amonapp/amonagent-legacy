@@ -3,7 +3,7 @@ openfiles = set()
 oldfile = __builtin__.file
 
 from amonagent.check import test_checks, test_plugins
-from amonagent.plugin import discover_plugins
+from amonagent.modules.plugins import discover_plugins
 
 
 class newfile(oldfile):
