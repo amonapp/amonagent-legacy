@@ -3,6 +3,9 @@ import os
 import re
 import logging
 
+from decimal import Decimal
+from datetime import timedelta, datetime
+
 try:
 	import json
 except ImportError:
@@ -97,6 +100,9 @@ class AmonPlugin(object):
 		else:
 			return name
 
+	def slow_queries(self, result):
+		self.result['slow_queries'] = result
+
 	def counter(self, name, value):
 		name = self.normalize(name)
 		
@@ -119,6 +125,20 @@ class AmonPlugin(object):
 			for k,v in kwargs.items():
 				self.result['versions'][k] = v
 
+	### UTILS 
+	### Used in PostgreSQL, Mysql
+	def normalize_row_value(self, value):
+		if type(value) is Decimal:
+			value = round(value, 2)
+		elif type(value) is timedelta:
+			value = value.total_seconds()
+		elif type(value) is datetime:
+			value =  str(value)
+		return value
+
+
+
+	### UTILS end
 	
 		
 	def collect(self):
