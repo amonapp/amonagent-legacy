@@ -126,7 +126,7 @@ class AmonPlugin(object):
 				self.result['versions'][k] = v
 
 	### UTILS 
-	### Used in PostgreSQL, Mysql
+	### Used in PostgreSQL, Mysql, Mongo
 	def normalize_row_value(self, value):
 		if type(value) is Decimal:
 			value = round(value, 2)
@@ -134,10 +134,13 @@ class AmonPlugin(object):
 			value = value.total_seconds()
 		elif type(value) is datetime:
 			value =  str(value)
+		elif type(value) is dict:
+			to_str = ', '.join("%s=%r" % (key,val) for (key,val) in value.iteritems())
+			value = to_str
+		if value == None or value is False:
+			value = ""
+		
 		return value
-
-
-
 	### UTILS end
 	
 		

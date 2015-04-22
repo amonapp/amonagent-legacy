@@ -1,4 +1,6 @@
 import requests
+import time
+import sys
 
 from amonagent.modules.core import (
 	get_uptime,
@@ -147,11 +149,17 @@ def test_checks():
 	print "{color}{message}{end}".format(color=color, message=message, end=ENDC)
 
 
+
+
+
+
+
+
 def test_plugins():
 	print "Enabled plugins: "
-	
+	start = time.time()
 	enabled_plugins = discover_plugins()
-
+	plugin_data_bytes = 0
 	unique= []
 	unique_plugins = []
 
@@ -182,5 +190,15 @@ def test_plugins():
 			color = FAIL
 
 		print plugin.result
+		plugin_data_bytes = plugin_data_bytes+sys.getsizeof(plugin.result)
+
 		print "\nCheck: {color}{message}{end}".format(color=color, message=message, end=ENDC)
 			
+
+	end = time.time()
+	execution_time =  end - start
+	
+	print "Data collected in {color}{execution_time}{end} / Size: {color}{size} bytes{end}".format(execution_time=execution_time,
+		color=OKGREEN,
+		end=ENDC,
+		size=plugin_data_bytes)
