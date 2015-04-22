@@ -152,10 +152,7 @@ def test_checks():
 
 
 
-
-
-
-def test_plugins():
+def test_plugins(name=None):
 	print "Enabled plugins: "
 	start = time.time()
 	enabled_plugins = discover_plugins()
@@ -163,15 +160,20 @@ def test_plugins():
 	unique= []
 	unique_plugins = []
 
-	# Calling discover plugins calls every plugin 2 times,
-	# TODO - debug
-	# Severity: Low
+	
 	for e in enabled_plugins:
-		cls_name = e.__class__.__name__
+		cls_name = e.__class__.__name__ # PostgresPlugin
+		cls_module = e.__class__.__module__ # postgres
+		
+		if name != None:
+			if cls_name not in unique and name == cls_module:
+				unique.append(cls_name)
+				unique_plugins.append(e)
 
-		if cls_name not in unique:
-			unique.append(cls_name)
-			unique_plugins.append(e)
+		else:
+			if cls_name not in unique:
+				unique.append(cls_name)
+				unique_plugins.append(e)
 
 	for plugin in unique_plugins:
 		print '------------------'

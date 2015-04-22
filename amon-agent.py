@@ -66,7 +66,12 @@ if __name__ == "__main__":
 		elif 'test' == sys.argv[1]:
 			test_checks()
 		elif 'test_plugins' == sys.argv[1]:
-			test_plugins()
+			try:
+				name = sys.argv[2]
+			except:
+				name = None
+				
+			test_plugins(name=name)
 		elif 'status' == sys.argv[1]:
 			try:
 				pf = file(PIDFILE,'r')
