@@ -70,7 +70,6 @@ if __name__ == "__main__":
 				name = sys.argv[2]
 			except:
 				name = None
-				
 			test_plugins(name=name)
 		elif 'status' == sys.argv[1]:
 			try:
