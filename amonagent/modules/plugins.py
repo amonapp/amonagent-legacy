@@ -100,8 +100,6 @@ class AmonPlugin(object):
 		else:
 			return name
 
-	def slow_queries(self, result):
-		self.result['slow_queries'] = result
 
 	def counter(self, name, value):
 		name = self.normalize(name)

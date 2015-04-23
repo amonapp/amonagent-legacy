@@ -1,3 +1,8 @@
+2.1 - 24.04.2015
+==============
+
+* Support for custom table data from mysql, nginx, apache, postgres
+
 2.0 - 15.02.2015
 ==============
 
