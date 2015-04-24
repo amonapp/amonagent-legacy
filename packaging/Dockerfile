@@ -1,9 +1,7 @@
-FROM martinrusev/centos:ansible
-MAINTAINER Martin Rusev
-
+FROM centos:latest
 # ENV GIT_CURL_VERBOSE 1
 
-ADD amon-agent-1.9.6-1.noarch.rpm var/agent.rpm
+ADD amon-agent-2.1-1.noarch.rpm var/agent.rpm
 
 RUN yum -t -y install /var/agent.rpm
 

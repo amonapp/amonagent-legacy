@@ -18,6 +18,9 @@ clean:
 	rm -rf build
 	rm -f *.deb *.rpm
 
+install_repo_base:
+	sudo apt-get install reprepro createrepo -y --force-yes
+
 
 # Layout all of the files common to both versions of the Agent in
 # the build directory.
