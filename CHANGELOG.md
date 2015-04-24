@@ -1,7 +1,28 @@
 2.1 - 24.04.2015
 ==============
 
-* Support for custom table data from mysql, nginx, apache, postgres
+* Support for custom table data from MySQL, Nginx, Apache, PostgreSQL, MongoDB
+
+**MySQL** 
+* Tables and index sizes
+* Slow queries
+
+**PostgreSQL**
+* Tables and index sizes
+* Slow queries
+* Index Hit rate
+
+**Nginx**
+* Requests - bytes, hits, percent, url
+* Not found - bytes, hits, percent, url
+
+**Apache**
+* Requests - bytes, hits, percent, url
+* Not found - bytes, hits, percent, url
+
+**MongoDB**
+* Collections and index sizes
+* Slow queries
 
 2.0 - 15.02.2015
 ==============
