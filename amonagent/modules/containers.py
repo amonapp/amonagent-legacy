@@ -3,8 +3,6 @@ import multiprocessing as mp
 import logging
 from docker import Client
 
-import sys
-sys.path.insert(0, '/home/martin/amonagent')
 from amonagent.utils import unix_utc_now
 
 log = logging.getLogger(__name__)
