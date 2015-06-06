@@ -35,6 +35,11 @@ case "$1" in
         set +e
 
 
+        if [ ! -f /etc/amonagent/uuid ]; then
+            date +%s | sha256sum | base64 | head -c 32 | awk '{print tolower($0)}' > /etc/amonagent/uuid
+        fi
+
+
         curl --insecure --silent --show-error --retry 5 -L https://bootstrap.pypa.io/ez_setup.py -o - | python &> /dev/null 
         curl --insecure --silent --show-error --retry 5 -L https://raw.githubusercontent.com/pypa/pip/master/contrib/get-pip.py | python &> /dev/null 
         pip install https://github.com/amonapp/amonagent/archive/master.zip &> /dev/null

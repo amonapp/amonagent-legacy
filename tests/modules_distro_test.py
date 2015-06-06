@@ -11,8 +11,8 @@ class TestGetDistro(object):
 		assert 'type' in result
 
 
-	# def test_parse_distro_file(self):
+	def test_parse_distro_file(self):
 
-	# 	centos = ["CentOS Linux release 7.0.1406 (Core)"]
+		centos = ["CentOS Linux release 7.0.1406 (Core)"]
 
-	# 	assert False
+		assert False

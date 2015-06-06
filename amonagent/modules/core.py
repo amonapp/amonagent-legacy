@@ -1,12 +1,23 @@
 import subprocess
 import re
-import requests
 
 import logging
 log = logging.getLogger(__name__)
 
 
 from amonagent.utils import split_and_slugify, to_float
+
+def get_system_uuid():
+
+	try:
+		with open('/etc/amonagent/uuid') as f:
+			uuid = f.readlines()[0]
+	except:
+		log.exception('Unable to get Agent unique id.')
+		uuid = False
+
+	return uuid
+
 
 def get_cpu_info():
 	processor_dict = {}

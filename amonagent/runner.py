@@ -7,7 +7,8 @@ from amonagent.modules.core import (
 	disk_check,
 	get_network_traffic,
 	get_ip_address,
-	get_cpu_info
+	get_cpu_info,
+	get_system_uuid
 )
 from amonagent.modules.distro import get_distro
 from amonagent.modules.plugins import discover_plugins
@@ -27,7 +28,8 @@ class Runner(object):
 			'processor': get_cpu_info(),
 			'ip_address': get_ip_address(),
 			'distro': get_distro(),
-			'uptime': get_uptime()
+			'uptime': get_uptime(),
+			'unique_id': get_system_uuid()
 		}
 
 		return system_info_dict
@@ -39,6 +41,7 @@ class Runner(object):
 			'disk': disk_check.check(),
 			'network': get_network_traffic(),
 			'loadavg': get_load_average(),
+			'unique_id': get_system_uuid()
 		}
 
 

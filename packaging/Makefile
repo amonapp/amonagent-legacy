@@ -16,7 +16,7 @@ FPM_BUILD=fpm --epoch 1 -s dir -e -C $(BUILD) \
 
 clean:
 	rm -rf build
-	rm -f *.deb *.rpm
+	# rm -f *.deb *.rpm
 
 install_repo_base:
 	sudo apt-get install reprepro createrepo -y --force-yes
@@ -94,6 +94,7 @@ update_rpm_repo:
 
 
 deploy: update_debian_repo update_rpm_repo
+	sudo ntpdate time.nist.gov
 	python s3uploader.py
 
 all: clean amon_agent_deb amon_agent_rpm
