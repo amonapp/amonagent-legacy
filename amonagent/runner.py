@@ -10,6 +10,7 @@ from amonagent.modules.core import (
 	get_cpu_info,
 	get_system_uuid
 )
+from amonagent.modules.containers import container_data_collector
 from amonagent.modules.distro import get_distro
 from amonagent.modules.plugins import discover_plugins
 
@@ -29,7 +30,7 @@ class Runner(object):
 			'ip_address': get_ip_address(),
 			'distro': get_distro(),
 			'uptime': get_uptime(),
-			'unique_id': get_system_uuid()
+			'unique_id': get_system_uuid(),
 		}
 
 		return system_info_dict
@@ -46,6 +47,9 @@ class Runner(object):
 
 
 		return system_data_dict
+
+	def containers(self):
+		return container_data_collector.collect()
 
 
 	def processes(self):

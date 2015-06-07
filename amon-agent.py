@@ -38,7 +38,8 @@ class AmonAgentDaemon(Daemon):
 			stats = {
 				'system': runner.system(),
 				'processes': runner.processes(),
-				'plugins': runner.plugins()
+				'plugins': runner.plugins(),
+				'containers': runner.containers()
 			}
 			remote = Remote()
 			remote.save_system_stats(stats)

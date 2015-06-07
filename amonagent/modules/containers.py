@@ -1,25 +1,11 @@
-
 import multiprocessing as mp
 import logging
 from docker import Client
-
-from amonagent.utils import unix_utc_now
 
 log = logging.getLogger(__name__)
 
 
 class ContainerDataCollector(object):
-
-	def __init__(self):
-		self.client = Client(base_url='unix://var/run/docker.sock', version='1.17')
-		self.output = mp.Queue()
-
-		self.running_containers = self.client.containers(filters={'status': 'running'})
-		self.total_running = len(self.running_containers)
-
-
-		self.result = {}
-
 
 	  # @stats[:cpu_percent] += calculate_cpu_percent(container_id, stats["cpu_stats"]["cpu_usage"]["total_usage"], s
 	   #    tats["cpu_stats"]["system_cpu_usage"], stats["cpu_stats"]["cpu_usage"]["percpu_usage"].count)
@@ -69,12 +55,19 @@ class ContainerDataCollector(object):
 	def collect_container_data(self, container):
 		container_id = container.get('Id')
 		total_loops = 0
+		
+		try:
+			name = container.get('Names')[0].strip("/")
+		except:
+			name = ""
+
 		result = {
 			"created": container.get('Created'),
-			"name": container.get('Names'),
+			"container_id": container_id,
+			"name": name,
 			"image": container.get('Image'),
 			"status": container.get('Status'),
-			"processes": self.container_processes(container_id)
+			# "processes": self.container_processes(container_id)
 		}
 
 		
@@ -105,30 +98,37 @@ class ContainerDataCollector(object):
 			total_loops = total_loops+1
 
 
-	def collect_with_multiprocessing(self):
-		processes = [mp.Process(target=self.collect_container_data, args=(x,)) for x in self.running_containers]
-
-		# Run processes
-		for p in processes:
-			p.start()
-
-		# Exit the completed processes
-		for p in processes:
-			p.join()
-
-		# Get process results from the output queue
-		results = [self.output.get() for p in processes]
-				
-		print results		
-
 	def collect(self):
-		for x in self.running_containers:
-			self.collect_container_data(x)
+		result = {}
+		try:
+			self.client = Client(base_url='unix://var/run/docker.sock', version='1.17')
+		except:
+			log.exception('Unable to connect to the Docker API.')
+			self.client = False
+
+		self.output = mp.Queue()
+
+		if self.client:
+			running_containers = self.client.containers(filters={'status': 'running'})
+		
+			processes = [mp.Process(target=self.collect_container_data, args=(x,)) for x in running_containers]
+
+			# Run processes
+			for p in processes:
+				p.start()
+
+			# Exit the completed processes
+			for p in processes:
+				p.join()
+
+			
+			# Get process results from the output queue
+			result = [self.output.get() for p in processes]
+			
+				
+		return result
 
 
 
 container_data_collector = ContainerDataCollector()
-
-# container_data_collector.collect_with_multiprocessing()
-
-
+# print container_data_collector.collect()
