@@ -24,12 +24,19 @@ OKGREEN = '\033[92m'
 WARNING = '\033[93m'
 FAIL = '\033[91m'
 ENDC = '\033[0m'
+SEPARATOR = "\n{color}---------{end}\n".format(color=OKGREEN,end=ENDC)
+
+
+def print_data(info=None, message=None):
+	if message == 'OK':
+		print info
+		print SEPARATOR
 
 def test_checks():
 	# Distro information 
 
-	distro = get_distro()
-	if len(distro) > 0:
+	info = get_distro()
+	if len(info) > 0:
 		message = 'OK'
 		color = OKGREEN
 	else:
@@ -37,6 +44,8 @@ def test_checks():
 		color = FAIL
 
 	print "Distro collector: {color}{message}{end}".format(color=color, message=message, end=ENDC)
+	print_data(info=info, message=message)
+	
 
 
 	info = get_cpu_info()
@@ -48,6 +57,7 @@ def test_checks():
 		color = FAIL
 
 	print "CPU Info collector: {color}{message}{end}".format(color=color, message=message, end=ENDC)
+	print_data(info=info, message=message)
 
 	info = get_ip_address()
 	if len(info) > 0:
@@ -58,7 +68,7 @@ def test_checks():
 		color = FAIL
 
 	print "IP address collector: {color}{message}{end}".format(color=color, message=message, end=ENDC)
-
+	print_data(info=info, message=message)
 
 	info = get_uptime()
 	if len(info) > 0:
@@ -69,6 +79,7 @@ def test_checks():
 		color = FAIL
 
 	print "Uptime collector: {color}{message}{end}".format(color=color, message=message, end=ENDC)
+	print_data(info=info, message=message)
 
 
 	info = get_memory_info()
@@ -80,6 +91,7 @@ def test_checks():
 		color = FAIL
 
 	print "Memory collector: {color}{message}{end}".format(color=color, message=message, end=ENDC)
+	print_data(info=info, message=message)
 
 
 	info = disk_check.check()
@@ -91,6 +103,7 @@ def test_checks():
 		color = FAIL
 
 	print "Disk usage collector: {color}{message}{end}".format(color=color, message=message, end=ENDC)
+	print_data(info=info, message=message)
 
 
 	info = get_network_traffic()
@@ -102,6 +115,7 @@ def test_checks():
 		color = FAIL
 
 	print "Network traffic collector: {color}{message}{end}".format(color=color, message=message, end=ENDC)
+	print_data(info=info, message=message)
 
 	info = get_load_average()
 	if len(info) > 0:
@@ -112,7 +126,7 @@ def test_checks():
 		color = FAIL
 
 	print "Load collector: {color}{message}{end}".format(color=color, message=message, end=ENDC)
-
+	print_data(info=info, message=message)
 
 	info = get_cpu_utilization()
 	if len(info) > 0:
@@ -123,6 +137,7 @@ def test_checks():
 		color = FAIL
 
 	print "CPU collector: {color}{message}{end}".format(color=color, message=message, end=ENDC)
+	print_data(info=info, message=message)
 
 	info = processes_data_collector.collect()
 	if len(info) > 0:
@@ -133,11 +148,11 @@ def test_checks():
 		color = FAIL
 
 	print "Process collector: {color}{message}{end}".format(color=color, message=message, end=ENDC)
+	print_data(info=info, message=message)
 
 
 
 	info = container_data_collector.collect()
-	print info
 	if len(info) > 0:
 		message = 'OK'
 		color = OKGREEN
@@ -146,6 +161,7 @@ def test_checks():
 		color = FAIL
 
 	print "Docker containers collector: {color}{message}{end}".format(color=color, message=message, end=ENDC)
+	print_data(info=info, message=message)
 
 
 	url = "{0}/api/test/{1}".format(settings.HOST, settings.SERVER_KEY)

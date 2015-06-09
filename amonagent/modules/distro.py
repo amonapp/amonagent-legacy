@@ -16,29 +16,10 @@
 # along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
-import stat
-import array
-import errno
-import fcntl
-import fnmatch
-import glob
 import platform
 import re
-import signal
 import socket
-import struct
-import datetime
-import getpass
-import pwd
-import ConfigParser
-import StringIO
 
-from string import maketrans
-
-try:
-    import json
-except ImportError:
-    import simplejson as json
 
 # --------------------------------------------------------------
 # timeout function to make sure some fact gathering
@@ -108,17 +89,12 @@ class Facts(object):
                  { 'path' : '/usr/bin/pkg',         'name' : 'pkg' },
     ]
 
-    def __init__(self, load_on_init=True):
+    def __init__(self):
 
         self.facts = {}
+        self.get_platform_facts()
+        self.get_distribution_facts()
 
-        if load_on_init:
-            self.get_platform_facts()
-            self.get_distribution_facts()
-
-
-    def populate(self):
-        return self.facts
 
     # Platform
     # platform.system() can be Linux, Darwin, Java, or Windows
@@ -371,25 +347,28 @@ class Facts(object):
 
 
 def get_distro():
-	distro = {}
-	f = Facts(load_on_init=False)
-	f.get_platform_facts()
-	f.get_distribution_facts()
+    distro = {}
+    try:
+       f = Facts()
+    except:
+        f = False
 
-	facts_filter = [
-		'distribution_version', 
-		'distribution',
-	]
-	replaced_names = {
-		'distribution_version': 'version',
-		'distribution' : 'name'
-	}
-	for key, fact in f.facts.items():
-		if key in facts_filter:
-			reported_key = replaced_names[key]
-			distro[reported_key] = fact
-			
 
-	return distro
+    if f:
+        facts_filter = [
+            'distribution_version', 
+            'distribution',
+        ]
+        replaced_names = {
+            'distribution_version': 'version',
+            'distribution' : 'name'
+        }
+        if type(f.facts) is dict:
 
-print get_distro()
+            for key, fact in f.facts.items():
+                if key in facts_filter:
+                    reported_key = replaced_names[key]
+                    distro[reported_key] = fact
+            
+
+    return distro

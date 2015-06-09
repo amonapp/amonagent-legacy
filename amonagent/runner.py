@@ -7,8 +7,7 @@ from amonagent.modules.core import (
 	disk_check,
 	get_network_traffic,
 	get_ip_address,
-	get_cpu_info,
-	get_system_uuid
+	get_cpu_info
 )
 from amonagent.modules.containers import container_data_collector
 from amonagent.modules.distro import get_distro

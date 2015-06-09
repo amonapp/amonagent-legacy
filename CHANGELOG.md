@@ -1,7 +1,7 @@
 2.2.1 - 09.06.2015
 ==============
 
-* Collects facts about the distro with Ansible
+* Collects facts about the distro with a ported Ansible module
 * Container module fixes
 * Updated requirements
 

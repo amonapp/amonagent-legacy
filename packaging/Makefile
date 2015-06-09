@@ -61,7 +61,6 @@ amon_agent_deb: clean install_base
 $(FPM_BUILD) -t deb \
 -n amon-agent \
 -d "python (>= 2.6)" \
--d "python-dev" \
 -d "curl" \
 -d "adduser" \
 -d "sysstat" \
@@ -80,7 +79,6 @@ amon_agent_rpm: clean install_base
 	FPM_EDITOR="echo ''>>"  \
 $(FPM_BUILD) -t rpm \
 -n "amon-agent" \
--d "python-devel" \
 -d "curl" \
 -d "sysstat" \
 -d "git" \
