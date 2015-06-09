@@ -109,21 +109,26 @@ class ContainerDataCollector(object):
 		self.output = mp.Queue()
 
 		if self.client:
-			running_containers = self.client.containers(filters={'status': 'running'})
-		
-			processes = [mp.Process(target=self.collect_container_data, args=(x,)) for x in running_containers]
 
-			# Run processes
-			for p in processes:
-				p.start()
+			try:
+				running_containers = self.client.containers(filters={'status': 'running'})
+			except:
+				running_containers = False
 
-			# Exit the completed processes
-			for p in processes:
-				p.join()
+			if running_containers:
+				processes = [mp.Process(target=self.collect_container_data, args=(x,)) for x in running_containers]
+
+				# Run processes
+				for p in processes:
+					p.start()
+
+				# Exit the completed processes
+				for p in processes:
+					p.join()
 
 			
-			# Get process results from the output queue
-			result = [self.output.get() for p in processes]
+				# Get process results from the output queue
+				result = [self.output.get() for p in processes]
 			
 				
 		return result
