@@ -1,17 +1,14 @@
-FROM centos:latest
-# ENV GIT_CURL_VERBOSE 1
+FROM ubuntu:latest
 
-ADD amon-agent-2.1-1.noarch.rpm var/agent.rpm
+RUN apt-get update
+RUN apt-get install -y gdebi-core
+ADD amon-agent_2.2.1_all.deb var/agent.deb
 
-RUN yum -t -y install /var/agent.rpm
+RUN gdebi -n /var/agent.deb
 
 RUN /etc/init.d/amon-agent status
 
-RUN /etc/init.d/amon-agent test
-RUN ls -lh /etc/amonagent/plugins
-
 RUN amonpm install boo
 RUN amonpm update
-
 
 CMD ["/bin/bash"]

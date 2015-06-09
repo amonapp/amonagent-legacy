@@ -1,3 +1,10 @@
+2.2.1 - 09.06.2015
+==============
+
+* Collects facts about the distro with Ansible
+* Container module fixes
+* Updated requirements
+
 2.2 - 06.06.2015
 ==============
 

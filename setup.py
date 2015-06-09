@@ -9,5 +9,5 @@ setup(
 	author_email='martin@amon.cx',
 	zip_safe=False,
 	packages=find_packages(),
-	install_requires=['requests>=2.3.0', 'unidecode', 'docker-py==1.2.2'],
+	install_requires=['requests>=2.3.0', 'unidecode', 'docker-py==1.2.2', 'ansible<2.0'],
 ) 

@@ -7,6 +7,10 @@ PACKAGES_PATH=/home/martin/amon-packages
 DEBIAN_REPO_PATH=$(PACKAGES_PATH)/debian/
 RPM_REPO_PATH=$(PACKAGES_PATH)/centos/
 
+PACKAGE="amon-agent"
+DEBIAN_PACKAGE_NAME="${PACKAGE}_${VERSION}_all.deb"
+CENTOS_PACKAGE_NAME="${PACKAGE}-${VERSION}-1.noarch.rpm"
+
 FPM_BUILD=fpm --epoch 1 -s dir -e -C $(BUILD) \
 -a all -m "Amon Packages <packages@amon.cx>" \
 --url "http://amon.cx/" \
@@ -16,7 +20,6 @@ FPM_BUILD=fpm --epoch 1 -s dir -e -C $(BUILD) \
 
 clean:
 	rm -rf build
-	# rm -f *.deb *.rpm
 
 install_repo_base:
 	sudo apt-get install reprepro createrepo -y --force-yes
@@ -53,10 +56,12 @@ install_base:
 # Ubuntu/Debian
 # =====================
 amon_agent_deb: clean install_base
+	rm -f *.deb
 	FPM_EDITOR="echo 'Replaces: amon-agent (<= $(VERSION))' >>" \
 $(FPM_BUILD) -t deb \
 -n amon-agent \
 -d "python (>= 2.6)" \
+-d "python-dev" \
 -d "curl" \
 -d "adduser" \
 -d "sysstat" \
@@ -71,9 +76,11 @@ $(FPM_BUILD) -t deb \
 # CentOS/Fedora
 # =====================
 amon_agent_rpm: clean install_base
+	rm -f *.rpm
 	FPM_EDITOR="echo ''>>"  \
 $(FPM_BUILD) -t rpm \
 -n "amon-agent" \
+-d "python-devel" \
 -d "curl" \
 -d "sysstat" \
 -d "git" \
@@ -102,12 +109,14 @@ all: clean amon_agent_deb amon_agent_rpm
 
 test_debian:
 	cp debian/Dockerfile Dockerfile
+	sed -i s/AMON_DEB_FILE/"$(DEBIAN_PACKAGE_NAME)"/g Dockerfile
 	docker build --rm=true --no-cache . 
 	rm Dockerfile
 
 
 test_rpm:
 	cp rpm/Dockerfile Dockerfile
+	sed -i s/AMON_RPM_FILE/"$(CENTOS_PACKAGE_NAME)"/g Dockerfile
 	docker build --rm=true --no-cache . 
 	rm Dockerfile
 
