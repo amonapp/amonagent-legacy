@@ -30,7 +30,6 @@ class Runner(object):
 			'ip_address': get_ip_address(),
 			'distro': get_distro(),
 			'uptime': get_uptime(),
-			'unique_id': get_system_uuid(),
 		}
 
 		return system_info_dict
@@ -42,7 +41,6 @@ class Runner(object):
 			'disk': disk_check.check(),
 			'network': get_network_traffic(),
 			'loadavg': get_load_average(),
-			'unique_id': get_system_uuid()
 		}
 
 
