@@ -2,6 +2,7 @@ BUILD=build/package
 AGENT=$(BUILD)/amonagent
 SRC=../
 VERSION=`PYTHONPATH=$(SRC) python -c "from amonagent import __version__; print __version__"`
+# VERSION='2.2'
 
 PACKAGES_PATH=/home/martin/amon-packages
 DEBIAN_REPO_PATH=$(PACKAGES_PATH)/debian/
@@ -105,11 +106,29 @@ deploy: update_debian_repo update_rpm_repo
 all: clean amon_agent_deb amon_agent_rpm
 
 
+build_arm_base:
+	cp debian/Dockerfile.arm.base Dockerfile
+	docker build --force-rm=true --rm=true --no-cache -t=martinrusev/amonbase-arm .  
+	rm Dockerfile
+
+build_arm:
+	cp debian/Dockerfile.arm Dockerfile
+	docker build --rm=true --no-cache . 
+	rm Dockerfile
+
+
+test_arm:
+	cp debian/Dockerfile.arm Dockerfile
+	sed -i s/AMON_DEB_FILE/"$(DEBIAN_PACKAGE_NAME)"/g Dockerfile
+	docker build --rm=true --no-cache . 
+	rm Dockerfile
+
 test_debian:
 	cp debian/Dockerfile Dockerfile
 	sed -i s/AMON_DEB_FILE/"$(DEBIAN_PACKAGE_NAME)"/g Dockerfile
 	docker build --rm=true --no-cache . 
 	rm Dockerfile
+
 
 
 test_rpm:
