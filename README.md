@@ -37,7 +37,7 @@ Issue the following commands:
 Create a /etc/yum.repos.d/amonagent.repo file to hold the following configuration information for the Amon Agent repository:
 
 	[amonagent]
-	name=Edgium Repository
+	name=Amonagent Repository
 	baseurl=http://packages.amon.cx/rpm/
 	gpgcheck=0
 	enabled=1
@@ -48,6 +48,11 @@ Create a /etc/yum.repos.d/amonagent.repo file to hold the following configuratio
 To install the latest stable version of the Agent, issue the following command:
 
 	yum install -y amon-agent
+	
+
+### Install just the Python source
+
+	pip install https://github.com/amonapp/amonagent/archive/master.zip
 
 ## Credits / Contact
 
