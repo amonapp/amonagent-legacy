@@ -1,4 +1,4 @@
-import multiprocessing as mp
+import multiprocessing
 import logging
 from docker import Client
 
@@ -34,7 +34,7 @@ class ContainerDataCollector(object):
 
 
 		if container_cpu_delta > 0 and system_cpu_delta > 0:
-	  		cpu_percent = (container_cpu_delta / system_cpu_delta) * num_processors * 100.0
+			cpu_percent = (container_cpu_delta / system_cpu_delta) * num_processors * 100.0
 
 		return cpu_percent
 
@@ -42,14 +42,14 @@ class ContainerDataCollector(object):
 		result = {}
 		container_top =  self.client.top(container_id)
 
-	 	container_processes = container_top.get('Processes')
-	 	header = container_top.get('Titles')
+		container_processes = container_top.get('Processes')
+		header = container_top.get('Titles')
 
-	 	if container_processes and header:
-	 		header = [x.lower() for x in header]
-	 		result = {'header': header, 'data': container_processes}
+		if container_processes and header:
+			header = [x.lower() for x in header]
+			result = {'header': header, 'data': container_processes}
 
-	 	return result
+		return result
 
 
 	def collect_container_data(self, container):
@@ -98,40 +98,45 @@ class ContainerDataCollector(object):
 			total_loops = total_loops+1
 
 
+		return result
+
+
 	def collect(self):
-		result = {}
+		result = []
 		try:
 			self.client = Client(base_url='unix://var/run/docker.sock', version='1.17')
 		except:
 			log.exception('Unable to connect to the Docker API.')
 			self.client = False
 
-		self.output = mp.Queue()
+		self.output = multiprocessing.Queue()
 
 		if self.client:
 
 			try:
 				running_containers = self.client.containers(filters={'status': 'running'})
 			except:
-				running_containers = False
+				running_containers = []
 
-			if running_containers:
-				processes = [mp.Process(target=self.collect_container_data, args=(x,)) for x in running_containers]
+			procs = []
+			total_running_containers = len(running_containers)
+			if len(running_containers) > 0:
 
-				# Run processes
-				for p in processes:
+				for container in running_containers:
+					p = multiprocessing.Process(
+						target=self.collect_container_data, args=(container,))
+					procs.append(p)
 					p.start()
 
-				# Exit the completed processes
-				for p in processes:
+				for container in running_containers:
+					result.append(self.output.get())
+
+				for p in procs:
 					p.join()
 
-			
-				# Get process results from the output queue
-				result = [self.output.get() for p in processes]
-			
-				
+
 		return result
+				
 
 
 

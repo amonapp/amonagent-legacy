@@ -141,10 +141,14 @@ test_all: test_debian test_rpm
 
 
 test_debian_repo:
-	cp debian/Dockerfile.beta.repo Dockerfile
+	cp debian/Dockerfile.repo Dockerfile
 	docker build --rm=true --no-cache . 
 	rm Dockerfile
 
+test_debian_repo_arm:
+	cp debian/Dockerfile.repo Dockerfile
+	docker build --rm=true --no-cache . 
+	rm Dockerfile
 
 
 test_rpm_repo:

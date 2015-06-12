@@ -1,6 +1,8 @@
-FROM amonbase:latest
+#FROM amonbase:latest
+FROM martinrusev/amonbase-arm
 
-RUN echo 'deb http://beta.packages.amon.cx/repo amon contrib' >> /etc/apt/sources.list
+RUN echo 'deb http://packages.amon.cx/repo amon contrib' >> /etc/apt/sources.list
+RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv AD53961F
 RUN apt-get update
 
 RUN apt-get install -y --force-yes amon-agent
