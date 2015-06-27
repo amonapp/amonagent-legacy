@@ -1,3 +1,14 @@
+2.2.4 - 27.06.2015
+==============
+
+* Fix a Python shared memory permission issue on older distros
+
+2.2.3 - 12.06.2015
+==============
+
+* Docker container module fixes
+
+
 2.2.1 - 09.06.2015
 ==============
 

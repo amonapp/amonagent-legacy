@@ -123,10 +123,15 @@ class ContainerDataCollector(object):
 			if len(running_containers) > 0:
 
 				for container in running_containers:
-					p = multiprocessing.Process(
-						target=self.collect_container_data, args=(container,))
-					procs.append(p)
-					p.start()
+					try:
+						p = multiprocessing.Process(
+							target=self.collect_container_data, args=(container,))
+						procs.append(p)
+						p.start()
+					except:
+						log.exception("Can't collect container data")
+
+
 
 				for container in running_containers:
 					result.append(self.output.get())
@@ -141,4 +146,4 @@ class ContainerDataCollector(object):
 
 
 container_data_collector = ContainerDataCollector()
-# print container_data_collector.collect()
+print container_data_collector.collect()
