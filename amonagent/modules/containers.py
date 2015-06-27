@@ -146,4 +146,4 @@ class ContainerDataCollector(object):
 
 
 container_data_collector = ContainerDataCollector()
-print container_data_collector.collect()
+# print container_data_collector.collect()

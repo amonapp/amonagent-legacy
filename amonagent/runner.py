@@ -27,8 +27,7 @@ class Runner(object):
 		system_info_dict = {
 			'processor': get_cpu_info(),
 			'ip_address': get_ip_address(),
-			'distro': get_distro(),
-			'uptime': get_uptime(),
+			'distro': get_distro(),	
 		}
 
 		return system_info_dict
@@ -40,6 +39,7 @@ class Runner(object):
 			'disk': disk_check.check(),
 			'network': get_network_traffic(),
 			'loadavg': get_load_average(),
+			'uptime': get_uptime(),
 		}
 
 
