@@ -109,7 +109,11 @@ class ContainerDataCollector(object):
 			log.exception('Unable to connect to the Docker API.')
 			self.client = False
 
-		self.output = multiprocessing.Queue()
+		try:
+			self.output = multiprocessing.Queue()
+		except:
+			log.exception('Can not create Queue.')
+			self.output = None
 
 		if self.client:
 
@@ -132,9 +136,9 @@ class ContainerDataCollector(object):
 						log.exception("Can't collect container data")
 
 
-
-				for container in running_containers:
-					result.append(self.output.get())
+				if self.output != None:
+					for container in running_containers:
+						result.append(self.output.get())
 
 				for p in procs:
 					p.join()
