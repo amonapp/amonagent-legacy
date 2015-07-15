@@ -1,9 +1,7 @@
-import multiprocessing
 import logging
 from docker import Client
 
 log = logging.getLogger(__name__)
-
 
 class ContainerDataCollector(object):
 
@@ -91,7 +89,7 @@ class ContainerDataCollector(object):
 				result['memory'] = i['memory_stats']['usage'] / 1024 / 1024
 				result['memory_limit'] = i['memory_stats']['limit'] / 1024 / 1024
 				result['cpu_percent'] = self.calculate_cpu_percent(prev_cpu, i['cpu_stats'])
-				self.output.put(result)
+				return result
 			elif total_loops == 2:
 				break
 
@@ -109,12 +107,6 @@ class ContainerDataCollector(object):
 			log.exception('Unable to connect to the Docker API.')
 			self.client = False
 
-		try:
-			self.output = multiprocessing.Queue()
-		except:
-			log.exception('Can not create Queue.')
-			self.output = None
-
 		if self.client:
 
 			try:
@@ -124,30 +116,16 @@ class ContainerDataCollector(object):
 
 			procs = []
 			total_running_containers = len(running_containers)
-			if len(running_containers) > 0:
+			if total_running_containers > 0:
 
+				# Wait for Docker to release an update with all the containers data collected in one go, until then: 
 				for container in running_containers:
-					try:
-						p = multiprocessing.Process(
-							target=self.collect_container_data, args=(container,))
-						procs.append(p)
-						p.start()
-					except:
-						log.exception("Can't collect container data")
-
-
-				if self.output != None:
-					for container in running_containers:
-						result.append(self.output.get())
-
-				for p in procs:
-					p.join()
-
-
+					p = self.collect_container_data(container)
+					result.append(p)
+					
 		return result
 				
 
 
 
 container_data_collector = ContainerDataCollector()
-# print container_data_collector.collect()
