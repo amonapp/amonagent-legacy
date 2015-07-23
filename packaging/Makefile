@@ -44,7 +44,6 @@ install_base:
 	mkdir -p $(BUILD)/etc/init.d
 	cp -r $(SRC)/amon-agent $(BUILD)/etc/init.d/amon-agent
 	cp -r $(SRC)/amon-agent.py $(BUILD)/usr/bin/amon-agent.py
-	cp -r $(SRC)/amon-agent.conf $(BUILD)/etc/amon-agent.conf
 	cp -r $(SRC)/amonpm $(BUILD)/usr/bin/amonpm
 	find $(BUILD)/etc/amonagent/ -type f -name "*.pyc" -exec rm -f {} \;
 	chmod 755 $(BUILD)/etc/init.d/amon-agent
