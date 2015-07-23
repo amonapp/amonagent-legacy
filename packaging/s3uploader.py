@@ -3,17 +3,9 @@ import boto.s3
 
 import os.path
 import sys
-from ConfigParser import SafeConfigParser
-
 
 base_path = "/home/martin/amon-packages"
-key_file = os.path.join(base_path, 'amazon_keys.conf')
 
-parser = SafeConfigParser()
-parser.read(key_file)
-
-AWS_ACCESS_KEY_ID = parser.get('amazon', 'key')
-AWS_ACCESS_KEY_SECRET = parser.get('amazon', 'secret')
 
 
 bucket_name = 'packages.amon.cx'
@@ -29,7 +21,7 @@ repos = {
 	}
 }
 
-conn = boto.connect_s3(AWS_ACCESS_KEY_ID, AWS_ACCESS_KEY_SECRET)
+conn = boto.connect_s3()
 
 
 bucket = conn.get_bucket(bucket_name,validate=True)
