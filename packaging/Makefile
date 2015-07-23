@@ -55,7 +55,7 @@ install_base:
 # =====================
 # Ubuntu/Debian
 # =====================
-amon_agent_deb: clean install_base
+build_deb: clean install_base
 	rm -f *.deb
 	FPM_EDITOR="echo 'Replaces: amon-agent (<= $(VERSION))' >>" \
 $(FPM_BUILD) -t deb \
@@ -74,7 +74,7 @@ $(FPM_BUILD) -t deb \
 # =====================
 # CentOS/Fedora
 # =====================
-amon_agent_rpm: clean install_base
+build_rpm: clean install_base
 	rm -f *.rpm
 	FPM_EDITOR="echo ''>>"  \
 $(FPM_BUILD) -t rpm \
