@@ -1,3 +1,8 @@
+2.2.6 - 25.08.2015
+==============
+
+* Remove the container checks from core (moved to plugins)
+
 2.2.4 - 27.06.2015
 ==============
 

@@ -9,7 +9,6 @@ from amonagent.modules.core import (
 	get_ip_address,
 	get_cpu_info
 )
-from amonagent.modules.containers import container_data_collector
 from amonagent.modules.distro import get_distro
 from amonagent.modules.plugins import discover_plugins
 
@@ -44,9 +43,6 @@ class Runner(object):
 
 
 		return system_data_dict
-
-	def containers(self):
-		return container_data_collector.collect()
 
 
 	def processes(self):

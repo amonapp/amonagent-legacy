@@ -13,7 +13,6 @@ from amonagent.modules.core import (
 	get_cpu_info
 )
 from amonagent.modules.processes import processes_data_collector
-from amonagent.modules.containers import container_data_collector
 from amonagent.modules.distro import get_distro
 from amonagent.modules.plugins import discover_plugins
 from amonagent.settings import settings
@@ -150,18 +149,6 @@ def test_checks():
 	print "Process collector: {color}{message}{end}".format(color=color, message=message, end=ENDC)
 	print_data(info=info, message=message)
 
-
-
-	info = container_data_collector.collect()
-	if len(info) > 0:
-		message = 'OK'
-		color = OKGREEN
-	else:
-		message = 'Fail'
-		color = FAIL
-
-	print "Docker containers collector: {color}{message}{end}".format(color=color, message=message, end=ENDC)
-	print_data(info=info, message=message)
 
 
 	url = "{0}/api/test/{1}".format(settings.HOST, settings.SERVER_KEY)
