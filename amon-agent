@@ -24,6 +24,8 @@ PIDPATH="/var/run/amonagent/"
 
 [ -f $AGENTPATH ] || echo "$AGENTPATH not found"
 
+. /etc/rc.d/init.d/functions
+
 action=$1
 
 case $action in
