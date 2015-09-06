@@ -102,7 +102,7 @@ deploy: update_debian_repo update_rpm_repo
 	sudo ntpdate time.nist.gov
 	python s3uploader.py
 
-all: clean amon_agent_deb amon_agent_rpm
+all: clean build_deb build_rpm
 
 
 build_arm_base:

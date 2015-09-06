@@ -1,4 +1,12 @@
 #!/usr/bin/env sh
+
+
+# chkconfig: 2345 95 05
+# description: Amon agent - collects system and process information.
+# processname: amon-agent
+# pidfile: /var/run/amonagent/amonagent.pid
+
+
 ### BEGIN INIT INFO
 # Provides:          amon-agent
 # Required-Start:    $remote_fs $syslog
