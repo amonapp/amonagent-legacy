@@ -14,5 +14,5 @@
        when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
      - include: centos.yml
        when: ansible_distribution == 'CentOS'
-     - template: src=amon-agent.conf dest=/etc/amon-agent.conf owner=amonagent group=amonagent mode=0644
+     - template: src=templates/amon-agent.conf dest=/etc/amon-agent.conf owner=amonagent group=amonagent mode=0644
      - command: /etc/init.d/amon-agent restart 

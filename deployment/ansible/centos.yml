@@ -1,4 +1,4 @@
-- template: src=centos.repo dest=/etc/yum.repos.d/amon.repo
+- template: src=templates/centos.repo dest=/etc/yum.repos.d/amon.repo
 
 - name: Install
   yum: name=amon-agent state=latest
