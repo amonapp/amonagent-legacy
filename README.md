@@ -54,6 +54,10 @@ To install the latest stable version of the Agent, issue the following command:
 
 	pip install https://github.com/amonapp/amonagent/archive/master.zip
 
+### Install with Ansible/Salt
+
+To install the amon-agent with Ansible or Salt, please take a look at the examples in the deployment directory. 
+
 ## Credits / Contact
 
 Contact martin@amon.cx with questions.

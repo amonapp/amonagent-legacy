@@ -1,0 +1,18 @@
+---
+- hosts: localhost
+  connection: local
+  sudo: True
+  vars:
+    api_key: uxIDpRApV3ULEnDUAwUNA6grHLBQs91iEiQsN8pIUao
+    amon_instance: http://192.168.72.128:9000
+    machine_id: "{{ ansible_machine_id | hash('md5') }}"
+  tasks:
+     - uri:
+        url: "{{amon_instance}}/api/v1/servers/create/?api_key={{api_key}}&key={{machine_id}}&name={{ansible_nodename}}"
+        method: GET
+     - include: ubuntu_debian.yml
+       when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+     - include: centos.yml
+       when: ansible_distribution == 'CentOS'
+     - template: src=amon-agent.conf dest=/etc/amon-agent.conf owner=amonagent group=amonagent mode=0644
+     - command: /etc/init.d/amon-agent restart 

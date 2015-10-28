@@ -17,7 +17,7 @@ amon-agent:
     - keyid: AD53961F
     - keyserver: keyserver.ubuntu.com
     {% elif grains['os_family'] == 'RedHat' %}
-    - baseurl: priority=1
+    - baseurl: http://packages.amon.cx/rpm/
     - gpgcheck: 0
     - enabled: 1
     {% endif %}
