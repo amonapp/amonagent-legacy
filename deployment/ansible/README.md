@@ -6,6 +6,7 @@
 
 ```
 api_key - a valid API key 
+amon_ip - the IP pointing to your Amon instance, used to configure the salt-minion
 amon_instance - the IP or domain pointing to your Amon instance
 ```
 
@@ -18,3 +19,17 @@ ansible-playbook amon-agent.yml
 ```
 
 Tested on Debian/Ubuntu and CentOS
+
+
+## Test the playbook
+
+Install Docker, then: 
+
+```
+docker pull williamyeh/ansible:centos7
+docker pull williamyeh/ansible:ubuntu14.04
+
+make test distro=ubuntu
+make test distro=centos
+
+```
