@@ -1,7 +1,7 @@
 ## Installing the amon-agent with Ansible
 
 - Copy all the files from deployment/ansible to a local path
-- In amon-agent.yml, replace the following variables with the appropriate values:
+- In api_vars.yml, replace the following variables with the appropriate values:
 
 
 ```
@@ -23,7 +23,7 @@ Tested on Debian/Ubuntu and CentOS
 
 ## Test the playbook
 
-Install Docker, then: 
+Install Docker, in api_vars.yml, uncomment machine_id for Docker then: 
 
 ```
 docker pull williamyeh/ansible:centos7
