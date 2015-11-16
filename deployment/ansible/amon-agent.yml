@@ -4,6 +4,8 @@
   sudo: True
   vars_files:
    - api_vars.yml
+  vars:
+    machine_id: "{{ ansible_machine_id | hash('md5') }}"
   tasks:
      - uri:
         url: "{{amon_instance}}/api/v1/servers/create/?api_key={{api_key}}&key={{machine_id}}&name={{ansible_nodename}}"
