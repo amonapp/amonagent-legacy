@@ -7,9 +7,9 @@
   vars:
     machine_id: "{{ ansible_machine_id | hash('md5') }}"
   tasks:
-      - name: Print version
-        debug: msg="Machine id {{ machine_id.stdout }}"
-     - uri:
+      - name: Print machine_id
+       debug: "msg='{{ machine_id.stdout }}'"
+      - uri:
         url: "{{amon_instance}}/api/v1/servers/create/?api_key={{api_key}}&key={{machine_id}}&name={{ansible_nodename}}"
         method: GET
      - include: ubuntu_debian.yml
