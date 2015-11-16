@@ -115,6 +115,11 @@ build_arm:
 	docker build --rm=true --no-cache . 
 	rm Dockerfile
 
+build_container: 
+	cp debian/Dockerfile.container Dockerfile
+	docker build --force-rm=true --rm=true --no-cache --tag="martinrusev/amonagent-$(VERSION)" .    
+	rm Dockerfile
+	docker rmi $$(docker images -q --filter dangling=true)
 
 test_arm:
 	cp debian/Dockerfile.arm Dockerfile

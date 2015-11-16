@@ -11,4 +11,32 @@
   command: apt-get update
 
 - name: Install.
-  command: apt-get install -y --force-yes amon-agent
+  command: apt-get install -y --force-yes amon-agent python-software-properties software-properties-common
+
+- name: Add Salt Repository - Ubuntu
+  apt_repository: repo='ppa:saltstack/salt'
+  when: ansible_distribution == 'Ubuntu'
+
+- name: Add Salt Repository - Debian
+  apt_repository: repo='deb http://debian.saltstack.com/debian jessie-saltstack main' state=present
+  when: ansible_distribution == 'Debian'
+
+
+- name: Update for Salt.
+  command: apt-get update
+
+- name: Install Salt
+  command: apt-get install -y --force-yes salt-minion
+
+
+- name: Check if the salt-minion config exists 
+  stat: path=/etc/salt/minion
+  register: stat_result
+
+- name: Copy the salt-minion config
+  template: src=templates/salt-minion.yml dest=/etc/salt/minion
+  when: stat_result.stat.exists == False   
+
+
+- name: Restart Salt
+  command: /etc/init.d/salt-minion restart

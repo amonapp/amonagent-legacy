@@ -1,0 +1,4 @@
+id: {{machine_id}}
+master: {{amon_ip}}
+master_port: 4506
+user: root

@@ -1,0 +1,6 @@
+---
+api_key: uxIDpRApV3ULEnDUAwUNA6grHLBQs91iEiQsN8pIUao
+amon_ip: 192.168.109.128
+amon_instance: http://192.168.109.128:9000
+machine_id: "{{ ansible_nodename | hash('md5') }}" # Docker
+# machine_id: "{{ ansible_machine_id | hash('md5') }}"

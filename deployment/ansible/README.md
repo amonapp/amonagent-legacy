@@ -7,7 +7,6 @@
 ```
 api_key - a valid API key 
 amon_instance - the IP or domain pointing to your Amon instance
-
 ```
 
 ## Running the playbook 

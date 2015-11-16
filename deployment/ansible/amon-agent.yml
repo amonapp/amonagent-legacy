@@ -2,10 +2,8 @@
 - hosts: localhost
   connection: local
   sudo: True
-  vars:
-    api_key: uxIDpRApV3ULEnDUAwUNA6grHLBQs91iEiQsN8pIUao
-    amon_instance: http://192.168.72.128:9000
-    machine_id: "{{ ansible_machine_id | hash('md5') }}"
+  vars_files:
+   - api_vars.yml
   tasks:
      - uri:
         url: "{{amon_instance}}/api/v1/servers/create/?api_key={{api_key}}&key={{machine_id}}&name={{ansible_nodename}}"
