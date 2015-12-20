@@ -37,7 +37,7 @@ case "$1" in
 
         curl --insecure --silent --show-error --retry 5 -L https://bootstrap.pypa.io/ez_setup.py -o - | python &> /dev/null 
         curl --insecure --silent --show-error --retry 5 -L https://raw.githubusercontent.com/pypa/pip/master/contrib/get-pip.py | python &> /dev/null 
-        pip install https://github.com/amonapp/amonagent/archive/master.zip &> /dev/null
+        pip install https://github.com/amonapp/amonagent-legacy/archive/master.zip &> /dev/null
 
         /etc/init.d/amon-agent restart
 
